@@ -10,8 +10,8 @@ public abstract class CollisionEngine {
 
     protected final AnimationEngine animationEngine; // The animation engine to manage the game components.
 
-    public CollisionEngine(AnimationEngine animationEngine) {
-        this.animationEngine = animationEngine;
+    protected CollisionEngine() {
+        this.animationEngine = AnimationEngine.getInstance();
     }
 
     /**

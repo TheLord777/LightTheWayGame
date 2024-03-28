@@ -6,7 +6,7 @@ import processing.core.PApplet;
 public abstract class ComponentManager extends GameEngine {
 
     protected ComponentManager(PApplet app) {
-        super(app);
+        super(app, Collisions.getInstance());
     }
 
     @Override

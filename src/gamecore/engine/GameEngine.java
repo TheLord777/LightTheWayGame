@@ -11,10 +11,12 @@ public abstract class GameEngine {
     protected final AnimationEngine animationEngine; // The animation engine to manage the game components.
     protected final int appWidth, appHeight;
     protected boolean gamePaused, showEndScreen; // Whether the game is paused or the end screen is showing.
+    protected CollisionEngine ce; // The collision engine to manage game collisions.
 
-    protected GameEngine(PApplet app) {
+    protected GameEngine(PApplet app, CollisionEngine ce) {
         this.app = app;
-        this.animationEngine = new AnimationEngine(app);
+        this.animationEngine = AnimationEngine.getInstance();
+        this.ce = ce;
         appWidth = app.displayWidth;
         appHeight = app.displayHeight;
         gamePaused = true;
@@ -33,12 +35,14 @@ public abstract class GameEngine {
     public void play() {
         if (showEndScreen && gamePaused) {
             animationEngine.step();
+            ce.collisions();
             gameLoop();
             drawEndScreen();
         } else if (gamePaused) {
             drawPausedScreen();
         } else {
             animationEngine.step();
+            ce.collisions();
 
             gameLoop();
         }
