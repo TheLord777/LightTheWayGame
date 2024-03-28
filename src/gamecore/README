@@ -1,0 +1,4 @@
+This package is used as a base to implement the appropriate game logic for a specific game.
+
+The classes are used to create a structure and generic tools which can be overridden to implement the behavior of a game.
+
