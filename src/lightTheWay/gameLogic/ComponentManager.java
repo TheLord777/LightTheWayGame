@@ -1,12 +1,12 @@
 package lightTheWay.gameLogic;
 
 import gamecore.engine.GameEngine;
-import processing.core.PApplet;
+import lightTheWay.Instance;
 
 public abstract class ComponentManager extends GameEngine {
 
-    protected ComponentManager(PApplet app) {
-        super(app, Collisions.getInstance());
+    protected ComponentManager() {
+        super(Instance.getApp(), Collisions.getInstance());
     }
 
     @Override

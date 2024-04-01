@@ -1,3 +1,4 @@
+import lightTheWay.Instance;
 import lightTheWay.gameLogic.LightTheWay;
 import processing.core.PApplet;
 
@@ -15,6 +16,7 @@ public class Game extends PApplet {
 
     }
 
+
     public void setup() {
         background(0);
         noStroke();
@@ -22,8 +24,10 @@ public class Game extends PApplet {
         // Use processing built in crosshair cursor.
         cursor(CROSS);
 
+        Instance.setApp(this);
+
         // create and setup new game engine.
-        ge = new LightTheWay(this);
+        ge = new LightTheWay();
         ge.setupGame();
     }
 

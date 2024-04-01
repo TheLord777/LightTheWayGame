@@ -4,8 +4,8 @@ import processing.core.PApplet;
 
 public class LightTheWay extends ComponentManager {
 
-    public LightTheWay(PApplet app) {
-        super(app);
+    public LightTheWay() {
+        super();
     }
 
 
