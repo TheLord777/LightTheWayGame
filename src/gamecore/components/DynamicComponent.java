@@ -1,7 +1,6 @@
 package gamecore.components;
 
 import gamecore.Config;
-import processing.core.PApplet;
 import processing.core.PVector;
 
 /**
@@ -17,15 +16,15 @@ public abstract class DynamicComponent extends GameComponent {
     // Millington
     protected final static float DAMPING = .995f;
 
-    DynamicComponent(PApplet a, PVector p, float width, float height) {
-        super(a, p, width, height);
+    DynamicComponent(PVector p, float width, float height) {
+        super(p, width, height);
         this.v = new PVector(0, 0);
         this.f = new PVector(0, 0);
         this.invm = 1 / mass(); // inverse mass. Store to avoid repeated calculation.
     }
 
-    protected DynamicComponent(PApplet a, PVector p, float width) {
-        super(a, p, width);
+    protected DynamicComponent(PVector p, float width) {
+        super(p, width);
         this.v = new PVector(0, 0);
         this.f = new PVector(0, 0);
         this.invm = 1 / mass(); // inverse mass. Store to avoid repeated calculation.

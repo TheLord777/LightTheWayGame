@@ -1,10 +1,8 @@
 package gamecore.components;
 
-import processing.core.PApplet;
-
 public class EndFrame extends GameComponent {
-    public EndFrame(PApplet app) {
-        super(app);
+    public EndFrame() {
+        super();
     }
 
     @Override

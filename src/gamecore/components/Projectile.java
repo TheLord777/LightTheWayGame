@@ -3,7 +3,6 @@ package gamecore.components;
 import gamecore.Config;
 import gamecore.progression.Progression;
 import gamecore.progression.ProjectileProgression;
-import processing.core.PApplet;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -18,8 +17,8 @@ public abstract class Projectile extends DynamicComponent {
     protected boolean drawTrail; // Whether to draw the trail of the projectile.
 
 
-    Projectile(PApplet a, PVector p, float width, float height) {
-        super(a, p, width, height);
+    Projectile(PVector p, float width, float height) {
+        super(p, width, height);
         this.progression = ProjectileProgression.PRELAUNCH; // All projectiles start in the prelaunch state.
         drawTrail = true; // Default to drawing the trail with the projectile.
     }

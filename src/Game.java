@@ -1,3 +1,4 @@
+import gamecore.components.GameComponent;
 import lightTheWay.Instance;
 import lightTheWay.gameLogic.LightTheWay;
 import processing.core.PApplet;
@@ -25,6 +26,7 @@ public class Game extends PApplet {
         cursor(CROSS);
 
         Instance.setApp(this);
+        GameComponent.setApp(this);
 
         // create and setup new game engine.
         ge = new LightTheWay();
