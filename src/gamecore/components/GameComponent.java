@@ -9,28 +9,33 @@ import processing.core.PVector;
  */
 public abstract class GameComponent {
 
-    protected final PApplet app; // app to draw on.
+    protected static PApplet app; // app to draw on.
+    private static boolean mutex = false;
     protected PVector p; // position of the component.
     protected float width;
     protected float height;
-    protected CollisionShape collisionShape;
+    protected CollisionShape collisionShape; // TODO implement collision shapes
 
-    public GameComponent(PApplet a, PVector p, float width, float height) {
-        this.app = a;
+    public static void setApp(PApplet app) {
+        if (!mutex) GameComponent.app = app;
+        mutex = true;
+
+    }
+
+    public GameComponent(PVector p, float width, float height) {
         this.p = p;
         this.width = width;
         this.height = height;
     }
 
-    public GameComponent(PApplet a, PVector p, float width) {
-        this.app = a;
+    public GameComponent(PVector p, float width) {
         this.p = p;
         this.width = width;
         this.height = width; // for circle components
     }
 
-    public GameComponent(PApplet app) {
-        this.app = app;
+    public GameComponent() {
+
     }
 
     /**

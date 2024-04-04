@@ -1,10 +1,8 @@
 package gamecore.engine;
 
-import gamecore.components.EndFrame;
+
 import gamecore.components.Explosion;
-import gamecore.components.Frame;
 import gamecore.components.GameComponent;
-import processing.core.PApplet;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,12 +13,15 @@ import java.util.List;
  */
 final public class AnimationEngine {
 
-    private final PApplet app; // The app canvas/ game area to render game components.
+    private static final AnimationEngine instance = new AnimationEngine();
+
+    public static AnimationEngine getInstance() {
+        return instance;
+    }
+
     private final ArrayList<GameComponent> components; // Collection of all active components to render.
 
-
-    public AnimationEngine(PApplet app) {
-        this.app = app;
+    private AnimationEngine() {
         components = new ArrayList<>();
     }
 
@@ -36,8 +37,6 @@ final public class AnimationEngine {
         for (GameComponent gameComponent : toAdd) {
             addComponentOnTopOfComponent(gameComponent, toAddOnTopOf);
         }
-
-
     }
 
 
@@ -66,14 +65,6 @@ final public class AnimationEngine {
         components.clear();
     }
 
-
-    public void createFrame(float displacement){
-        components.add(new Frame(app, displacement));
-    }
-
-    public void endFrame(){
-        components.add(new EndFrame(app));
-    }
 
     public void removeComponents(List<GameComponent> toRemove) {
         components.removeAll(toRemove);

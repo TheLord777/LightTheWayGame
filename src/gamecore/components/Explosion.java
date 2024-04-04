@@ -3,7 +3,6 @@ package gamecore.components;
 import gamecore.Config;
 import gamecore.progression.ExplosionProgression;
 import gamecore.progression.Progression;
-import processing.core.PApplet;
 import processing.core.PVector;
 
 public abstract class Explosion extends Projectile {
@@ -11,8 +10,8 @@ public abstract class Explosion extends Projectile {
     private float explosionRadius;
     private Progression explosionProg;
 
-    protected Explosion(PApplet a, PVector p, float width, float height) {
-        super(a, p, width, height);
+    protected Explosion(PVector p, float width, float height) {
+        super(p, width, height);
         this.explosionProg = ExplosionProgression.PREEXPLOSION;
         this.explosionRadius = width;
     }

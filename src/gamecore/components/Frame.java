@@ -1,14 +1,13 @@
 package gamecore.components;
 
 import gamecore.Config;
-import processing.core.PApplet;
 
 public class Frame extends GameComponent {
 
     private final float DISPLACEMENT;
 
-    public Frame(PApplet app, float displacement) {
-        super(app);
+    public Frame(float displacement) {
+        super();
         DISPLACEMENT = displacement;
     }
 
