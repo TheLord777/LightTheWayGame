@@ -1,7 +1,8 @@
 package gamecore.components;
 
 public enum CollisionShape {
-    CIRCLE, RECTANGLE
-
-
+    CIRCLE, 
+    RECTANGLE,
+    LINE,
+    POINT
 }

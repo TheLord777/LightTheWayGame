@@ -131,4 +131,8 @@ public abstract class GameComponent {
         return p;
     }
 
+    public CollisionShape getShape() {
+        return collisionShape;
+    }
+
 }
