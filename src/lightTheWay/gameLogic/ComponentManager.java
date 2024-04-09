@@ -18,7 +18,7 @@ public abstract class ComponentManager extends GameEngine {
     public void setupGame() {
         // Initialize tileSize
 
-        int tileSize = min(app.width, app.height) / 40; // Adjust as needed
+        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
 
         // Create a new instance of MapFormation
         MapFormation mapFormation = new MapFormation(new PVector(0, 0), app.width, app.height, tileSize);
