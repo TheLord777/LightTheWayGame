@@ -1,6 +1,7 @@
 package lightTheWay.components;
 
 import gamecore.components.GameComponent;
+import processing.core.PApplet;
 import processing.core.PVector;
 
 import java.util.LinkedList;
@@ -19,7 +20,7 @@ public class MapFormation extends GameComponent {
     public MapFormation(PVector p, float width, float height, int tileSize) {
         super(p, width, height);
         this.tileSize = tileSize;
-        generateMap(); // Generate the map upon initialization
+        generateMap();
 
     }
 
@@ -43,11 +44,13 @@ public class MapFormation extends GameComponent {
         for (int i = 0; i < generations; i++) {
             applyAutomataRules();
         }
-        int numStartPoints = rows * cols / 200; // Adjust the number of start points as needed
+
+        boolean[][] visited = new boolean[rows][cols];
+        int numStartPoints = rows * cols / 150; // Adjust the number of start points as needed
         for (int i = 0; i < numStartPoints; i++) {
             int startX = floor(app.random(cols));
             int startY = floor(app.random(rows));
-            floodFill(startX, startY);
+            floodFill(startX, startY, visited);
         }
     }
 
@@ -99,40 +102,24 @@ public class MapFormation extends GameComponent {
         return count;
     }
 
-    public void floodFill(int startX, int startY) {
+
+    public void floodFill(int startX, int startY, boolean[][] visited) {
         int rows = grid.length;
         int cols = grid[0].length;
-        boolean[][] visited = new boolean[rows][cols];
-        Queue<PVector> queue = new LinkedList<>();
 
-        // Start flood fill from the given startX and startY
-        queue.offer(new PVector(startX, startY));
         visited[startY][startX] = true;
 
-        while (!queue.isEmpty()) {
-            PVector current = queue.poll();
-            int x = (int) current.x;
-            int y = (int) current.y;
+        int[][] neighbors = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+        for (int[] neighbor : neighbors) {
+            int newX = startX + neighbor[0];
+            int newY = startY + neighbor[1];
 
-            // Check neighboring cells
-            int[][] neighbors = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-            for (int[] neighbor : neighbors) {
-                int newX = x + neighbor[0];
-                int newY = y + neighbor[1];
-
-                // Check if the neighboring cell is within bounds and is not visited
-                if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && !visited[newY][newX]) {
-                    // If the neighboring cell is a space or on the edge of the grid, fill it
-                    if (grid[newY][newX] == 0) {
-                        visited[newY][newX] = true;
-                        queue.offer(new PVector(newX, newY));
-                    }
-                }
+            // Check if the neighboring cell is within bounds and is not visited
+            if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && !visited[newY][newX] && grid[newY][newX] == 0) {
+                floodFill(newX, newY, visited); // Recursively fill adjacent space
             }
         }
     }
-
-
 
 
     @Override
@@ -140,18 +127,30 @@ public class MapFormation extends GameComponent {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 if (grid[i][j] == 1) {
-                    app.fill(55, 44, 44);   // Fill with white for empty space
+                    app.fill(55, 44, 44);   // Fill with gray for walls
                 } else {
                     // Determine color based on noise for variation
                     float noiseVal = app.noise(i * 0.05f, j * 0.05f); // Adjust frequency as needed
                     int rockColor = getColorFromNoise(noiseVal);
-                    app.fill(rockColor);
+                    if (noiseVal < 0.45) { // Adjust the threshold for moss application (lower values for more moss)
+                        // Calculate moss color with fading effect
+                        float mossNoise = app.noise(i * 0.05f, j * 0.05f);
+                        int mossBrightness = (int) app.map(mossNoise, 0, 1, 100, 200); // Adjust brightness range as needed
+                        int mossSaturation = (int) app.map(mossNoise, 0, 1, 150, 255); // Adjust saturation range as needed
+                        int mossHue = (int) app.map(mossNoise, 0, 1, 80, 120); // Adjust hue range as needed
+                        app.fill(mossHue, mossSaturation, mossBrightness); // Moss color with fading effect
+                    } else {
+                        app.fill(rockColor);
+                    }
                 }
                 app.noStroke();
                 app.rect(j * tileSize, i * tileSize, tileSize, tileSize);
             }
         }
     }
+
+
+
     // Function to map Perlin noise to a color gradient from light to dark
     private int getColorFromNoise(float noiseVal) {
         // Map noise value to a grayscale spectrum

@@ -1,6 +1,11 @@
 package lightTheWay.gameLogic;
 
+import lightTheWay.components.ExampleComponent;
+import lightTheWay.components.MapFormation;
 import processing.core.PApplet;
+import processing.core.PVector;
+
+import static processing.core.PApplet.min;
 
 public class LightTheWay extends ComponentManager {
 
@@ -21,7 +26,12 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void spaceKey() {
+        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
 
+        // Create a new instance of MapFormation
+        MapFormation mapFormation = new MapFormation(new PVector(0, 0), app.width, app.height, tileSize);
+        animationEngine.addComponent(mapFormation);
+        animationEngine.addComponent(new ExampleComponent());
     }
 
     @Override
