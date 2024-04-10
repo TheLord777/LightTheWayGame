@@ -60,53 +60,7 @@ final public class AnimationEngine {
      * This method will render all the game components in the game, i.e. update each object and then draw.
      */
     public void step() {
-        // Render Components
         for (GameComponent gc : components) gc.step();
-        // Render Lighting
-        lighting();
-    }
-
-    /**
-     * This method handles the lighting for the game, by placing a shadow over the display and masking for light sources
-     * Needs to run AFTER the latest round of rendering, as it takes a snapshot of the rendered elements
-     */
-    public void lighting() {
-        // Apply Shadows and Lights
-        PApplet app = Instance.getApp();
-        // Get snapshot of current rendered display
-        PImage screen = app.get(0, 0, app.width, app.height);
-        // Cover screen in shadow
-        app.pushStyle();
-        app.noStroke();
-        app.fill(0);
-        app.rect(0, 0, app.width, app.height);
-        app.popStyle();
-        // Begin carving out light from shadows using mask
-        PGraphics lightMask = app.createGraphics(app.width, app.height, PApplet.JAVA2D);
-        lightMask.beginDraw();
-        lightMask.background(0, 0);
-        lightMask.blendMode(PApplet.SCREEN);
-        lightMask.noStroke();
-        // Draw lights for each component based on light size
-        for (GameComponent gc : components) {
-            float xCenter, yCenter;
-            if (gc.getShape() == CollisionShape.RECTANGLE) {
-                xCenter = gc.getP().x + gc.getWidth() / 2;
-                yCenter = gc.getP().y + gc.getHeight() / 2;
-            } else {
-                xCenter = gc.getP().x;
-                yCenter = gc.getP().y;
-            }
-            for (int i=0; i <= gc.getLightSize(); i += 20) {
-                lightMask.fill(255 / (gc.getLightSize() / 20));
-                lightMask.ellipse(xCenter, yCenter, gc.getLightSize() - i, gc.getLightSize() - i);
-            }
-        }
-        lightMask.endDraw();
-        // Apply the mask to the rendered display
-        screen.mask(lightMask);
-        // Draw the masked image
-        app.image(screen, 0, 0);
     }
 
     public ArrayList<GameComponent> getComponents() {

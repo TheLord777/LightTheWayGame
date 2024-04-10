@@ -15,7 +15,6 @@ public abstract class GameComponent {
     protected float width;
     protected float height;
     protected CollisionShape collisionShape; // TODO implement collision shapes
-    protected float lightSize; // 0 for no light, else creates a light with the given size
 
     public static void setApp(PApplet app) {
         if (!mutex) GameComponent.app = app;
@@ -138,14 +137,6 @@ public abstract class GameComponent {
 
     public void setShape(CollisionShape c) {
         collisionShape = c;
-    }
-
-    public float getLightSize() {
-        return lightSize;
-    }
-
-    public void setLightSize(float l) {
-        lightSize = l;
     }
 
 }

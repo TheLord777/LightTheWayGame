@@ -9,7 +9,6 @@ public class ExampleComponent extends GameComponent {
     public ExampleComponent() {
         super(new PVector(0, 0), 100, 150);
         super.setShape(CollisionShape.RECTANGLE);
-        super.setLightSize(400);
     }
 
     @Override
