@@ -20,19 +20,27 @@ public abstract class ComponentManager extends GameEngine {
     public void setupGame() {
         // Example of adding a component to the game
         animationEngine.addComponent(new ExampleComponent());
-        animationEngine.addComponent(new LightComponent(400, 400, 500));
+        animationEngine.addComponent(new LightComponent(400, 400, 400, 20));
+        animationEngine.addComponent(new LightComponent(800, 800, 200, 20));
+        animationEngine.addComponent(new LightComponent(1200, 400, 200));
     }
 
     @Override
     public void play() {
         super.play(); // use standard play() method
+        // Movable shape on mouse to test
+        PApplet app = Instance.getApp();
+        app.fill(0, 0, 255);
+        app.circle(app.mouseX, app.mouseY, 50);
         // Lighting
         if (showEndScreen && gamePaused) {
             // Handle custom lighting effect
             lighting();
+            System.out.println(app.frameRate);
         } else if (!gamePaused) {
             // Handle custom lighting effect
             lighting();
+            System.out.println(app.frameRate);
         }
     }
 
@@ -70,18 +78,13 @@ public abstract class ComponentManager extends GameEngine {
                     xCenter = lc.getP().x;
                     yCenter = lc.getP().y;
                 }
-                int sumVal = 0;
+                float baseSize = lc.getLightSize() / 2;
                 float addVal = lc.getLightDisplayIncrement();
-                for (int i=0; i <= lc.getLightDisplaySize(); i += (lc.getLightDisplaySize() / 25)) {
-                    if (sumVal > 240) break;
+                float sizeIncrement = (lc.getLightDisplaySize() - baseSize) / 6;
+                for (int i = 0; i < 6; i++) {
                     lightMask.fill(addVal);
-                    sumVal+= addVal;
-                    lightMask.ellipse(xCenter, yCenter, lc.getLightDisplaySize() - i, lc.getLightDisplaySize() - i);
+                    lightMask.ellipse(xCenter, yCenter, baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
                 }
-                // for (int i=0; i <= lc.getLightSize(); i += 20) {
-                //     lightMask.fill(255 / (lc.getLightSize() / 20));
-                //     lightMask.ellipse(xCenter, yCenter, lc.getLightSize() - i, lc.getLightSize() - i);
-                // }
             }
         }
         lightMask.endDraw();
