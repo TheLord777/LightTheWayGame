@@ -105,4 +105,9 @@ public abstract class DynamicComponent extends GameComponent {
     public boolean outOfBounds() {
         return p.x - Config.BOUNDRY > app.displayWidth || p.x + Config.BOUNDRY < 0;
     }
+
+    public void applyGravity() {
+        var g = Config.GRAVITY.copy().mult(mass()); // f = mg.
+        applyForce(g);
+    }
 }

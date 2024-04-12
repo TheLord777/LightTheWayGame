@@ -90,9 +90,6 @@ public abstract class Projectile extends DynamicComponent {
     }
 
 
-    public void applyGravity() {
-        var g = Config.GRAVITY.copy().mult(mass()); // f = mg.
-        applyForce(g);
-    }
+
 
 }
