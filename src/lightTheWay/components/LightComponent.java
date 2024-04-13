@@ -32,6 +32,15 @@ public class LightComponent extends GameComponent {
         this.setDecrementRate(d);
     }
 
+    public LightComponent(float x, float y, float w, float h, float l, float d) {
+        super(new PVector(x, y), w, h);
+        this.setShape(CollisionShape.CIRCLE);
+        this.setDefaultSize(l);
+        this.setLightSize(l);
+        this.setLightIncrement(40);
+        this.setDecrementRate(d);
+    }
+
     @Override
     protected void draw() {
         app.fill(255, 165, 0);
