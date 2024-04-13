@@ -12,11 +12,11 @@ public class CampComponent extends LightComponent {
 
     @Override
     protected void draw() {
+        drawCamp();
+
         drawLogs();
 
         super.draw();
-
-        drawCamp();
     }
 
     protected void drawLogs() {
@@ -36,21 +36,58 @@ public class CampComponent extends LightComponent {
     }
 
     protected void drawCamp() {
-        PApplet app = Instance.getApp();
         float diameter = this.getLightSize() / 10;
 
-        app.fill(28, 69, 135);
-        app.triangle(p.x + diameter, p.y + diameter / 2 + 5, p.x + diameter + 50, p.y + diameter / 2 + 5, p.x + diameter + 25, p.y + diameter / 2 - 75);
+        float yPosition = p.y + diameter / 2 + 5;
+
+        drawTent(p.x - 3 * diameter / 2, yPosition - 5, true, 1);
+
+        drawTent(p.x + diameter, yPosition, true, 0);
+
+        drawTent(p.x - diameter, yPosition, false, 2);
+
+    }
+
+    protected void drawTent(float xPosition, float yPosition, boolean faceLeft, int colorChoice) {
+        PApplet app = Instance.getApp();
+
+        int directionMultiplier = faceLeft ? 1 : -1;
+
+        switch (colorChoice) {
+            case 0: // blue
+                app.fill(28, 69, 135);
+                break;
+            case 1: // red
+                app.fill(102, 0, 0);
+                break;
+            case 2: // green
+                app.fill(39, 78, 19);
+                break;
+            default: // white (fallback)
+                app.fill(150, 150, 150);
+        }
+        app.triangle(xPosition, yPosition, xPosition + (50 * directionMultiplier), yPosition, xPosition + (25 * directionMultiplier), yPosition - 80);
 
         app.fill(205,133,63);
-        app.rect(p.x + diameter + 25, p.y + diameter / 2 - 75, 5, 80);
+        app.rect(xPosition + (25 * directionMultiplier), yPosition - 80, (5 * directionMultiplier), 80);
 
-        app.fill(17, 85, 204);
-        app.quad(p.x + diameter + 50, p.y + diameter / 2 + 5, 
-                 p.x + diameter + 25, p.y + diameter / 2 - 75, 
-                 p.x + diameter + 105, p.y + diameter / 2 - 75,
-                 p.x + diameter + 130, p.y + diameter / 2 + 5);
-
+        switch (colorChoice) {
+            case 0: // blue
+                app.fill(17, 85, 204);
+                break;
+            case 1: // red
+                app.fill(153, 0, 0);
+                break;
+            case 2: // green
+                app.fill(56, 118, 29);
+                break;
+            default: // white (fallback)
+                app.fill(200, 200, 200);
+        }
+        app.quad(xPosition + (50 * directionMultiplier), yPosition, 
+                 xPosition + (25 * directionMultiplier), yPosition - 80, 
+                 xPosition + (105 * directionMultiplier), yPosition - 80,
+                 xPosition + (130 * directionMultiplier), yPosition);
     }
 
     @Override
