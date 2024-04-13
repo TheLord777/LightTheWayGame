@@ -4,6 +4,7 @@ import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
+import lightTheWay.components.CampComponent;
 import lightTheWay.components.ExampleComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
@@ -23,6 +24,7 @@ public abstract class ComponentManager extends GameEngine {
         animationEngine.addComponent(new LightComponent(400, 400, 400, 20));
         animationEngine.addComponent(new LightComponent(800, 800, 200, 20));
         animationEngine.addComponent(new LightComponent(1200, 400, 200));
+        animationEngine.addComponent(new CampComponent(1200, 800, 400, 400, 400));
     }
 
     @Override
