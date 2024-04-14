@@ -135,4 +135,8 @@ public abstract class GameComponent {
         return collisionShape;
     }
 
+    public void setShape(CollisionShape c) {
+        collisionShape = c;
+    }
+
 }

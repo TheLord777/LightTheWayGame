@@ -19,7 +19,7 @@ public class Game extends PApplet {
 
 
     public void setup() {
-        background(0);
+        background(255);
         noStroke();
 
         // Use processing built in crosshair cursor.
@@ -35,7 +35,7 @@ public class Game extends PApplet {
 
 
     public void draw() {
-        background(0);
+        background(255);
 
         // Run game engine specific game loop
         ge.play();

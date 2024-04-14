@@ -1,5 +1,6 @@
 package lightTheWay.components;
 
+import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
 import processing.core.PVector;
 
@@ -7,6 +8,7 @@ public class ExampleComponent extends GameComponent {
 
     public ExampleComponent() {
         super(new PVector(0, 0), 100, 150);
+        super.setShape(CollisionShape.RECTANGLE);
     }
 
     @Override
