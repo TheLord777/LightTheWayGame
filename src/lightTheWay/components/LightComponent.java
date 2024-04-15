@@ -15,6 +15,16 @@ public class LightComponent extends GameComponent {
     private int frames = 0;
     private float decrementRate = 0; // the amount that the size of a light should decrease per second
 
+
+    public LightComponent(PVector p , float l, float d) {
+        super(p, 0, 0);
+        this.setShape(CollisionShape.POINT);
+        this.setDefaultSize(l);
+        this.setLightSize(l);
+        this.setLightIncrement(40);
+        this.setDecrementRate(d);
+    }
+
     public LightComponent(float x, float y, float l) {
         super(new PVector(x, y), 0, 0);
         this.setShape(CollisionShape.POINT);
@@ -59,7 +69,7 @@ public class LightComponent extends GameComponent {
 
     @Override
     protected void update() {
-        flicker();
+//        flicker();
 
         decrementLight();
     }

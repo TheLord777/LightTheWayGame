@@ -5,7 +5,6 @@ import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
-import lightTheWay.components.ExampleComponent;
 import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PVector;
 import lightTheWay.components.LightComponent;
@@ -29,30 +28,9 @@ public abstract class ComponentManager extends GameEngine {
 
         // Example of adding a component to the game
         animationEngine.addComponent(hero);
-        animationEngine.addComponent(new ExampleComponent());
-        animationEngine.addComponent(new LightComponent(400, 400, 400, 20));
-        animationEngine.addComponent(new LightComponent(800, 800, 200, 20));
-        animationEngine.addComponent(new LightComponent(1200, 400, 200));
+        animationEngine.addComponent(hero.createLight(500));
     }
 
-    @Override
-    public void play() {
-        super.play(); // use standard play() method
-        // Movable shape on mouse to test
-        PApplet app = Instance.getApp();
-        app.fill(0, 0, 255);
-        app.circle(app.mouseX, app.mouseY, 50);
-        // Lighting
-        if (showEndScreen && gamePaused) {
-            // Handle custom lighting effect
-            lighting();
-            System.out.println(app.frameRate);
-        } else if (!gamePaused) {
-            // Handle custom lighting effect
-            lighting();
-            System.out.println(app.frameRate);
-        }
-    }
 
     /**
      * This method handles the lighting for the game, by placing a shadow over the display and masking for light sources
@@ -93,7 +71,7 @@ public abstract class ComponentManager extends GameEngine {
                 float sizeIncrement = (lc.getLightDisplaySize() - baseSize) / 6;
                 for (int i = 0; i < 6; i++) {
                     lightMask.fill(addVal);
-                    lightMask.ellipse(xCenter, yCenter, baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
+                    lightMask.ellipse(xCenter, yCenter,  baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
                 }
             }
         }

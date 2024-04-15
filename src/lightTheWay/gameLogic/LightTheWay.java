@@ -1,5 +1,6 @@
 package lightTheWay.gameLogic;
 
+import lightTheWay.Instance;
 import processing.core.PApplet;
 
 public class LightTheWay extends ComponentManager {
@@ -11,7 +12,17 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     protected void gameLoop() {
-
+        PApplet app = Instance.getApp();
+        app.fill(0, 0, 255);
+        app.circle(app.mouseX, app.mouseY, 50);
+        // Lighting
+        if (showEndScreen && gamePaused) {
+            // Handle custom lighting effect
+            lighting();
+        } else if (!gamePaused) {
+            // Handle custom lighting effect
+            lighting();
+        }
     }
 
     @Override
