@@ -14,14 +14,13 @@ public class MapSquare extends GameComponent {
 
     @Override
     protected void draw() {
+        float noiseVal = app.noise(p.x*0.05f, p.y* 0.05f); // Adjust frequency as needed
+        int rockColor = getColorFromNoise(noiseVal);
 
         // Draw logic for MapSquare goes here
         if (type == 1) {
             return;
-//            app.fill(55, 44, 44); // Fill with gray for walls
         } else {
-            float noiseVal = app.noise(p.x*0.05f, p.y* 0.05f); // Adjust frequency as needed
-            int rockColor = getColorFromNoise(noiseVal);
             if (noiseVal < 0.45) { // Adjust the threshold for moss application (lower values for more moss)
                 // Calculate moss color with fading effect
                 float mossNoise = app.noise(p.x*0.05f, p.y* 0.05f);
