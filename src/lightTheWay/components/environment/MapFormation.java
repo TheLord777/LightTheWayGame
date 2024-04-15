@@ -24,15 +24,11 @@ public class MapFormation extends GameComponent implements Serializable {
         super(new PVector(0,0), width, height);
         this.b = new Background();
         this.tileSize = tileSize;
-        rows = (int) (height / tileSize);
+        rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
         lastChanged = null;
 
         generateMap();
-
-//        paintRandomPlatforms();
-        generateLadders();
-        generateRope();
     }
 
     private void generateMap() {
@@ -92,8 +88,6 @@ public class MapFormation extends GameComponent implements Serializable {
     }
 
     private boolean allSurroundingCellsAreSpace(int x, int y) {
-
-
         for (int i = x - 10; i <= x + 5; i++) {
             for (int j = y - 3; j <= y + 3; j++) {
                 // Ensure the coordinates are within bounds
@@ -169,26 +163,6 @@ public class MapFormation extends GameComponent implements Serializable {
         return count;
     }
 
-    private void generateLadders() {
-        ladders = new ArrayList<>();
-        for (int i = 0; i < map.length - 4; i++) { // Ensure there are enough rows below for the ladder
-            for (int j = 0; j < map[0].length; j++) {
-                // Check if the cell is empty and surrounded by walls on the sides
-                if (map[i][j].getType() == 0 && surroundedByWalls(i, j)) {
-                    // Check if there's already a ladder in this cell
-                    if (Math.random() < 0.02) { // Adjust the probability as needed
-                        // Create ladder components for the current cell and the 4 cells below it
-                        for (int k = 0; k < 5; k++) {
-                            LadderComponent ladder = new LadderComponent(new PVector(j * tileSize, (i + k) * tileSize), tileSize, tileSize);
-                            ladders.add(ladder);
-                        }
-                        // Break out of the loop to avoid overlapping ladders in the same column
-                        break;
-                    }
-                }
-            }
-        }
-    }
     private boolean surroundedByWalls(int x, int y) {
         int rows = map.length;
         int cols = map[0].length;
@@ -201,36 +175,6 @@ public class MapFormation extends GameComponent implements Serializable {
 
         return topWall && bottomWall || leftWall || rightWall;
     }
-
-    private void generateRope() {
-        ropes = new ArrayList<>();
-
-        int topRow = 0; // Index of the top row
-
-        // Iterate through the top row to find a space cell
-        for (int j = 0; j < map[0].length; j++) {
-            if (map[topRow][j].getType() == 1) { // Check if the cell is empty
-                // Calculate the position of the rope in the center of the cell
-                float x = j * tileSize + tileSize / 2.0f;
-                float y = 0 + tileSize / 2.0f; // Start the rope at the top of the cell
-
-                // Create a new RopeComponent at the calculated position
-                RopeComponent rope = new RopeComponent(new PVector(x, y), tileSize, tileSize);
-                // Add the rope to the list of game components
-                ropes.add(rope);
-
-                // Generate rope for 6 cells down
-                for (int k = 1; k < 6; k++) {
-                    float ropeY = 0 + k * tileSize + tileSize / 2.0f; // Calculate y-coordinate
-                    RopeComponent nextRope = new RopeComponent(new PVector(x, ropeY), tileSize, tileSize);
-                    ropes.add(nextRope);
-                }
-
-                break; // Stop searching once the rope is generated
-            }
-        }
-    }
-
 
 
     private boolean spaceOnCeiling() {
@@ -267,16 +211,7 @@ public class MapFormation extends GameComponent implements Serializable {
                 square.draw(); // Draw each MapSquare
             }
         }
-        for(LadderComponent ladder: ladders){
-            ladder.draw();
-        }
-
-        for(RopeComponent rope: ropes){
-            rope.draw();
-        }
     }
-
-    // Function to map Perlin noise to a color gradient from light to dark
 
     @Override
     public void update() {

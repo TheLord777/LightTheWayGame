@@ -67,6 +67,7 @@ public class LevelGenerator extends PApplet {
         if (key == '1') type = 1;
         if (key == '2') type = 2;
         if (key == '3') type = 3;
+        if (key == '4') type = 4;
         if (key == ' ') saveMap();
         if (key == 'n') {
             int tileSize = min(width, height) / 50; // Adjust as needed
