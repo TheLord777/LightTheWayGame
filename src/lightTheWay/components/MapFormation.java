@@ -27,9 +27,10 @@ public class MapFormation extends GameComponent {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (Math.random() < chanceToStartAlive) {
-                    map[i][j] = new MapSquare(1); //walls
+                    map[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize),app.width, app.height, 1); // walls
+
                 } else {
-                    map[i][j] = new MapSquare(0); //space
+                    map[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize),app.width, app.height, 0);
                 }
             }
         }
@@ -129,15 +130,15 @@ public class MapFormation extends GameComponent {
 
                 if (map[i][j].getType() == 1) {
                     if (aliveNeighbors < 4) {
-                        newMap[i][j] = new MapSquare(0); // Wall dies if it has fewer than 4 neighbors
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 0); // Wall dies if it has fewer than 4 neighbors
                     } else {
-                        newMap[i][j] = new MapSquare(1); // Wall remains alive
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 1); // Wall remains alive
                     }
                 } else {
                     if (aliveNeighbors > 4) {
-                        newMap[i][j] = new MapSquare(1); // Space becomes wall if it has more than 4 neighbors
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 1); // Space becomes wall if it has more than 4 neighbors
                     } else {
-                        newMap[i][j] = new MapSquare(0); // Space remains empty
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 0); // Space remains empty
                     }
                 }
             }
@@ -166,39 +167,14 @@ public class MapFormation extends GameComponent {
 
     @Override
     public void draw() {
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j].getType() == 1) {
-                    app.fill(55, 44, 44);   // Fill with gray for walls
-                } else if (map[i][j].getType() == 2) {
-                    app.fill(255, 0, 0); // Fill with red for cells surrounded by all space cells
-                } else {
-                    // Determine color based on noise for variation
-                    float noiseVal = app.noise(i * 0.05f, j * 0.05f); // Adjust frequency as needed
-                    int rockColor = getColorFromNoise(noiseVal);
-                    if (noiseVal < 0.45) { // Adjust the threshold for moss application (lower values for more moss)
-                        // Calculate moss color with fading effect
-                        float mossNoise = app.noise(i * 0.05f, j * 0.05f);
-                        int mossBrightness = (int) app.map(mossNoise, 0, 1, 100, 200); // Adjust brightness range as needed
-                        int mossSaturation = (int) app.map(mossNoise, 0, 1, 150, 255); // Adjust saturation range as needed
-                        int mossHue = (int) app.map(mossNoise, 0, 1, 80, 120); // Adjust hue range as needed
-                        app.fill(mossHue, mossSaturation, mossBrightness); // Moss color with fading effect
-                    } else {
-                        app.fill(rockColor);
-                    }
-                }
-                app.noStroke();
-                app.rect(j * tileSize, i * tileSize, tileSize, tileSize);
+        for (MapSquare[] squares : map) {
+            for (MapSquare square : squares) {
+                square.draw(); // Draw each MapSquare
             }
         }
     }
 
     // Function to map Perlin noise to a color gradient from light to dark
-    private int getColorFromNoise(float noiseVal) {
-        // Map noise value to a grayscale spectrum
-        float brightness = app.map(noiseVal, 0, 1, 30, 220);  // Adjust brightness for variation
-        return app.color(brightness);
-    }
 
     @Override
     public void update() {
