@@ -1,6 +1,8 @@
 package lightTheWay.components;
 
-public class MapSquare {
+import gamecore.components.GameComponent;
+
+public class MapSquare extends GameComponent {
     private int type;
 
     public MapSquare(int type) {
@@ -13,5 +15,20 @@ public class MapSquare {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    @Override
+    protected void draw() {
+
+    }
+
+    @Override
+    protected void update() {
+
+    }
+
+    @Override
+    public boolean intersection(GameComponent ge) {
+        return false;
     }
 }
