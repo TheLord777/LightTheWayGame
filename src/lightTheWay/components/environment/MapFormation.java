@@ -178,7 +178,7 @@ public class MapFormation extends GameComponent {
                 // Check if the cell is empty and surrounded by walls on the sides
                 if (map[i][j].getType() == 0 && surroundedByWalls(i, j)) {
                     // Check if there's already a ladder in this cell
-                    if (Math.random() < 0.2) { // Adjust the probability as needed
+                    if (Math.random() < 0.02) { // Adjust the probability as needed
                         // Create ladder components for the current cell and the 4 cells below it
                         for (int k = 0; k < 5; k++) {
                             LadderComponent ladder = new LadderComponent(new PVector(j * tileSize, (i + k) * tileSize), tileSize, tileSize);
