@@ -6,7 +6,9 @@ import lightTheWay.components.ExampleComponent;
 import lightTheWay.components.MapFormation;
 import processing.core.PVector;
 
-import static processing.core.PApplet.min;
+import java.util.ArrayList;
+
+import static processing.core.PApplet.*;
 
 public abstract class ComponentManager extends GameEngine {
 
@@ -23,7 +25,7 @@ public abstract class ComponentManager extends GameEngine {
         // Create a new instance of MapFormation
         MapFormation mapFormation = new MapFormation(new PVector(0, 0), app.width, app.height, tileSize);
         animationEngine.addComponent(mapFormation);
-        animationEngine.addComponent(new ExampleComponent());
+
     }
 
 

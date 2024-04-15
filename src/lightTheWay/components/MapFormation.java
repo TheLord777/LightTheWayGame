@@ -1,19 +1,13 @@
 package lightTheWay.components;
 
 import gamecore.components.GameComponent;
-import processing.core.PApplet;
 import processing.core.PVector;
-
-import java.util.LinkedList;
-import java.util.Queue;
-
-import static processing.core.PApplet.floor;
-
+import static processing.core.PApplet.println;
 
 public class MapFormation extends GameComponent {
 
     private int tileSize;
-    private int[][] grid;
+    private MapSquare[][] map;
     private double chanceToStartAlive = 0.55;
     private int generations = 10;
 
@@ -21,21 +15,21 @@ public class MapFormation extends GameComponent {
         super(p, width, height);
         this.tileSize = tileSize;
         generateMap();
-
+        paintRandomPlatforms();
     }
 
     private void generateMap() {
         int rows = (int) (height / tileSize);
         int cols = (int) (width / tileSize);
-        grid = new int[rows][cols];
+        map = new MapSquare[rows][cols];
 
-        // Initialize the grid with random values
+        // Initialize the map with random values
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (Math.random() < chanceToStartAlive) {
-                    grid[i][j] = 1;
+                    map[i][j] = new MapSquare(1); //walls
                 } else {
-                    grid[i][j] = 0;
+                    map[i][j] = new MapSquare(0); //space
                 }
             }
         }
@@ -44,90 +38,140 @@ public class MapFormation extends GameComponent {
         for (int i = 0; i < generations; i++) {
             applyAutomataRules();
         }
+    }
 
-        boolean[][] visited = new boolean[rows][cols];
-        int numStartPoints = rows * cols / 150; // Adjust the number of start points as needed
-        for (int i = 0; i < numStartPoints; i++) {
-            int startX = floor(app.random(cols));
-            int startY = floor(app.random(rows));
-            floodFill(startX, startY, visited);
+    private void paintRandomPlatform(int x, int y, int platformSize) {
+        int rows = map.length;
+        int cols = map[0].length;
+
+        // Define the boundaries of the platform within the radius
+        int startX = Math.max(0, x - platformSize);
+        int endX = Math.min(rows - 1, x + platformSize);
+        int startY = Math.max(0, y - platformSize);
+        int endY = Math.min(cols - 1, y + platformSize);
+
+        // Generate the platform within the defined boundaries
+        for (int i = startX; i <= endX; i++) {
+            for (int j = startY; j <= endY; j++) {
+                if (Math.random() < 0.5) {
+                    map[i][j].setType(0); // Set the cell as a wall with a 50% chance
+                }
+            }
         }
     }
 
-    public void applyAutomataRules() {
-        int rows = (int) (height / tileSize);
-        int cols = (int) (width / tileSize);
-        int[][] newGrid = new int[rows][cols];
+    private void paintRandomPlatforms() {
+        int rows = map.length;
+        int cols = map[0].length;
+
+        // Loop through each cell in the map
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                // Check if the cell is not empty and surrounded by all space cells
+                if (map[i][j].getType() != 0 && allSurroundingCellsAreSpace(i, j)) {
+                    println("Cell (" + i + ", " + j + ") is surrounded by all space cells.");
+
+                    // Paint a random platform at the current cell
+                    paintRandomPlatform(i, j, 2); // Adjust the platform size as needed
+
+                    // Return to the beginning of the map to restart the search
+                    i = 0;
+                    j = 0;
+                }
+            }
+        }
+    }
+
+    private boolean allSurroundingCellsAreSpace(int x, int y) {
+        int rows = map.length;
+        int cols = map[0].length;
+
+        for (int i = x - 10; i <= x + 5; i++) {
+            for (int j = y - 3; j <= y + 3; j++) {
+                // Ensure the coordinates are within bounds
+                if (i >= 0 && i < rows && j >= 0 && j < cols) {
+                    // Skip the center cell
+                    if (i == x && j == y) {
+                        continue;
+                    }
+                    // Skip if the cell is already a platform
+                    if (map[i][j].getType() == 0) {
+                        // Debug
+                        println("Checking cell (" + i + ", " + j + ") - Value: " + map[i][j].getType());
+
+                        // If any cell in the 3x3 area is not empty, return false
+                        if (map[i][j].getType() != 1) {
+                            println("Cell (" + i + ", " + j + ") is not empty.");
+                            return false;
+                        }
+                    }
+                } else {
+                    // Debug
+                    println("Cell (" + i + ", " + j + ") is out of bounds.");
+                    // If any cell is out of bounds, return false
+                    return false;
+                }
+            }
+        }
+        // If all cells in the 3x3 area are empty or platforms, return true
+        return true;
+    }
+
+    private void applyAutomataRules() {
+        int rows = map.length;
+        int cols = map[0].length;
+        MapSquare[][] newMap = new MapSquare[rows][cols];
 
         // Apply rules to each cell
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 int aliveNeighbors = countAliveNeighbors(i, j);
 
-                if (grid[i][j] == 1) {
+                if (map[i][j].getType() == 1) {
                     if (aliveNeighbors < 4) {
-                        newGrid[i][j] = 0; // Wall dies if it has fewer than 4 neighbors
+                        newMap[i][j] = new MapSquare(0); // Wall dies if it has fewer than 4 neighbors
                     } else {
-                        newGrid[i][j] = 1; // Wall remains alive
+                        newMap[i][j] = new MapSquare(1); // Wall remains alive
                     }
                 } else {
                     if (aliveNeighbors > 4) {
-                        newGrid[i][j] = 1; // Space becomes wall if it has more than 4 neighbors
+                        newMap[i][j] = new MapSquare(1); // Space becomes wall if it has more than 4 neighbors
                     } else {
-                        newGrid[i][j] = 0; // Space remains empty
+                        newMap[i][j] = new MapSquare(0); // Space remains empty
                     }
                 }
             }
         }
 
-        // Update the grid
-        grid = newGrid;
+        // Update the map
+        map = newMap;
     }
 
-    public int countAliveNeighbors(int x, int y) {
-        int rows = (int) (height / tileSize);
-        int cols = (int) (width / tileSize);
+    private int countAliveNeighbors(int x, int y) {
         int count = 0;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 int neighborX = x + i;
                 int neighborY = y + j;
 
-                if (neighborX >= 0 && neighborX < rows && neighborY >= 0 && neighborY < cols) {
-                    count += grid[neighborX][neighborY];
+                if (neighborX >= 0 && neighborX < map.length && neighborY >= 0 && neighborY < map[0].length) {
+                    count += map[neighborX][neighborY].getType();
                 }
             }
         }
-        count -= grid[x][y]; // Exclude the cell itself from the count
+        count -= map[x][y].getType(); // Exclude the cell itself from the count
         return count;
-    }
-
-
-    public void floodFill(int startX, int startY, boolean[][] visited) {
-        int rows = grid.length;
-        int cols = grid[0].length;
-
-        visited[startY][startX] = true;
-
-        int[][] neighbors = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-        for (int[] neighbor : neighbors) {
-            int newX = startX + neighbor[0];
-            int newY = startY + neighbor[1];
-
-            // Check if the neighboring cell is within bounds and is not visited
-            if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && !visited[newY][newX] && grid[newY][newX] == 0) {
-                floodFill(newX, newY, visited); // Recursively fill adjacent space
-            }
-        }
     }
 
 
     @Override
     public void draw() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == 1) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                if (map[i][j].getType() == 1) {
                     app.fill(55, 44, 44);   // Fill with gray for walls
+                } else if (map[i][j].getType() == 2) {
+                    app.fill(255, 0, 0); // Fill with red for cells surrounded by all space cells
                 } else {
                     // Determine color based on noise for variation
                     float noiseVal = app.noise(i * 0.05f, j * 0.05f); // Adjust frequency as needed
@@ -149,14 +193,13 @@ public class MapFormation extends GameComponent {
         }
     }
 
-
-
     // Function to map Perlin noise to a color gradient from light to dark
     private int getColorFromNoise(float noiseVal) {
         // Map noise value to a grayscale spectrum
         float brightness = app.map(noiseVal, 0, 1, 30, 220);  // Adjust brightness for variation
         return app.color(brightness);
     }
+
     @Override
     public void update() {
         // No specific update logic needed for the map formation

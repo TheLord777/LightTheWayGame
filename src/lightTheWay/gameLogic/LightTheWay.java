@@ -5,7 +5,10 @@ import lightTheWay.components.MapFormation;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 import static processing.core.PApplet.min;
+import static processing.core.PApplet.print;
 
 public class LightTheWay extends ComponentManager {
 
@@ -31,7 +34,8 @@ public class LightTheWay extends ComponentManager {
         // Create a new instance of MapFormation
         MapFormation mapFormation = new MapFormation(new PVector(0, 0), app.width, app.height, tileSize);
         animationEngine.addComponent(mapFormation);
-        animationEngine.addComponent(new ExampleComponent());
+
+
     }
 
     @Override
