@@ -1,4 +1,4 @@
-package lightTheWay.components;
+package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
 import processing.core.PVector;
@@ -14,9 +14,11 @@ public class MapSquare extends GameComponent {
 
     @Override
     protected void draw() {
+
         // Draw logic for MapSquare goes here
         if (type == 1) {
-            app.fill(55, 44, 44); // Fill with gray for walls
+            return;
+//            app.fill(55, 44, 44); // Fill with gray for walls
         } else {
             float noiseVal = app.noise(p.x*0.05f, p.y* 0.05f); // Adjust frequency as needed
             int rockColor = getColorFromNoise(noiseVal);
@@ -33,6 +35,7 @@ public class MapSquare extends GameComponent {
         }
         app.rect(p.x, p.y, width, height);
     }
+
 
     @Override
     protected void update() {

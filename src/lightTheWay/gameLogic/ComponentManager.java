@@ -2,11 +2,8 @@ package lightTheWay.gameLogic;
 
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
-import lightTheWay.components.ExampleComponent;
-import lightTheWay.components.MapFormation;
+import lightTheWay.components.environment.MapFormation;
 import processing.core.PVector;
-
-import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
 

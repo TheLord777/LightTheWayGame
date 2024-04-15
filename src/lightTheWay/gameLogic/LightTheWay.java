@@ -1,11 +1,7 @@
 package lightTheWay.gameLogic;
 
-import lightTheWay.components.ExampleComponent;
-import lightTheWay.components.MapFormation;
-import processing.core.PApplet;
+import lightTheWay.components.environment.MapFormation;
 import processing.core.PVector;
-
-import java.util.ArrayList;
 
 import static processing.core.PApplet.min;
 import static processing.core.PApplet.print;
@@ -19,7 +15,8 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     protected void gameLoop() {
-
+        app.fill(255);
+        app.text("fps" + app.frameRate, 50, 10);
     }
 
     @Override
@@ -29,11 +26,7 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void spaceKey() {
-        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
-
-        // Create a new instance of MapFormation
-        MapFormation mapFormation = new MapFormation(new PVector(0, 0), app.width, app.height, tileSize);
-        animationEngine.addComponent(mapFormation);
+        setupGame();
 
 
     }

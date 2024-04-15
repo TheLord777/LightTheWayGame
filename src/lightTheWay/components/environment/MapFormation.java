@@ -1,4 +1,4 @@
-package lightTheWay.components;
+package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
 import processing.core.PVector;
@@ -9,11 +9,14 @@ public class MapFormation extends GameComponent {
     private int tileSize;
     private MapSquare[][] map;
     private double chanceToStartAlive = 0.55;
-    private int generations = 10;
+    private int generations = 5;
+    private Background b;
 
     public MapFormation(PVector p, float width, float height, int tileSize) {
         super(p, width, height);
+        this.b = new Background();
         this.tileSize = tileSize;
+
         generateMap();
         paintRandomPlatforms();
     }
@@ -26,12 +29,10 @@ public class MapFormation extends GameComponent {
         // Initialize the map with random values
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (Math.random() < chanceToStartAlive) {
-                    map[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize),app.width, app.height, 1); // walls
+                int t = Math.random() < chanceToStartAlive? 1: 0;
 
-                } else {
-                    map[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize),app.width, app.height, 0);
-                }
+                map[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize),tileSize, tileSize, t);
+
             }
         }
 
@@ -70,7 +71,7 @@ public class MapFormation extends GameComponent {
             for (int j = 0; j < cols; j++) {
                 // Check if the cell is not empty and surrounded by all space cells
                 if (map[i][j].getType() != 0 && allSurroundingCellsAreSpace(i, j)) {
-                    println("Cell (" + i + ", " + j + ") is surrounded by all space cells.");
+                    //println("Cell (" + i + ", " + j + ") is surrounded by all space cells.");
 
                     // Paint a random platform at the current cell
                     paintRandomPlatform(i, j, 2); // Adjust the platform size as needed
@@ -98,17 +99,17 @@ public class MapFormation extends GameComponent {
                     // Skip if the cell is already a platform
                     if (map[i][j].getType() == 0) {
                         // Debug
-                        println("Checking cell (" + i + ", " + j + ") - Value: " + map[i][j].getType());
+                        //println("Checking cell (" + i + ", " + j + ") - Value: " + map[i][j].getType());
 
                         // If any cell in the 3x3 area is not empty, return false
                         if (map[i][j].getType() != 1) {
-                            println("Cell (" + i + ", " + j + ") is not empty.");
+                            //println("Cell (" + i + ", " + j + ") is not empty.");
                             return false;
                         }
                     }
                 } else {
                     // Debug
-                    println("Cell (" + i + ", " + j + ") is out of bounds.");
+                    //println("Cell (" + i + ", " + j + ") is out of bounds.");
                     // If any cell is out of bounds, return false
                     return false;
                 }
@@ -130,15 +131,15 @@ public class MapFormation extends GameComponent {
 
                 if (map[i][j].getType() == 1) {
                     if (aliveNeighbors < 4) {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 0); // Wall dies if it has fewer than 4 neighbors
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 0); // Wall dies if it has fewer than 4 neighbors
                     } else {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 1); // Wall remains alive
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 1); // Wall remains alive
                     }
                 } else {
                     if (aliveNeighbors > 4) {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 1); // Space becomes wall if it has more than 4 neighbors
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 1); // Space becomes wall if it has more than 4 neighbors
                     } else {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), app.width, app.height, 0); // Space remains empty
+                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 0); // Space remains empty
                     }
                 }
             }
@@ -165,8 +166,11 @@ public class MapFormation extends GameComponent {
     }
 
 
+
+
     @Override
     public void draw() {
+        b.draw();
         for (MapSquare[] squares : map) {
             for (MapSquare square : squares) {
                 square.draw(); // Draw each MapSquare
