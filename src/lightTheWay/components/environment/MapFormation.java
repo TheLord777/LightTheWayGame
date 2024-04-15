@@ -2,36 +2,43 @@ package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
 import processing.core.PVector;
+
+import java.io.Serializable;
+
 import static processing.core.PApplet.println;
 
-public class MapFormation extends GameComponent {
+public class MapFormation extends GameComponent implements Serializable {
 
     private int tileSize;
     private MapSquare[][] map;
     private double chanceToStartAlive = 0.55;
     private int generations = 5;
     private Background b;
+    private int rows, cols;
+    private MapSquare lastChanged;
 
-    public MapFormation(PVector p, float width, float height, int tileSize) {
-        super(p, width, height);
+
+    public MapFormation(float width, float height, int tileSize) {
+        super(new PVector(0,0), width, height);
         this.b = new Background();
         this.tileSize = tileSize;
+        rows = (int) (height / tileSize);
+        cols = (int) (width / tileSize);
+        lastChanged = null;
 
         generateMap();
-        paintRandomPlatforms();
+//        paintRandomPlatforms();
     }
 
     private void generateMap() {
-        int rows = (int) (height / tileSize);
-        int cols = (int) (width / tileSize);
-        map = new MapSquare[rows][cols];
+        map = new MapSquare[cols][rows];
 
         // Initialize the map with random values
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
                 int t = Math.random() < chanceToStartAlive? 1: 0;
 
-                map[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize),tileSize, tileSize, t);
+                map[i][j] = new MapSquare(new PVector(i * tileSize, j * tileSize),tileSize, tileSize, t);
 
             }
         }
@@ -43,9 +50,6 @@ public class MapFormation extends GameComponent {
     }
 
     private void paintRandomPlatform(int x, int y, int platformSize) {
-        int rows = map.length;
-        int cols = map[0].length;
-
         // Define the boundaries of the platform within the radius
         int startX = Math.max(0, x - platformSize);
         int endX = Math.min(rows - 1, x + platformSize);
@@ -63,8 +67,6 @@ public class MapFormation extends GameComponent {
     }
 
     private void paintRandomPlatforms() {
-        int rows = map.length;
-        int cols = map[0].length;
 
         // Loop through each cell in the map
         for (int i = 0; i < rows; i++) {
@@ -85,8 +87,7 @@ public class MapFormation extends GameComponent {
     }
 
     private boolean allSurroundingCellsAreSpace(int x, int y) {
-        int rows = map.length;
-        int cols = map[0].length;
+
 
         for (int i = x - 10; i <= x + 5; i++) {
             for (int j = y - 3; j <= y + 3; j++) {
@@ -120,26 +121,24 @@ public class MapFormation extends GameComponent {
     }
 
     private void applyAutomataRules() {
-        int rows = map.length;
-        int cols = map[0].length;
-        MapSquare[][] newMap = new MapSquare[rows][cols];
+        MapSquare[][] newMap = new MapSquare[cols][rows];
 
         // Apply rules to each cell
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
                 int aliveNeighbors = countAliveNeighbors(i, j);
 
                 if (map[i][j].getType() == 1) {
                     if (aliveNeighbors < 4) {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 0); // Wall dies if it has fewer than 4 neighbors
+                        newMap[i][j] = new MapSquare(map[i][j].getP(), tileSize, tileSize, 0); // Wall dies if it has fewer than 4 neighbors
                     } else {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 1); // Wall remains alive
+                        newMap[i][j] = new MapSquare(map[i][j].getP(), tileSize, tileSize, 1); // Wall remains alive
                     }
                 } else {
                     if (aliveNeighbors > 4) {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 1); // Space becomes wall if it has more than 4 neighbors
+                        newMap[i][j] = new MapSquare(map[i][j].getP(), tileSize, tileSize, 1); // Space becomes wall if it has more than 4 neighbors
                     } else {
-                        newMap[i][j] = new MapSquare(new PVector(j * tileSize, i * tileSize), tileSize, tileSize, 0); // Space remains empty
+                        newMap[i][j] = new MapSquare(map[i][j].getP(), tileSize, tileSize, 0); // Space remains empty
                     }
                 }
             }
@@ -188,5 +187,19 @@ public class MapFormation extends GameComponent {
     @Override
     public boolean intersection(GameComponent ge) {
         return false; // No collision detection for the map
+    }
+
+
+    public void edit(int x, int y, int t){
+        int xIndex = (int) (x / tileSize);
+        int yIndex = (int) (y / tileSize);
+
+        if (lastChanged == null || lastChanged != map[xIndex][yIndex]){
+            lastChanged = map[xIndex][yIndex];
+        } else {
+            return;
+        }
+
+        map[xIndex][yIndex].setType(t);
     }
 }

@@ -3,11 +3,13 @@ package gamecore.components;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.io.Serializable;
+
 /**
  * Base Game Component class for all game components.
  * These elements are static and are drawn and updated in the game loop.
  */
-public abstract class GameComponent {
+public abstract class GameComponent implements Serializable {
 
     protected static PApplet app; // app to draw on.
     private static boolean mutex = false;

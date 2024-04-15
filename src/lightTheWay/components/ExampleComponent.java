@@ -5,8 +5,8 @@ import processing.core.PVector;
 
 public class ExampleComponent extends GameComponent {
 
-    public ExampleComponent() {
-        super(new PVector(0, 0), 100, 150);
+    public ExampleComponent(PVector p ) {
+        super(p, 100, 150);
     }
 
     @Override

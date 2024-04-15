@@ -80,6 +80,11 @@ public class Game extends PApplet {
     }
 
 
+    public void mouseDragged() {
+        ge.mousePressed();
+    }
+
+
     public static void main(String... args) {
         PApplet.main("Game");
     }

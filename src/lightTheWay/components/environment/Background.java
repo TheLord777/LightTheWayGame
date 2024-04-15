@@ -2,7 +2,9 @@ package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
 
-public class Background extends GameComponent {
+import java.io.Serializable;
+
+public class Background extends GameComponent implements Serializable {
 
     @Override
     protected void draw() {
