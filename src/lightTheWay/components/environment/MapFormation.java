@@ -5,12 +5,14 @@ import processing.core.PVector;
 
 import java.io.Serializable;
 
-import static processing.core.PApplet.println;
+import java.util.ArrayList;
 
 public class MapFormation extends GameComponent implements Serializable {
 
     private int tileSize;
     private MapSquare[][] map;
+    private ArrayList<LadderComponent> ladders;
+    private ArrayList<RopeComponent> ropes;
     private double chanceToStartAlive = 0.55;
     private int generations = 5;
     private Background b;
@@ -27,7 +29,10 @@ public class MapFormation extends GameComponent implements Serializable {
         lastChanged = null;
 
         generateMap();
+
 //        paintRandomPlatforms();
+        generateLadders();
+        generateRope();
     }
 
     private void generateMap() {
@@ -164,8 +169,95 @@ public class MapFormation extends GameComponent implements Serializable {
         return count;
     }
 
+    private void generateLadders() {
+        ladders = new ArrayList<>();
+        for (int i = 0; i < map.length - 4; i++) { // Ensure there are enough rows below for the ladder
+            for (int j = 0; j < map[0].length; j++) {
+                // Check if the cell is empty and surrounded by walls on the sides
+                if (map[i][j].getType() == 0 && surroundedByWalls(i, j)) {
+                    // Check if there's already a ladder in this cell
+                    if (Math.random() < 0.02) { // Adjust the probability as needed
+                        // Create ladder components for the current cell and the 4 cells below it
+                        for (int k = 0; k < 5; k++) {
+                            LadderComponent ladder = new LadderComponent(new PVector(j * tileSize, (i + k) * tileSize), tileSize, tileSize);
+                            ladders.add(ladder);
+                        }
+                        // Break out of the loop to avoid overlapping ladders in the same column
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    private boolean surroundedByWalls(int x, int y) {
+        int rows = map.length;
+        int cols = map[0].length;
+
+        // Check if any of the neighboring cells are not walls
+        boolean topWall = x - 1 < 0 || (map[x - 1][y].getType() != 1);
+        boolean bottomWall = x + 1 >= rows || (map[x + 1][y].getType() != 1);
+        boolean leftWall = y - 1 < 0 || (map[x][y - 1].getType() != 1);
+        boolean rightWall = y + 1 >= cols || (map[x][y + 1].getType() != 1);
+
+        return topWall && bottomWall || leftWall || rightWall;
+    }
+
+    private void generateRope() {
+        ropes = new ArrayList<>();
+
+        int topRow = 0; // Index of the top row
+
+        // Iterate through the top row to find a space cell
+        for (int j = 0; j < map[0].length; j++) {
+            if (map[topRow][j].getType() == 1) { // Check if the cell is empty
+                // Calculate the position of the rope in the center of the cell
+                float x = j * tileSize + tileSize / 2.0f;
+                float y = 0 + tileSize / 2.0f; // Start the rope at the top of the cell
+
+                // Create a new RopeComponent at the calculated position
+                RopeComponent rope = new RopeComponent(new PVector(x, y), tileSize, tileSize);
+                // Add the rope to the list of game components
+                ropes.add(rope);
+
+                // Generate rope for 6 cells down
+                for (int k = 1; k < 6; k++) {
+                    float ropeY = 0 + k * tileSize + tileSize / 2.0f; // Calculate y-coordinate
+                    RopeComponent nextRope = new RopeComponent(new PVector(x, ropeY), tileSize, tileSize);
+                    ropes.add(nextRope);
+                }
+
+                break; // Stop searching once the rope is generated
+            }
+        }
+    }
 
 
+
+    private boolean spaceOnCeiling() {
+        int ceilingRow = 0; // Index of the row below the ceiling
+
+        // Iterate through the row below the ceiling
+        for (int j = 0; j < map[0].length; j++) {
+            // Check if the current cell is empty
+            if (map[ceilingRow][j].getType() == 0) {
+                // Check if there's enough space for the rope (at least 8 consecutive empty cells)
+                boolean hasSpace = true;
+                for (int k = j + 1; k < j + 8; k++) {
+                    if (k >= map[0].length || map[ceilingRow][k].getType() != 0) {
+                        // If any cell in the next 8 cells is not empty or out of bounds, there's not enough space
+                        hasSpace = false;
+                        break;
+                    }
+                }
+                if (hasSpace) {
+                    // If there's enough space, return true
+                    return true;
+                }
+            }
+        }
+        // If no suitable opening is found, return false
+        return false;
+    }
 
     @Override
     public void draw() {
@@ -174,6 +266,13 @@ public class MapFormation extends GameComponent implements Serializable {
             for (MapSquare square : squares) {
                 square.draw(); // Draw each MapSquare
             }
+        }
+        for(LadderComponent ladder: ladders){
+            ladder.draw();
+        }
+
+        for(RopeComponent rope: ropes){
+            rope.draw();
         }
     }
 
