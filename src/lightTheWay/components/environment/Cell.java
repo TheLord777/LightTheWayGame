@@ -1,34 +1,44 @@
 package lightTheWay.components.environment;
 
+import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
+import processing.core.PApplet;
 import processing.core.PVector;
 
-import java.io.Serializable;
+public class Cell extends GameComponent {
 
-public class MapSquare extends GameComponent  {
+    private CellType type;
 
-    private int type;
-
-
-    public MapSquare(PVector p, float width, float height, int type) {
+    public Cell(PVector p, float width, float height) {
         super(p, width, height);
-        this.type = type;
+        this.type = Math.random() < .4 ? CellType.EMPTY : CellType.WALL;
+        this.collisionShape = CollisionShape.RECTANGLE;
+    }
+
+    public Cell(PVector p, float width, float height, int type) {
+        super(p, width, height);
+        this.type = CellType.fromInt(type);
+        this.collisionShape = CollisionShape.RECTANGLE;
     }
 
     @Override
     protected void draw() {
-        if (type == 0){
-         drawRock();
-        }else if (type == 1) {
-            return; // the background
-        }else if (type == 2){
-            drawLadder();
-        } else if (type == 3){
-            drawRope();
-        } else if (type == 4){
-            drawWater();
+        switch (type) {
+            case EMPTY:
+                break;
+            case WALL:
+                drawRock();
+                break;
+            case LADDER:
+                drawLadder();
+                break;
+            case ROPE:
+                drawRope();
+                break;
+            case WATER:
+                drawWater();
+                break;
         }
-
     }
 
 
@@ -45,17 +55,17 @@ public class MapSquare extends GameComponent  {
 
     // Additional methods specific to MapSquare can be added here
 
-    public int getType() {
+    public CellType getType() {
         return type;
     }
 
     public void setType(int type) {
-        this.type = type;
+        this.type = CellType.fromInt(type);
     }
 
     private int getColorFromNoise(float noiseVal) {
         // Map noise value to a grayscale spectrum
-        float brightness = app.map(noiseVal, 0, 1, 30, 220);  // Adjust brightness for variation
+        float brightness = PApplet.map(noiseVal, 0, 1, 30, 220);  // Adjust brightness for variation
         return app.color(brightness);
     }
 
@@ -85,26 +95,26 @@ public class MapSquare extends GameComponent  {
     }
 
 
-    private void drawRope(){
-            app.pushStyle();
+    private void drawRope() {
+        app.pushStyle();
 
-            app.stroke(0); // Set stroke color to black
-            app.strokeWeight(4); // Set stroke weight as needed
+        app.stroke(0); // Set stroke color to black
+        app.strokeWeight(4); // Set stroke weight as needed
 
-            // Calculate the x-coordinate of the center of the cell
-            float centerX = getX() + getWidth() / 2.0f;
+        // Calculate the x-coordinate of the center of the cell
+        float centerX = getX() + getWidth() / 2.0f;
 
-            // Calculate the y-coordinate of the top of the cell
-            float topY = getY() - getHeight() / 2.0f;
+        // Calculate the y-coordinate of the top of the cell
+        float topY = getY() - getHeight() / 2.0f;
 
-            // Draw a vertical line from the top to the bottom of the cell
-            app.line(centerX, topY, centerX, getY() + getHeight());
+        // Draw a vertical line from the top to the bottom of the cell
+        app.line(centerX, topY, centerX, getY() + getHeight());
 
-            app.popStyle();
+        app.popStyle();
     }
 
 
-    private void drawWater(){
+    private void drawWater() {
         app.pushStyle();
         app.fill(0, 0, 255);
         app.rect(p.x, p.y, width, height);
@@ -112,8 +122,8 @@ public class MapSquare extends GameComponent  {
     }
 
 
-    private void drawRock(){
-        float noiseVal = app.noise(p.x*0.05f, p.y* 0.05f); // Adjust frequency as needed
+    private void drawRock() {
+        float noiseVal = app.noise(p.x * 0.05f, p.y * 0.05f); // Adjust frequency as needed
         int rockColor = getColorFromNoise(noiseVal);
 
         if (noiseVal < 0.45) { // Adjust the threshold for moss application (lower values for more moss)
@@ -131,4 +141,26 @@ public class MapSquare extends GameComponent  {
 
     }
 
+
+    public boolean isEmpty() {
+        return type == CellType.EMPTY;
+    }
+
+    public boolean isWall() {
+        return type == CellType.WALL;
+    }
+
+
+    public boolean isLadder() {
+        return type == CellType.LADDER;
+    }
+
+
+    public boolean isRope() {
+        return type == CellType.ROPE;
+    }
+
+    public boolean isWater() {
+        return type == CellType.WATER;
+    }
 }

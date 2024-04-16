@@ -1,10 +1,7 @@
 import gamecore.components.GameComponent;
 import lightTheWay.Instance;
-import lightTheWay.components.ExampleComponent;
-import lightTheWay.components.environment.MapFormation;
-import lightTheWay.gameLogic.LightTheWay;
+import lightTheWay.components.environment.Level;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +13,7 @@ import java.io.ObjectOutputStream;
  */
 public class LevelGenerator extends PApplet {
 
-    MapFormation map;
+    Level map;
 
     int type = 0;
 
@@ -38,7 +35,7 @@ public class LevelGenerator extends PApplet {
 
 
         int tileSize = min(width, height) / 50; // Adjust as needed
-        map = new MapFormation(width, height, tileSize);
+        map = new Level(width, height, tileSize);
 
 
     }
@@ -71,7 +68,7 @@ public class LevelGenerator extends PApplet {
         if (key == ' ') saveMap();
         if (key == 'n') {
             int tileSize = min(width, height) / 50; // Adjust as needed
-            map = new MapFormation(width, height, tileSize);
+            map = new Level(width, height, tileSize);
         }
 
     }

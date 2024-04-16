@@ -1,8 +1,5 @@
 package lightTheWay.gameLogic;
 
-import lightTheWay.components.environment.MapFormation;
-import processing.core.PVector;
-
 import java.io.*;
 
 import static processing.core.PApplet.min;
@@ -30,7 +27,7 @@ public class LightTheWay extends ComponentManager {
         try {
             FileOutputStream fileOut = new FileOutputStream("map.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(mapFormation);
+            out.writeObject(level);
             out.close();
             fileOut.close();
             System.out.println("Serialized data is saved in employee.ser");
@@ -48,7 +45,7 @@ public class LightTheWay extends ComponentManager {
 
 
         animationEngine.removeAllComponents();
-        animationEngine.addComponent(mapFormation);
+        animationEngine.addComponent(level);
     }
 
     @Override
