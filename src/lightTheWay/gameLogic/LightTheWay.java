@@ -1,7 +1,10 @@
 package lightTheWay.gameLogic;
 
 import lightTheWay.Instance;
-import processing.core.PApplet;
+import java.io.*;
+
+import static processing.core.PApplet.min;
+import static processing.core.PApplet.print;
 
 public class LightTheWay extends ComponentManager {
 
@@ -27,7 +30,6 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void mousePressed() {
-
     }
 
     @Override
@@ -76,4 +78,6 @@ public class LightTheWay extends ComponentManager {
     public void downKeyUp() {
 
     }
+
+
 }

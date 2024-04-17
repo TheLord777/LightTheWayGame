@@ -11,8 +11,16 @@ import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import lightTheWay.components.environment.Level;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+import static processing.core.PApplet.*;
 
 public abstract class ComponentManager extends GameEngine {
+    Level level;
 
     PlayableCharacter hero;
 
@@ -29,6 +37,33 @@ public abstract class ComponentManager extends GameEngine {
         // Example of adding a component to the game
         animationEngine.addComponent(hero);
         animationEngine.addComponent(hero.createLight(500));
+        // Initialize tileSize
+        animationEngine.removeAllComponents();
+
+        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
+
+        // Create a new instance of MapFormation
+        getMapFormation("map.ser");
+        animationEngine.addComponent(level);
+
+    }
+
+
+    public void getMapFormation(String file) {
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            level = (Level) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return;
+        } catch (ClassNotFoundException c) {
+            System.out.println("MapFormation class not found");
+            c.printStackTrace();
+            return;
+        }
     }
 
 

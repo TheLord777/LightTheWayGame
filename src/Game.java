@@ -39,6 +39,7 @@ public class Game extends PApplet {
 
         // Run game engine specific game loop
         ge.play();
+        println(frameCount);
     }
 
 
@@ -76,6 +77,11 @@ public class Game extends PApplet {
      * Handle mouse presses.
      */
     public void mousePressed() {
+        ge.mousePressed();
+    }
+
+
+    public void mouseDragged() {
         ge.mousePressed();
     }
 
