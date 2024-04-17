@@ -39,7 +39,6 @@ public class Game extends PApplet {
 
         // Run game engine specific game loop
         ge.play();
-        println(frameCount);
     }
 
 

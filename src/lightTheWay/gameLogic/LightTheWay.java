@@ -1,6 +1,8 @@
 package lightTheWay.gameLogic;
 
 import lightTheWay.Instance;
+import processing.core.PApplet;
+
 import java.io.*;
 
 import static processing.core.PApplet.min;
