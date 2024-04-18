@@ -1,5 +1,6 @@
 package lightTheWay.components.characters;
 
+import gamecore.components.CollisionShape;
 import gamecore.components.DynamicComponent;
 import gamecore.components.GameComponent;
 import processing.core.PVector;
@@ -13,6 +14,7 @@ public class Character extends DynamicComponent {
 
     protected Character(PVector p, float width) {
         super(p, width);
+        this.setShape(CollisionShape.CIRCLE);
     }
 
     @Override

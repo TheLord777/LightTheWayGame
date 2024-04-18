@@ -15,6 +15,7 @@ public abstract class GameComponent {
     protected float width;
     protected float height;
     protected CollisionShape collisionShape; // TODO implement collision shapes
+    protected boolean illuminated = false; // whether or not the component is within proximity to a light source
 
     public static void setApp(PApplet app) {
         if (!mutex) GameComponent.app = app;
@@ -42,7 +43,7 @@ public abstract class GameComponent {
      * Draw and update the game component.
      */
     public void step() {
-        draw();
+        if (illuminated) draw(); // draws if illuminated
         update();
     }
 
@@ -137,6 +138,14 @@ public abstract class GameComponent {
 
     public void setShape(CollisionShape c) {
         collisionShape = c;
+    }
+
+    public boolean getIlluminated() {
+        return illuminated;
+    }
+
+    public void setIlluminated(boolean b) {
+        illuminated = b;
     }
 
 }
