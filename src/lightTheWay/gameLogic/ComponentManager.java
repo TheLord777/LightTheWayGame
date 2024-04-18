@@ -7,6 +7,7 @@ import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PVector;
+import lightTheWay.components.ExampleComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -70,6 +71,8 @@ public abstract class ComponentManager extends GameEngine {
         }
     }
 
+
+    }
 
     /**
      * This method handles the lighting for the game, by placing a shadow over the display and masking for light sources

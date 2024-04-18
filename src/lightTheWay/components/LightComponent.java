@@ -15,40 +15,33 @@ public class LightComponent extends GameComponent {
     private int frames = 0;
     private float decrementRate = 0; // the amount that the size of a light should decrease per second
 
-
     public LightComponent(PVector p , float l, float d) {
-        super(p, 0, 0);
-        this.setShape(CollisionShape.POINT);
-        this.setDefaultSize(l);
-        this.setLightSize(l);
-        this.setLightIncrement(40);
-        this.setDecrementRate(d);
-    }
-
-    public LightComponent(float x, float y, float l) {
-        super(new PVector(x, y), 0, 0);
-        this.setShape(CollisionShape.POINT);
-        this.setDefaultSize(l);
-        this.setLightSize(l);
-        this.setLightIncrement(40);
-    }
-
-    public LightComponent(float x, float y, float l, float d) {
-        super(new PVector(x, y), 0, 0);
-        this.setShape(CollisionShape.POINT);
-        this.setDefaultSize(l);
-        this.setLightSize(l);
-        this.setLightIncrement(40);
-        this.setDecrementRate(d);
-    }
-
-    public LightComponent(float x, float y, float w, float h, float l, float d) {
-        super(new PVector(x, y), w, h);
+        super(p, l, l);
         this.setShape(CollisionShape.CIRCLE);
         this.setDefaultSize(l);
         this.setLightSize(l);
         this.setLightIncrement(40);
         this.setDecrementRate(d);
+        this.setIlluminated(true);
+    }
+
+    public LightComponent(float x, float y, float l) {
+        super(new PVector(x, y), l, l);
+        this.setShape(CollisionShape.CIRCLE);
+        this.setDefaultSize(l);
+        this.setLightSize(l);
+        this.setLightIncrement(40);
+        this.setIlluminated(true);
+    }
+
+    public LightComponent(float x, float y, float l, float d) {
+        super(new PVector(x, y), l, l);
+        this.setShape(CollisionShape.CIRCLE);
+        this.setDefaultSize(l);
+        this.setLightSize(l);
+        this.setLightIncrement(40);
+        this.setDecrementRate(d);
+        this.setIlluminated(true);
     }
 
     @Override
@@ -77,6 +70,16 @@ public class LightComponent extends GameComponent {
     @Override
     public boolean intersection(GameComponent ge) {
         return false;
+    }
+
+    @Override
+    public float getWidth() {
+        return lightSize;
+    }
+
+    @Override
+    public float getHeight() {
+        return lightSize;
     }
 
     public float getDefaultSize() {

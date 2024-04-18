@@ -19,8 +19,8 @@ public class Character extends DynamicComponent {
 
     protected Character(PVector p, float width, Level l) {
         super(p, width);
+        this.setShape(CollisionShape.CIRCLE);
         this.environment = l;
-        this.collisionShape = CollisionShape.CIRCLE;
     }
 
     @Override
