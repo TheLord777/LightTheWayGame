@@ -1,11 +1,13 @@
 package lightTheWay.components.environment;
 
+//TODO start rop, end rope, spawn point, end point
 public enum CellType {
     EMPTY(0),
     WALL(1),
     LADDER(2),
     ROPE(3),
-    WATER(4);
+    WATER(4),
+    CAMP(5);
 
     private final int value;
 

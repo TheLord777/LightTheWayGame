@@ -42,6 +42,12 @@ public class Cell extends GameComponent {
     }
 
 
+    public PVector getClosestPoint(PVector p) {
+        float x = PApplet.constrain(p.x, this.p.x, this.p.x + width);
+        float y = PApplet.constrain(p.y, this.p.y, this.p.y + height);
+        return new PVector(x, y);
+    }
+
     @Override
     protected void update() {
         // Update logic for MapSquare goes here

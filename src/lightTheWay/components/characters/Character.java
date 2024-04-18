@@ -1,23 +1,31 @@
 package lightTheWay.components.characters;
 
+import gamecore.components.CollisionShape;
 import gamecore.components.DynamicComponent;
 import gamecore.components.GameComponent;
+import lightTheWay.components.environment.Cell;
+import lightTheWay.components.environment.Level;
 import processing.core.PVector;
+
+import java.util.List;
 
 import static lightTheWay.GameConfig.MAX_SPEED;
 
 public class Character extends DynamicComponent {
 
     boolean left = false, right = false, up = false, down = false, sprint = false;
+    private Level environment;
 
 
-    protected Character(PVector p, float width) {
+    protected Character(PVector p, float width, Level l) {
         super(p, width);
+        this.environment = l;
+        this.collisionShape = CollisionShape.CIRCLE;
     }
 
     @Override
     protected float mass() {
-        return width;
+        return width * 100;
     }
 
     @Override
@@ -34,36 +42,50 @@ public class Character extends DynamicComponent {
 
     @Override
     public void update() {
-        if (p.y < (float) app.height /2) {
-            applyGravity();
-        } else {
-            v.y =0;
+        if (!standing()) applyGravity();
+        else v.y = 0;
 
-        }
         move();
 
+
         super.update();
+
+        if (headHit()) v.y = 0;
+        if (leftHit() || rightHit()) v.x = 0;
+
+        if (!environment.intersection(this)) return;
+
+        // If there was a collision, move the character back to the closest point on the map.
+        PVector cp = environment.getClosestPoint(this);
+
+        // Calculate the vector from the closest point to the character.
+        PVector v1 = PVector.sub(p, cp).setMag(width / 2);
+
+        // Set the position of the character to the closest point on the map without clipping.
+        setPosition(cp.add(v1));
     }
 
     private void move() {
-        if (Math.abs(v.x) >= MAX_SPEED * 2)
+        if (Math.abs(v.x) >= MAX_SPEED) {
+            v.x = MAX_SPEED * Math.signum(v.x);
             return;
-
-        float speed = 20;
-
-        if (p.y < (float) app.height /2) speed = 5;
-
-        if (left) applyForce(new PVector(-speed, 0));
-        if (right)
-            applyForce(new PVector(speed, 0));
-        if (up && Math.abs(v.y) == 0) applyForce(new PVector(0, -speed * 20));
-        if (down) applyForce(new PVector(0, 0.1f));
-        if (!left && !right) {
-            if (v.x < 0) applyForce(new PVector(speed, 0));
-            else applyForce(new PVector(-speed, 0));
         }
 
-        if (v.y < 0) applyGravity();
+        float speed = 500;
+
+//        if (!standing()) speed = 5;
+
+        if (left) applyForce(new PVector(-speed, 0));
+        if (right) applyForce(new PVector(speed, 0));
+        if (up && standing()) applyForce(new PVector(0, -speed *30));
+//        if (down) applyForce(new PVector(0, 0.1f));
+        if (!left && !right && standing()) {
+            if (v.x < 0) applyForce(new PVector(speed, 0));
+            else applyForce(new PVector(-speed, 0));
+
+            if (Math.abs(v.x) < 1) v.x = 0;
+        }
+
     }
 
     public void setLeft(boolean left) {
@@ -83,5 +105,23 @@ public class Character extends DynamicComponent {
         this.down = down;
     }
 
+    private boolean standing() {
+        Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + width / 2));
+        return c.isWall();
+    }
 
+    private boolean headHit() {
+        Cell c = environment.getCellFromPoint(new PVector(p.x, p.y - width / 2));
+        return c.isWall();
+    }
+
+    private boolean leftHit() {
+        Cell c = environment.getCellFromPoint(new PVector(p.x - width / 2, p.y));
+        return c.isWall();
+    }
+
+    private boolean rightHit() {
+        Cell c = environment.getCellFromPoint(new PVector(p.x + width / 2, p.y));
+        return c.isWall();
+    }
 }

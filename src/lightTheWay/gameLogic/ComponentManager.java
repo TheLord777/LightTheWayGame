@@ -32,19 +32,23 @@ public abstract class ComponentManager extends GameEngine {
     @Override
     public void setupGame() {
         animationEngine.removeAllComponents();
-        hero = new PlayableCharacter(new PVector(50,400), 50);
+        getMapFormation("map.ser");
+//        level = new Level(app.width, appHeight, 50);
+        animationEngine.addComponent(level);
+
+
+        hero = new PlayableCharacter(new PVector(150,app.height -250), level.getTileSize(), level);
 
         // Example of adding a component to the game
         animationEngine.addComponent(hero);
-        animationEngine.addComponent(hero.createLight(500));
-        // Initialize tileSize
-        animationEngine.removeAllComponents();
-
-        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
+        animationEngine.addComponent(hero.createLight(250));
+//        // Initialize tileSize
+//        animationEngine.removeAllComponents();
+//
+//        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
 
         // Create a new instance of MapFormation
-        getMapFormation("map.ser");
-        animationEngine.addComponent(level);
+
 
     }
 

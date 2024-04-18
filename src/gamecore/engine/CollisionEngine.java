@@ -32,7 +32,7 @@ public abstract class CollisionEngine {
      * @param c2 The second component in the collison pair
      * @return Whether or not c1 is colliding with c2
      */
-    protected boolean checkCollision(GameComponent c1, GameComponent c2) {
+    public static boolean checkCollision(GameComponent c1, GameComponent c2) {
         if (c1.getShape() == CollisionShape.CIRCLE) {
             return checkCollisionCircleShape(c1, c2);
         } else if (c2.getShape() == CollisionShape.CIRCLE) {
@@ -41,7 +41,7 @@ public abstract class CollisionEngine {
         return false;
     }
 
-    protected boolean checkCollisionCircleShape(GameComponent circle, GameComponent shape) {
+    protected static boolean checkCollisionCircleShape(GameComponent circle, GameComponent shape) {
         switch (shape.getShape()) {
             case CIRCLE:
                 return checkCollisionCircleCircle(circle, shape);
@@ -65,7 +65,7 @@ public abstract class CollisionEngine {
      * @param r2 The radius of the second circle
      * @return Whether or not the first circle is colliding with the second circle
      */
-    protected boolean checkCollisionCircleCircle(float x1, float y1, float r1, float x2, float y2, float r2) {
+    protected static boolean checkCollisionCircleCircle(float x1, float y1, float r1, float x2, float y2, float r2) {
         return (PApplet.dist(x1, y1, x2, y2) <= r1 + r2);
     }
 
@@ -76,7 +76,7 @@ public abstract class CollisionEngine {
      * @param r2 The radius of the second circle
      * @return Whether or not the first circle is colliding with the second circle
      */
-    protected boolean checkCollisionCircleCircle(PVector p1, float r1, PVector p2, float r2) {
+    protected static boolean checkCollisionCircleCircle(PVector p1, float r1, PVector p2, float r2) {
         return checkCollisionCircleCircle(p1.x, p1.y, r1, p2.x, p2.y, r2);
     }
 
@@ -85,7 +85,7 @@ public abstract class CollisionEngine {
      * @param c2 The second circle game component
      * @return Whether or not the first circle is colliding with the second circle
      */
-    protected boolean checkCollisionCircleCircle(GameComponent c1, GameComponent c2) {
+    protected static boolean checkCollisionCircleCircle(GameComponent c1, GameComponent c2) {
         return checkCollisionCircleCircle(c1.getP(), c1.getWidth() / 2, c2.getP(), c2.getWidth() / 2);
     }
 
@@ -99,7 +99,7 @@ public abstract class CollisionEngine {
      * @param ry2 THe second y-coordinate of the rectangle (bottom edge)
      * @return Whether or not the circle is colliding with the rectangle
      */
-    protected boolean checkCollisionCircleRectangle(float cx, float cy, float r, float rx1, float ry1, float rx2, float ry2) {
+    protected static boolean checkCollisionCircleRectangle(float cx, float cy, float r, float rx1, float ry1, float rx2, float ry2) {
         // Determine edges to check against
         float xToCheck = cx;
         float yToCheck = cy;
@@ -131,7 +131,7 @@ public abstract class CollisionEngine {
      * @param height The height of the rectangle
      * @return Whether or not the circle is colliding with the rectangle
      */
-    protected boolean checkCollisionCircleRectangle(PVector cp, float r, PVector rp, float width, float height) {
+    protected static boolean checkCollisionCircleRectangle(PVector cp, float r, PVector rp, float width, float height) {
         float cx = PApplet.constrain(cp.x, rp.x, rp.x + width);
         float cy = PApplet.constrain(cp.y, rp.y, rp.y + height);
 
@@ -143,7 +143,7 @@ public abstract class CollisionEngine {
      * @param r The rectangle game component
      * @return Whether or not the circle is colliding with the rectangle
      */
-    protected boolean checkCollisionCircleRectangle(GameComponent c, GameComponent r) {
+    protected static boolean checkCollisionCircleRectangle(GameComponent c, GameComponent r) {
         return checkCollisionCircleRectangle(c.getP(), c.getWidth() / 2, r.getP(), r.getWidth(), r.getHeight());
     }
 

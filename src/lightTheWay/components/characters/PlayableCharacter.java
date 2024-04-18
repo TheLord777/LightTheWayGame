@@ -1,6 +1,7 @@
 package lightTheWay.components.characters;
 
 import lightTheWay.components.LightComponent;
+import lightTheWay.components.environment.Level;
 import processing.core.PVector;
 
 public class PlayableCharacter extends Character {
@@ -8,8 +9,8 @@ public class PlayableCharacter extends Character {
     private LightComponent light;
 
 
-    public PlayableCharacter(PVector p, float width) {
-        super(p, width);
+    public PlayableCharacter(PVector p, float width, Level l) {
+        super(p, width, l);
     }
 
 

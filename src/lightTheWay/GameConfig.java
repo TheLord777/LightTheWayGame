@@ -4,5 +4,5 @@ import gamecore.Config;
 
 public class GameConfig extends Config {
 
-    public static final int MAX_SPEED = 5;
+    public static final float MAX_SPEED = 5;
 }

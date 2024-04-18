@@ -1,6 +1,7 @@
 package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
+import gamecore.engine.CollisionEngine;
 import processing.core.PVector;
 
 import java.io.Serializable;
@@ -97,23 +98,67 @@ public class Level extends GameComponent implements Serializable {
 
     @Override
     public boolean intersection(GameComponent ge) {
-        for (Cell[] cells : map) {
-            for (Cell cell : cells) {
-                if (cell.intersection(ge)) return true;
-            }
+        Cell c = getCellFromGCPosition(ge);
+        List<Cell> neighbours = getNeighbours(c);
+
+        for (Cell neighbour : neighbours) {
+            if (!neighbour.isEmpty() && CollisionEngine.checkCollision(ge, neighbour)) return true;
         }
-        return false; // No collision detection for the map
+
+        return !c.isEmpty() && CollisionEngine.checkCollision(ge, c);
     }
 
 
-    public List<Cell> touch(GameComponent ge) {
-        List<Cell> touched = new ArrayList<>();
-        for (Cell[] cells : map) {
-            for (Cell cell : cells) {
-                if (cell.intersection(ge)) touched.add(cell);
+    public PVector getClosestPoint(GameComponent gc) {
+        PVector res = null;
+        float minDist = Float.MAX_VALUE;
+
+        Cell current = getCellFromGCPosition(gc);
+
+        List<Cell> neighbours = getNeighbours(current);
+        for (Cell neighbour : neighbours) {
+            if (neighbour.isEmpty()) continue;
+            PVector p = neighbour.getClosestPoint(gc.getP());
+            float d = PVector.dist(p, gc.getP());
+            if (d < minDist) {
+                minDist = d;
+                res = p;
             }
         }
-        return touched;
+
+        return res;
+    }
+
+    public List<Cell> touch(GameComponent gc) {
+        Cell c = getCellFromGCPosition(gc);
+        List<Cell> neighbours = getNeighbours(c);
+        List<Cell> res = new ArrayList<>();
+
+        for (Cell neighbour : neighbours) {
+          if (!neighbour.isEmpty() && CollisionEngine.checkCollision(gc, neighbour)) res.add(neighbour);
+        }
+
+        res.add(c);
+        return res;
+    }
+
+
+    private List<Cell> getNeighbours(Cell c) {
+        List<Cell> res = new ArrayList<>();
+        int x = (int) (c.getP().x / c.getWidth());
+        int y = (int) (c.getP().y / c.getHeight());
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue;
+                int ni = x + i;
+                int nj = y + j;
+                if (ni >= 0 && ni < cols && nj >= 0 && nj < rows) {
+                    res.add(map[ni][nj]);
+                }
+            }
+        }
+        return res;
+
     }
 
     public void edit(int x, int y, int t) {
@@ -122,5 +167,22 @@ public class Level extends GameComponent implements Serializable {
 
 
         map[xIndex][yIndex].setType(t);
+    }
+
+    public Cell getCellFromGCPosition(GameComponent gc) {
+        int x = (int) (gc.getP().x / tileSize);
+        int y = (int) (gc.getP().y / tileSize);
+        return map[x][y];
+    }
+
+
+    public Cell getCellFromPoint(PVector p) {
+        int x = (int) (p.x / tileSize);
+        int y = (int) (p.y / tileSize);
+        return map[x][y];
+    }
+
+    public int getTileSize() {
+        return tileSize;
     }
 }
