@@ -35,14 +35,18 @@ public abstract class ComponentManager extends GameEngine {
         animationEngine.removeAllComponents();
         getMapFormation("map.ser");
 //        level = new Level(app.width, appHeight, 50);
-        animationEngine.addComponent(level);
 
 
-        hero = new PlayableCharacter(new PVector(150,app.height -250), level.getTileSize(), level);
+
+        hero = new PlayableCharacter(new PVector(150,app.height -150), level.getTileSize(), level);
 
         // Example of adding a component to the game
+        animationEngine.addComponent(level);
         animationEngine.addComponent(hero);
         animationEngine.addComponent(hero.createLight(250));
+
+
+
 //        // Initialize tileSize
 //        animationEngine.removeAllComponents();
 //
@@ -71,8 +75,6 @@ public abstract class ComponentManager extends GameEngine {
         }
     }
 
-
-    }
 
     /**
      * This method handles the lighting for the game, by placing a shadow over the display and masking for light sources

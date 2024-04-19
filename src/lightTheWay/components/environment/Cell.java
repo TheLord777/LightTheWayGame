@@ -39,6 +39,7 @@ public class Cell extends GameComponent {
                 drawWater();
                 break;
         }
+        setIlluminated(false);
     }
 
 

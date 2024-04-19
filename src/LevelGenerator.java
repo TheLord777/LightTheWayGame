@@ -44,6 +44,8 @@ public class LevelGenerator extends PApplet {
     public void draw() {
         background(0);
 
+
+        map.setDev(true);
         map.draw();
     }
 
@@ -75,11 +77,13 @@ public class LevelGenerator extends PApplet {
 
     public void saveMap(){
         try {
+            map.setDev(false);
             FileOutputStream fileOut = new FileOutputStream("map.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();
             fileOut.close();
+            map.setDev(true);
         } catch (IOException i) {
             i.printStackTrace();
         }

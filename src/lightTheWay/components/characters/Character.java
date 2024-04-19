@@ -3,11 +3,10 @@ package lightTheWay.components.characters;
 import gamecore.components.CollisionShape;
 import gamecore.components.DynamicComponent;
 import gamecore.components.GameComponent;
-import lightTheWay.components.environment.Cell;
 import lightTheWay.components.environment.Level;
+import lightTheWay.components.environment.Cell;
 import processing.core.PVector;
 
-import java.util.List;
 
 import static lightTheWay.GameConfig.MAX_SPEED;
 
@@ -62,7 +61,7 @@ public class Character extends DynamicComponent {
         PVector v1 = PVector.sub(p, cp).setMag(width / 2);
 
         // Set the position of the character to the closest point on the map without clipping.
-        setPosition(cp.add(v1));
+        p.set(cp.add(v1));
     }
 
     private void move() {

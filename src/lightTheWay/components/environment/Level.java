@@ -16,6 +16,7 @@ public class Level extends GameComponent implements Serializable {
     private int generations = 5;
     private Background b;
     private int rows, cols;
+    private boolean dev = false;
 
 
     public Level(float width, float height, int tileSize) {
@@ -86,7 +87,9 @@ public class Level extends GameComponent implements Serializable {
         b.draw();
         for (Cell[] squares : map) {
             for (Cell square : squares) {
-                square.draw(); // Draw each MapSquare
+               if (dev || square.getIlluminated())
+                   square.draw(); // Draw each MapSquare
+
             }
         }
     }
@@ -142,8 +145,24 @@ public class Level extends GameComponent implements Serializable {
         return res;
     }
 
+    public List<Cell> getCellsWithinGrid(float x1, float y1, float x2, float y2) {
+        List<Cell> res = new ArrayList<>();
+        int x1Index = (int) (x1 / tileSize);
+        int y1Index = (int) (y1 / tileSize);
+        int x2Index = (int) (x2 / tileSize);
+        int y2Index = (int) (y2 / tileSize);
 
-    private List<Cell> getNeighbours(Cell c) {
+        for (int i = x1Index; i <= x2Index; i++) {
+            for (int j = y1Index; j <= y2Index; j++) {
+                if (i >= 0 && i < cols && j >= 0 && j < rows) res.add(map[i][j]);
+            }
+        }
+
+        return res;
+    }
+
+
+    public List<Cell> getNeighbours(Cell c) {
         List<Cell> res = new ArrayList<>();
         int x = (int) (c.getP().x / c.getWidth());
         int y = (int) (c.getP().y / c.getHeight());
@@ -165,9 +184,9 @@ public class Level extends GameComponent implements Serializable {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
-
         map[xIndex][yIndex].setType(t);
     }
+
 
     public Cell getCellFromGCPosition(GameComponent gc) {
         int x = (int) (gc.getP().x / tileSize);
@@ -184,5 +203,9 @@ public class Level extends GameComponent implements Serializable {
 
     public int getTileSize() {
         return tileSize;
+    }
+
+    public void setDev(boolean b){
+        this.dev = b;
     }
 }

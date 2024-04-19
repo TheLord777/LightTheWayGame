@@ -47,6 +47,7 @@ public abstract class GameComponent implements Serializable {
     public void step() {
         if (illuminated) draw(); // draws if illuminated
         update();
+        setIlluminated(false);
     }
 
     /**
