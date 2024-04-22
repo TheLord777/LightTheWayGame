@@ -11,6 +11,7 @@ public class MapFormation extends GameComponent {
     private MapSquare[][] map;
     private ArrayList<LadderComponent> ladders;
     private ArrayList<RopeComponent> ropes;
+    private ArrayList<ChestComponent> chests;
     private double chanceToStartAlive = 0.55;
     private int generations = 5;
     private Background b;
@@ -25,6 +26,7 @@ public class MapFormation extends GameComponent {
         paintRandomPlatforms();
         generateLadders();
         generateRope();
+        generateChest();
     }
 
     private void generateMap() {
@@ -233,33 +235,39 @@ public class MapFormation extends GameComponent {
         }
     }
 
+    private void generateChest() {
+        chests = new ArrayList<>();
+        // Iterate over the map to find a suitable location for the chest
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                // Check if the current cell is a suitable location for the chest
+                if (isValidChestLocation(i, j)) {
+                    // Calculate the position of the chest
+                    float x = j * tileSize + tileSize / 2.0f;
+                    float y = i * tileSize + tileSize / 2.0f;
 
+                    // Create the chest component at the calculated position
+                    ChestComponent chest = new ChestComponent(new PVector(x, y), tileSize * 2, tileSize);
 
-    private boolean spaceOnCeiling() {
-        int ceilingRow = 0; // Index of the row below the ceiling
-
-        // Iterate through the row below the ceiling
-        for (int j = 0; j < map[0].length; j++) {
-            // Check if the current cell is empty
-            if (map[ceilingRow][j].getType() == 0) {
-                // Check if there's enough space for the rope (at least 8 consecutive empty cells)
-                boolean hasSpace = true;
-                for (int k = j + 1; k < j + 8; k++) {
-                    if (k >= map[0].length || map[ceilingRow][k].getType() != 0) {
-                        // If any cell in the next 8 cells is not empty or out of bounds, there's not enough space
-                        hasSpace = false;
-                        break;
-                    }
-                }
-                if (hasSpace) {
-                    // If there's enough space, return true
-                    return true;
+                    // Add the chest component to the list of game components
+                    chests.add(chest);
+                    return;
                 }
             }
         }
-        // If no suitable opening is found, return false
-        return false;
     }
+
+    private boolean isValidChestLocation(int x, int y) {
+        // Check if the current cell is a wall square with enough space for the chest
+        return map[x][y].getType() == 1 && hasSpaceForChest(x, y);
+    }
+
+    private boolean hasSpaceForChest(int x, int y) {
+        // Check if there is enough space above the wall square for the chest
+        int spaceAbove = 3; // Adjust this value as needed
+        return x - spaceAbove >= 0 && map[x - spaceAbove][y].getType() == 0;
+    }
+
 
     @Override
     public void draw() {
@@ -276,9 +284,11 @@ public class MapFormation extends GameComponent {
         for(RopeComponent rope: ropes){
             rope.draw();
         }
-    }
 
-    // Function to map Perlin noise to a color gradient from light to dark
+        for(ChestComponent chest: chests){
+            chest.draw();
+        }
+    }
 
     @Override
     public void update() {
