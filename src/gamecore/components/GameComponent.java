@@ -77,7 +77,6 @@ public abstract class GameComponent {
         float cy = PApplet.constrain(gc.getY(), this.getY(), this.getY() + this.getHeight());
 
         return PVector.dist(gc.getP(), new PVector(cx, cy)) <= gc.getWidth() / 2;
-
     }
 
     public boolean pointIntersectsRectangle(PVector p) {

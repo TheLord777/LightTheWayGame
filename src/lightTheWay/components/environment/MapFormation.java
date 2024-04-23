@@ -247,7 +247,7 @@ public class MapFormation extends GameComponent {
                     float y = i * tileSize + tileSize / 2.0f;
 
                     // Create the chest component at the calculated position
-                    ChestComponent chest = new ChestComponent(new PVector(x, y), tileSize * 2, tileSize);
+                    ChestComponent chest = new ChestComponent(new PVector(x, y), tileSize , tileSize);
 
                     // Add the chest component to the list of game components
                     chests.add(chest);
