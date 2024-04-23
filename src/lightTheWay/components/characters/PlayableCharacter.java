@@ -20,7 +20,8 @@ public class PlayableCharacter extends Character {
     }
 
     public LightComponent createLight(float l) {
-        light = new LightComponent(p, l, 5);
+        // light = new LightComponent(p, l, 5);
+        light = new LightComponent(p, l, 0);
         return light;
     }
 

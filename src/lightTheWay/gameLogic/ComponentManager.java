@@ -46,6 +46,9 @@ public abstract class ComponentManager extends GameEngine {
         animationEngine.addComponent(hero.createLight(250));
 
 
+        // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
+
+
 
 //        // Initialize tileSize
 //        animationEngine.removeAllComponents();
@@ -75,7 +78,6 @@ public abstract class ComponentManager extends GameEngine {
         }
     }
 
-
     /**
      * This method handles the lighting for the game, by placing a shadow over the display and masking for light sources
      * Needs to run AFTER the latest round of rendering, as it takes a snapshot of the rendered elements
@@ -84,7 +86,7 @@ public abstract class ComponentManager extends GameEngine {
         // Apply Shadows and Lights
         PApplet app = Instance.getApp();
         // Get snapshot of current rendered display
-        PImage screen = app.get(0, 0, app.width, app.height);
+        PImage screen = app.get((int) app.screenX(0, 0), (int) app.screenY(0, 0), app.width, app.height);
         // Cover screen in shadow
         app.pushStyle();
         app.noStroke();
@@ -113,6 +115,7 @@ public abstract class ComponentManager extends GameEngine {
                 float baseSize = lc.getLightSize() / 2;
                 float addVal = lc.getLightDisplayIncrement();
                 float sizeIncrement = (lc.getLightDisplaySize() - baseSize) / 6;
+
                 for (int i = 0; i < 6; i++) {
                     lightMask.fill(addVal);
                     lightMask.ellipse(xCenter, yCenter,  baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
@@ -125,5 +128,19 @@ public abstract class ComponentManager extends GameEngine {
         // Draw the masked image
         app.image(screen, 0, 0);
     }
+
+    public void pushCameraPosition() {
+        PApplet app = Instance.getApp();
+
+        app.pushMatrix();
+        app.translate(app.width/2, app.height/2);
+        app.translate(-hero.getX(), -hero.getY());
+    }
+
+    public void popCameraPosition() {
+        PApplet app = Instance.getApp();
+
+        app.popMatrix();
+    }    
 
 }

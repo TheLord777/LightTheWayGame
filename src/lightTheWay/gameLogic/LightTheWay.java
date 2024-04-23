@@ -14,6 +14,17 @@ public class LightTheWay extends ComponentManager {
         super();
     }
 
+    @Override
+    public void play() {
+        if (showEndScreen && gamePaused || !gamePaused) {
+            pushCameraPosition();
+        }
+        super.play();
+        if (showEndScreen && gamePaused || !gamePaused) {
+            popCameraPosition();
+        }
+    }
+
 
     @Override
     protected void gameLoop() {
