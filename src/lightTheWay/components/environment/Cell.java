@@ -5,7 +5,7 @@ import gamecore.components.GameComponent;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class Cell extends GameComponent {
+public abstract class Cell extends GameComponent {
 
     private CellType type;
     private int spawnType ;
@@ -20,38 +20,6 @@ public class Cell extends GameComponent {
         this.type = CellType.fromInt(type);
         this.collisionShape = CollisionShape.RECTANGLE;
     }
-
-    @Override
-    protected void draw() {
-        switch (type) {
-            case EMPTY:
-                break;
-            case WALL:
-                drawRock();
-                break;
-            case LADDER:
-                drawLadder();
-                break;
-            case ROPE:
-                drawRope();
-                break;
-            case WATER:
-                drawWater();
-                break;
-            case CHEST:
-                drawChest();
-                break;
-            case ENEMYSPAWN:
-                spawnType = 1;
-                setSpawnType(spawnType);
-                break;
-            case PLAYERSPAWN:
-                spawnType = 2;
-                setSpawnType(spawnType);
-                break;
-        }
-    }
-
 
     @Override
     protected void update() {
@@ -72,32 +40,6 @@ public class Cell extends GameComponent {
         this.type = CellType.fromInt(type);
     }
 
-    private void drawLadder() {
-        LadderCell ladder = new LadderCell(new PVector(p.x, p.y), width, height);
-        ladder.draw();
-    }
-
-    private void drawRope() {
-        RopeCell rope = new RopeCell(new PVector(p.x, p.y), width, height);
-        rope.draw();
-    }
-
-
-    private void drawWater() {
-        WaterCell water = new WaterCell(new PVector(p.x, p.y), width, height);
-        water.draw();
-    }
-
-    private void drawChest() {
-        // Create and draw a ChestCell instance
-        ChestCell chest = new ChestCell(new PVector(p.x, p.y), width, height, false);
-        chest.draw();
-    }
-
-    private void drawRock(){
-        WallCell wall = new WallCell(new PVector(p.x, p.y), width, height);
-        wall.draw();
-    }
 
     private void setSpawnType(int spawnType){
         if(spawnType == 1){

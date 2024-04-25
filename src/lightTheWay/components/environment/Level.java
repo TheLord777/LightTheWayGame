@@ -33,7 +33,7 @@ public class Level extends GameComponent implements Serializable {
         // Initialize the map with random values
         for (int i = 0; i < cols; i++)
             for (int j = 0; j < rows; j++)
-                map[i][j] = new Cell(new PVector(i * tileSize, j * tileSize), tileSize, tileSize);
+                map[i][j] = new WallCell(new PVector(i * tileSize, j * tileSize), tileSize, tileSize);
 
         // Apply cellular automata rules to smooth the map
         for (int i = 0; i < generations; i++) applyAutomataRules();
@@ -54,7 +54,12 @@ public class Level extends GameComponent implements Serializable {
                 if (map[i][j].isEmpty()) t = aliveNeighbors >= 3 ? 1 : 0;
                 else t = aliveNeighbors >= 4 ? 1 : 0;
 
-                newMap[i][j] = new Cell(map[i][j].getP(), tileSize, tileSize, t); // Wall dies if it has fewer than 4 neighbors
+                if (t == 0){
+                    newMap[i][j] = new WallCell(map[i][j].getP(), tileSize, tileSize, t);
+                } else {
+                    newMap[i][j] = new Cell(map[i][j].getP(), tileSize, tileSize, t);
+                }
+                ; // Wall dies if it has fewer than 4 neighbors
             }
         }
 
