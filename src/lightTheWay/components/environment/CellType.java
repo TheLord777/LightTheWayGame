@@ -5,7 +5,10 @@ public enum CellType {
     WALL(1),
     LADDER(2),
     ROPE(3),
-    WATER(4);
+    WATER(4),
+    CHEST(5),
+    ENEMYSPAWN(6),
+    PLAYERSPAWN(7);
 
     private final int value;
 

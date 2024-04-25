@@ -8,7 +8,7 @@ import processing.core.PVector;
 public class Cell extends GameComponent {
 
     private CellType type;
-
+    private int spawnType ;
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
         this.type = Math.random() < .4 ? CellType.EMPTY : CellType.WALL;
@@ -38,6 +38,17 @@ public class Cell extends GameComponent {
             case WATER:
                 drawWater();
                 break;
+            case CHEST:
+                drawChest();
+                break;
+            case ENEMYSPAWN:
+                spawnType = 1;
+                setSpawnType(spawnType);
+                break;
+            case PLAYERSPAWN:
+                spawnType = 2;
+                setSpawnType(spawnType);
+                break;
         }
     }
 
@@ -53,8 +64,6 @@ public class Cell extends GameComponent {
         return false; // Placeholder, implement actual logic as needed
     }
 
-    // Additional methods specific to MapSquare can be added here
-
     public CellType getType() {
         return type;
     }
@@ -63,84 +72,40 @@ public class Cell extends GameComponent {
         this.type = CellType.fromInt(type);
     }
 
-    private int getColorFromNoise(float noiseVal) {
-        // Map noise value to a grayscale spectrum
-        float brightness = PApplet.map(noiseVal, 0, 1, 30, 220);  // Adjust brightness for variation
-        return app.color(brightness);
-    }
-
-
     private void drawLadder() {
-        app.pushStyle(); // Save the current style settings
-
-        app.stroke(0); // Black color for ladder strokes
-        app.strokeWeight(3); // Adjust the stroke weight as needed
-
-        // Calculate the dimensions for the ladder within the cell
-        float cellCenterX = getX() + getWidth() / 2.0f; // Center of the cell horizontally
-        float cellTopY = getY(); // Top of the cell
-        float cellBottomY = getY() + getHeight(); // Bottom of the cell
-
-        // Draw the left railing of the ladder
-        app.line(cellCenterX - 0.25f * getWidth(), cellTopY, cellCenterX - 0.25f * getWidth(), cellBottomY);
-
-        // Draw the right railing of the ladder
-        app.line(cellCenterX + 0.25f * getWidth(), cellTopY, cellCenterX + 0.25f * getWidth(), cellBottomY);
-
-        // Draw the horizontal step line in the middle of the cell
-        float stepY = cellTopY + getHeight() / 2.0f;
-        app.line(getX(), stepY, getX() + getWidth(), stepY);
-
-        app.popStyle(); // Restore the previous style settings
+        LadderCell ladder = new LadderCell(new PVector(p.x, p.y), width, height);
+        ladder.draw();
     }
-
 
     private void drawRope() {
-        app.pushStyle();
-
-        app.stroke(0); // Set stroke color to black
-        app.strokeWeight(4); // Set stroke weight as needed
-
-        // Calculate the x-coordinate of the center of the cell
-        float centerX = getX() + getWidth() / 2.0f;
-
-        // Calculate the y-coordinate of the top of the cell
-        float topY = getY() - getHeight() / 2.0f;
-
-        // Draw a vertical line from the top to the bottom of the cell
-        app.line(centerX, topY, centerX, getY() + getHeight());
-
-        app.popStyle();
+        RopeCell rope = new RopeCell(new PVector(p.x, p.y), width, height);
+        rope.draw();
     }
 
 
     private void drawWater() {
-        app.pushStyle();
-        app.fill(0, 0, 255);
-        app.rect(p.x, p.y, width, height);
-        app.popStyle();
+        WaterCell water = new WaterCell(new PVector(p.x, p.y), width, height);
+        water.draw();
     }
 
+    private void drawChest() {
+        // Create and draw a ChestCell instance
+        ChestCell chest = new ChestCell(new PVector(p.x, p.y), width, height, false);
+        chest.draw();
+    }
 
-    private void drawRock() {
-        float noiseVal = app.noise(p.x * 0.05f, p.y * 0.05f); // Adjust frequency as needed
-        int rockColor = getColorFromNoise(noiseVal);
+    private void drawRock(){
+        WallCell wall = new WallCell(new PVector(p.x, p.y), width, height);
+        wall.draw();
+    }
 
-        if (noiseVal < 0.45) { // Adjust the threshold for moss application (lower values for more moss)
-            // Calculate moss color with fading effect
-            float mossNoise = app.noise(p.x * 0.05f, p.y * 0.05f);
-            int mossBrightness = (int) app.map(mossNoise, 0, 1, 100, 200); // Adjust brightness range as needed
-            int mossSaturation = (int) app.map(mossNoise, 0, 1, 150, 255); // Adjust saturation range as needed
-            int mossHue = (int) app.map(mossNoise, 0, 1, 80, 120); // Adjust hue range as needed
-            app.fill(mossHue, mossSaturation, mossBrightness); // Moss color with fading effect
-        } else {
-            app.fill(rockColor);
+    private void setSpawnType(int spawnType){
+        if(spawnType == 1){
+            //spawn enemies
+        }else if (spawnType == 2){
+            //spawn Player
         }
-        app.rect(p.x, p.y, width, height);
-
-
     }
-
 
     public boolean isEmpty() {
         return type == CellType.EMPTY;
