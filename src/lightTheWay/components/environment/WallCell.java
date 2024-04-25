@@ -7,7 +7,7 @@ import processing.core.PVector;
 public class WallCell extends Cell {
 
     public WallCell(PVector p, float width, float height) {
-        super(p, width, height, CellType.WALL.getValue());
+        super(p, width, height);
     }
 
     @Override

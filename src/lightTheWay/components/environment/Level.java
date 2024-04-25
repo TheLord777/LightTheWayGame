@@ -56,7 +56,7 @@ public class Level extends GameComponent implements Serializable {
                 if (map[i][j] instanceof EmptyCell) t = aliveNeighbors >= 3 ? 1 : 0;
                 else t = aliveNeighbors >= 4 ? 1 : 0;
 
-                if (t == 0){
+                if (t == 0) {
                     newMap[i][j] = new WallCell(map[i][j].getP(), tileSize, tileSize);
                 } else {
                     newMap[i][j] = new EmptyCell(map[i][j].getP(), tileSize, tileSize);
@@ -92,8 +92,8 @@ public class Level extends GameComponent implements Serializable {
         b.draw();
         for (Cell[] squares : map) {
             for (Cell square : squares) {
-               if (dev || square.getIlluminated())
-                   square.draw(); // Draw each MapSquare
+                if (dev || square.getIlluminated())
+                    square.draw(); // Draw each MapSquare
 
             }
         }
@@ -143,7 +143,7 @@ public class Level extends GameComponent implements Serializable {
         List<Cell> res = new ArrayList<>();
 
         for (Cell neighbour : neighbours) {
-          if (!neighbour.isEmpty() && CollisionEngine.checkCollision(gc, neighbour)) res.add(neighbour);
+            if (!neighbour.isEmpty() && CollisionEngine.checkCollision(gc, neighbour)) res.add(neighbour);
         }
 
         res.add(c);
@@ -189,7 +189,9 @@ public class Level extends GameComponent implements Serializable {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
-        map[xIndex][yIndex].setType(t);
+        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t);
+
+
     }
 
 
@@ -210,7 +212,7 @@ public class Level extends GameComponent implements Serializable {
         return tileSize;
     }
 
-    public void setDev(boolean b){
+    public void setDev(boolean b) {
         this.dev = b;
     }
 }

@@ -6,9 +6,9 @@ import processing.core.PVector;
 
 public class ChestCell extends Cell{
     private boolean isOpen;
-    public ChestCell(PVector p, float width, float height, boolean isOpen) {
-        super(p, width, height, CellType.CHEST.getValue());
-        this.isOpen = isOpen;
+    public ChestCell(PVector p, float width, float height) {
+        super(p, width, height);
+        this.isOpen = false;
     }
 
     @Override

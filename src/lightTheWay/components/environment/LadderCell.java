@@ -5,7 +5,7 @@ import processing.core.PVector;
 
 public class LadderCell extends Cell{
     public LadderCell(PVector p, float width, float height) {
-        super(p, width, height, CellType.LADDER.getValue());
+        super(p, width, height);
     }
 
     @Override

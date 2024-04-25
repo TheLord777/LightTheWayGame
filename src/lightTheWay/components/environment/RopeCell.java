@@ -5,7 +5,7 @@ import processing.core.PVector;
 
 public class RopeCell extends Cell{
     public RopeCell(PVector p, float width, float height) {
-        super(p, width, height, CellType.ROPE.getValue());
+        super(p, width, height);
     }
 
     @Override

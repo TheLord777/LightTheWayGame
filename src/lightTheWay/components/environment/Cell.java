@@ -7,7 +7,8 @@ import processing.core.PVector;
 
 public abstract class Cell extends GameComponent {
 
-    private int spawnType ;
+    private int spawnType;
+
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
         this.collisionShape = CollisionShape.RECTANGLE;
@@ -32,11 +33,10 @@ public abstract class Cell extends GameComponent {
     }
 
 
-
-    private void setSpawnType(int spawnType){
-        if(spawnType == 1){
+    private void setSpawnType(int spawnType) {
+        if (spawnType == 1) {
             //spawn enemies
-        }else if (spawnType == 2){
+        } else if (spawnType == 2) {
             //spawn Player
         }
     }
@@ -63,7 +63,35 @@ public abstract class Cell extends GameComponent {
         return this instanceof WaterCell;
     }
 
-    public static Cell createIntialCell(PVector p, float width, float height){
+    public static Cell createIntialCell(PVector p, float width, float height) {
         return Math.random() < .35 ? new EmptyCell(p, width, height) : new WallCell(p, width, height);
     }
+
+    public static Cell cellFromType(Cell oldCell, int t) {
+        switch (t) {
+            case 0:
+                return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 1:
+                return new WallCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 2:
+                return new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 3:
+                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 4:
+                return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 5:
+                return new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 6:
+                return new CampCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 7:
+                return new SpawnCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 8:
+                return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+
+
+            default:
+                return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+        }
+    }
+
 }
