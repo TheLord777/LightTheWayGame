@@ -12,7 +12,7 @@ public class Frame extends GameComponent {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         //create frame boarder
         app.fill(25);
         app.stroke(0, 0, 50);

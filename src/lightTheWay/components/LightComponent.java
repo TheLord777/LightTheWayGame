@@ -45,7 +45,7 @@ public class LightComponent extends GameComponent {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
 //        app.fill(255, 165, 0);
 //        drawFire(this.getLightDisplaySize() / 10);
 //

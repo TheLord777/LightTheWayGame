@@ -28,7 +28,7 @@ public class Character extends DynamicComponent {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         app.fill(255, 0, 0);
         app.ellipse(p.x, p.y, width, width);
     }

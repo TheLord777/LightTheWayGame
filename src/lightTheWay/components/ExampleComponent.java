@@ -12,7 +12,7 @@ public class ExampleComponent extends GameComponent {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         app.fill(255, 0, 0);
         app.rect(p.x, p.y, width, height);
     }

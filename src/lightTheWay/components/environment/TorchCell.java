@@ -7,5 +7,10 @@ public class TorchCell extends Cell{
         super(p, width, height, CellType.WALL.getValue());
     }
 
+    @Override
+    public void draw() {
+
+    }
+
 
 }

@@ -11,7 +11,7 @@ public class WallCell extends Cell {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
 
         float noiseVal = app.noise(p.x * 0.05f, p.y * 0.05f); // Adjust frequency as needed
         int rockColor = getColorFromNoise(noiseVal);

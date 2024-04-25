@@ -15,7 +15,7 @@ public class PlayableCharacter extends Character {
 
 
     @Override
-    protected void draw() {
+    public void draw() {
         super.draw();
     }
 

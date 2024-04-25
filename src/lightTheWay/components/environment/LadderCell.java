@@ -9,7 +9,7 @@ public class LadderCell extends Cell{
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
 
         app.pushStyle(); // Save the current style settings
 

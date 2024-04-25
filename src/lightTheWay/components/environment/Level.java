@@ -35,7 +35,7 @@ public class Level extends GameComponent implements Serializable {
         // Initialize the map with random values
         for (int i = 0; i < cols; i++)
             for (int j = 0; j < rows; j++)
-                map[i][j] = new WallCell(new PVector(i * tileSize, j * tileSize), tileSize, tileSize);
+                map[i][j] = Cell.createIntialCell(new PVector(i * tileSize, j * tileSize), tileSize, tileSize);
 
         // Apply cellular automata rules to smooth the map
         for (int i = 0; i < generations; i++) applyAutomataRules();
@@ -53,13 +53,13 @@ public class Level extends GameComponent implements Serializable {
 
                 int t;
 
-                if (map[i][j].isEmpty()) t = aliveNeighbors >= 3 ? 1 : 0;
+                if (map[i][j] instanceof EmptyCell) t = aliveNeighbors >= 3 ? 1 : 0;
                 else t = aliveNeighbors >= 4 ? 1 : 0;
 
                 if (t == 0){
                     newMap[i][j] = new WallCell(map[i][j].getP(), tileSize, tileSize);
                 } else {
-                    newMap[i][j] = null;
+                    newMap[i][j] = new EmptyCell(map[i][j].getP(), tileSize, tileSize);
                 }
             }
         }
@@ -78,7 +78,7 @@ public class Level extends GameComponent implements Serializable {
                 int neighborY = y + j;
 
                 if (neighborX >= 0 && neighborX < map.length && neighborY >= 0 && neighborY < map[0].length) {
-                    count += map[neighborX][neighborY].isEmpty() ? 1 : 0;
+                    count += map[neighborX][neighborY] instanceof EmptyCell ? 1 : 0;
                 }
             }
         }

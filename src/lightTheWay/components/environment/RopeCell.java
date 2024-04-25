@@ -9,7 +9,7 @@ public class RopeCell extends Cell{
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         app.pushStyle();
 
         app.stroke(0); // Set stroke color to black

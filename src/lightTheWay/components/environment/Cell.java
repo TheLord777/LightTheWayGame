@@ -26,6 +26,12 @@ public abstract class Cell extends GameComponent {
         // Update logic for MapSquare goes here
     }
 
+    public PVector getClosestPoint(PVector p) {
+        float x = PApplet.constrain(p.x, this.p.x, this.p.x + width);
+        float y = PApplet.constrain(p.y, this.p.y, this.p.y + height);
+        return new PVector(x, y);
+    }
+
     @Override
     public boolean intersection(GameComponent ge) {
         // Intersection logic for MapSquare goes here
@@ -71,5 +77,9 @@ public abstract class Cell extends GameComponent {
 
     public boolean isWater() {
         return type == CellType.WATER;
+    }
+
+    public static Cell createIntialCell(PVector p, float width, float height){
+        return Math.random() < .35 ? new EmptyCell(p, width, height) : new WallCell(p, width, height);
     }
 }

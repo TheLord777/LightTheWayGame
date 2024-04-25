@@ -11,7 +11,7 @@ public class WaterCell extends Cell{
     }
 
     @Override
-    protected void draw(){
+    public void draw(){
         app.pushStyle();
         app.fill(0, 0, 255);
         app.rect(p.x, p.y, width, height);

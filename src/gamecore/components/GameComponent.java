@@ -53,7 +53,7 @@ public abstract class GameComponent implements Serializable {
     /**
      * Draw the game component.
      */
-    protected abstract void draw();
+    public abstract void draw();
 
     /**
      * Update the game component.

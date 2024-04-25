@@ -12,7 +12,7 @@ public class ChestCell extends Cell{
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         app.pushStyle();
         app.fill(200);
         app.strokeWeight(2);
