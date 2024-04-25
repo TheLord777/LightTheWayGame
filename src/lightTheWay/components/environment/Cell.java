@@ -7,19 +7,12 @@ import processing.core.PVector;
 
 public abstract class Cell extends GameComponent {
 
-    private CellType type;
     private int spawnType ;
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
-        this.type = Math.random() < .4 ? CellType.EMPTY : CellType.WALL;
         this.collisionShape = CollisionShape.RECTANGLE;
     }
 
-    public Cell(PVector p, float width, float height, int type) {
-        super(p, width, height);
-        this.type = CellType.fromInt(type);
-        this.collisionShape = CollisionShape.RECTANGLE;
-    }
 
     @Override
     protected void update() {
@@ -38,15 +31,6 @@ public abstract class Cell extends GameComponent {
         return false; // Placeholder, implement actual logic as needed
     }
 
-    // Additional methods specific to MapSquare can be added here
-
-    public CellType getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = CellType.fromInt(type);
-    }
 
 
     private void setSpawnType(int spawnType){
@@ -58,25 +42,25 @@ public abstract class Cell extends GameComponent {
     }
 
     public boolean isEmpty() {
-        return type == CellType.EMPTY;
+        return this instanceof EmptyCell;
     }
 
     public boolean isWall() {
-        return type == CellType.WALL;
+        return this instanceof WallCell;
     }
 
 
     public boolean isLadder() {
-        return type == CellType.LADDER;
+        return this instanceof LadderCell;
     }
 
 
     public boolean isRope() {
-        return type == CellType.ROPE;
+        return this instanceof RopeCell;
     }
 
     public boolean isWater() {
-        return type == CellType.WATER;
+        return this instanceof WaterCell;
     }
 
     public static Cell createIntialCell(PVector p, float width, float height){
