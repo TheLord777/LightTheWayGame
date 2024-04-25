@@ -25,5 +25,9 @@ public class PlayableCharacter extends Character {
         return light;
     }
 
+    public LightComponent getLight() {
+        return light;
+    }
+
 
 }

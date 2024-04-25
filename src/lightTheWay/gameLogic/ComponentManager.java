@@ -8,6 +8,7 @@ import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PVector;
 import lightTheWay.components.ExampleComponent;
+import lightTheWay.components.HUDComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -24,6 +25,8 @@ public abstract class ComponentManager extends GameEngine {
     Level level;
 
     PlayableCharacter hero;
+
+    HUDComponent hud;
 
     protected ComponentManager() {
         super(Instance.getApp(), Collisions.getInstance());
@@ -47,6 +50,7 @@ public abstract class ComponentManager extends GameEngine {
 
 
         // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
+        hud = new HUDComponent(hero);
 
 
 

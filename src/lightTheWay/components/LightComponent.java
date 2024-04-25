@@ -46,11 +46,11 @@ public class LightComponent extends GameComponent {
 
     @Override
     protected void draw() {
-//        app.fill(255, 165, 0);
-//        drawFire(this.getLightDisplaySize() / 10);
-//
-//        app.fill(255, 0, 0);
-//        drawFire(2 * this.getLightDisplaySize() / 30);
+       app.fill(255, 165, 0);
+       drawFire(this.getLightDisplaySize() / 10);
+
+       app.fill(255, 0, 0);
+       drawFire(2 * this.getLightDisplaySize() / 30);
     }
 
     protected void drawFire(float circleRadius) {
@@ -62,7 +62,7 @@ public class LightComponent extends GameComponent {
 
     @Override
     protected void update() {
-//        flicker();
+        flicker();
 
         decrementLight();
     }

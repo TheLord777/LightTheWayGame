@@ -2,6 +2,7 @@ package lightTheWay.gameLogic;
 
 import lightTheWay.Instance;
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 import java.io.*;
 
@@ -22,7 +23,11 @@ public class LightTheWay extends ComponentManager {
         super.play();
         if (showEndScreen && gamePaused || !gamePaused) {
             popCameraPosition();
+            this.hud.step();
         }
+        app.fill(255);
+        app.textAlign(PConstants.CENTER, PConstants.TOP);
+        app.text("Frame Rate: " + app.frameRate, 100, 10);
     }
 
 
