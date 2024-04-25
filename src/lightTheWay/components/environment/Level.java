@@ -55,17 +55,17 @@ public class Level extends GameComponent implements Serializable {
                 else t = aliveNeighbors >= 4 ? 1 : 0;
 
                 if (t == 0){
-                    newMap[i][j] = new WallCell(map[i][j].getP(), tileSize, tileSize, t);
+                    newMap[i][j] = new WallCell(map[i][j].getP(), tileSize, tileSize);
                 } else {
-                    newMap[i][j] = new Cell(map[i][j].getP(), tileSize, tileSize, t);
+                    newMap[i][j] = null;
                 }
-                ; // Wall dies if it has fewer than 4 neighbors
             }
         }
 
         // Update the map
         map = newMap;
     }
+
 
     private int countAliveNeighbors(int x, int y) {
         int count = 0;
