@@ -12,6 +12,8 @@ public abstract class Cell extends GameComponent {
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
         this.collisionShape = CollisionShape.RECTANGLE;
+
+
     }
 
 
@@ -87,6 +89,8 @@ public abstract class Cell extends GameComponent {
                 return new SpawnCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 8:
                 return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 9:
+                return new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),200,300);
 
 
             default:
