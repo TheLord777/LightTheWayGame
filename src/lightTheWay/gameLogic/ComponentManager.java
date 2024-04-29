@@ -53,6 +53,8 @@ public abstract class ComponentManager extends GameEngine {
         // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
         hud = new HUDComponent(hero);
 
+        animationEngine.addComponent(new CampComponent(new PVector(150,app.height -200), 250));
+
 
 
 //        // Initialize tileSize

@@ -3,10 +3,15 @@ package lightTheWay.components;
 import gamecore.components.GameComponent;
 import lightTheWay.Instance;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class CampComponent extends LightComponent {
 
-    public CampComponent(float x, float y, float w, float h, float l) {
+    public CampComponent(PVector p, float l) {
+        super(p, l, 0);
+    }    
+
+    public CampComponent(float x, float y, float l) {
         super(x, y, l);
     }
 
@@ -102,5 +107,9 @@ public class CampComponent extends LightComponent {
         return false;
     }
 
+    @Override
+    public void setIlluminated(boolean b) {
+        this.illuminated = true; // can never not be illuminated
+    }
 
 }
