@@ -69,7 +69,7 @@ public abstract class Cell extends GameComponent {
         return Math.random() < .35 ? new EmptyCell(p, width, height) : new WallCell(p, width, height);
     }
 
-    public static Cell cellFromType(Cell oldCell, int t) {
+    public static Cell cellFromType(Cell oldCell, int t, Level level) {
         switch (t) {
             case 0:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
@@ -90,7 +90,7 @@ public abstract class Cell extends GameComponent {
             case 8:
                 return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 9:
-                return new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),200,300);
+                return new Stalactite(level, oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),200,300);
 
 
             default:

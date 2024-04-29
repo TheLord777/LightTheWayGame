@@ -189,7 +189,7 @@ public class Level extends GameComponent implements Serializable {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
-        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t);
+        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
 
 
     }
