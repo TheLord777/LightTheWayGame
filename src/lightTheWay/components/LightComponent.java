@@ -45,24 +45,24 @@ public class LightComponent extends GameComponent {
     }
 
     @Override
-    public void draw() {
-        app.fill(255, 165, 0);
-        drawFire(this.getLightDisplaySize() / 10);
+    protected void draw() {
+       app.fill(255, 165, 0);
+       drawFire(this.getLightDisplaySize() / 10);
 
-        app.fill(255, 0, 0);
-        drawFire(2 * this.getLightDisplaySize() / 30);
+       app.fill(255, 0, 0);
+       drawFire(2 * this.getLightDisplaySize() / 30);
     }
 
-    protected void drawFire(float circleRadius) {
-        app.circle(p.x, p.y, circleRadius);
-        app.triangle(p.x - circleRadius / 2, p.y, p.x + circleRadius / 2, p.y, p.x, p.y - circleRadius);
-        app.triangle(p.x - circleRadius / 2, p.y, p.x + circleRadius / 2, p.y, p.x - circleRadius / 2, p.y - circleRadius / 2);
-        app.triangle(p.x - circleRadius / 2, p.y, p.x + circleRadius / 2, p.y, p.x + circleRadius / 2, p.y - 2 * circleRadius / 3);
+    protected void drawFire(float circleDiameter) {
+        app.circle(p.x, p.y, circleDiameter);
+        app.triangle(p.x - circleDiameter / 2, p.y, p.x + circleDiameter / 2, p.y, p.x, p.y - circleDiameter);
+        app.triangle(p.x - circleDiameter / 2, p.y, p.x + circleDiameter / 2, p.y, p.x - circleDiameter / 2, p.y - circleDiameter / 2);
+        app.triangle(p.x - circleDiameter / 2, p.y, p.x + circleDiameter / 2, p.y, p.x + circleDiameter / 2, p.y - 2 * circleDiameter / 3);
     }
 
     @Override
     protected void update() {
-//        flicker();
+        flicker();
 
         decrementLight();
     }
