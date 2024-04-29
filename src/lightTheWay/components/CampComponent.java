@@ -45,7 +45,7 @@ public class CampComponent extends LightComponent {
 
         float yPosition = p.y + diameter / 2 + 5;
 
-        drawTent(p.x - 3 * diameter / 2, yPosition - 5, true, 1);
+        drawTent(p.x - 5 * diameter / 4, yPosition - 5, true, 1);
 
         drawTent(p.x + diameter, yPosition, true, 0);
 
@@ -55,6 +55,9 @@ public class CampComponent extends LightComponent {
 
     protected void drawTent(float xPosition, float yPosition, boolean faceLeft, int colorChoice) {
         PApplet app = Instance.getApp();
+
+        float tentHeight = this.getLightSize() / 6.25f;
+        float tentOpeningWidth = this.getLightSize() / 10;
 
         int directionMultiplier = faceLeft ? 1 : -1;
 
@@ -71,10 +74,10 @@ public class CampComponent extends LightComponent {
             default: // white (fallback)
                 app.fill(150, 150, 150);
         }
-        app.triangle(xPosition, yPosition, xPosition + (50 * directionMultiplier), yPosition, xPosition + (25 * directionMultiplier), yPosition - 80);
+        app.triangle(xPosition, yPosition, xPosition + (tentOpeningWidth * directionMultiplier), yPosition, xPosition + (tentOpeningWidth / 2 * directionMultiplier), yPosition - tentHeight);
 
         app.fill(205,133,63);
-        app.rect(xPosition + (25 * directionMultiplier), yPosition - 80, (5 * directionMultiplier), 80);
+        app.rect(xPosition + (tentOpeningWidth / 2 * directionMultiplier), yPosition - tentHeight, (3 * directionMultiplier), tentHeight);
 
         switch (colorChoice) {
             case 0: // blue
@@ -89,10 +92,10 @@ public class CampComponent extends LightComponent {
             default: // white (fallback)
                 app.fill(200, 200, 200);
         }
-        app.quad(xPosition + (50 * directionMultiplier), yPosition, 
-                 xPosition + (25 * directionMultiplier), yPosition - 80, 
-                 xPosition + (105 * directionMultiplier), yPosition - 80,
-                 xPosition + (130 * directionMultiplier), yPosition);
+        app.quad(xPosition + (tentOpeningWidth * directionMultiplier), yPosition, 
+                 xPosition + (tentOpeningWidth / 2 * directionMultiplier), yPosition - tentHeight, 
+                 xPosition + ((tentHeight + tentOpeningWidth / 2) * directionMultiplier), yPosition - tentHeight,
+                 xPosition + ((tentHeight + tentOpeningWidth) * directionMultiplier), yPosition);
     }
 
     @Override
