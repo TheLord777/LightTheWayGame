@@ -24,7 +24,7 @@ public class HUDComponent extends GameComponent {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         app.fill(102, 102, 102);
         app.triangle(p.x, p.y - 20, p.x, p.y + height, p.x - width / 16, p.y + height);
         app.rect(p.x, p.y - 20, width, height + 20);

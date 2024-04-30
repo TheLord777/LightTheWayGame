@@ -4,14 +4,39 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class RopeCell extends Cell{
-    public RopeCell(PVector p, float width, float height) {
+    private boolean isWall;
+    private WallCell wallcell;
+    public RopeCell(PVector p, float width, float height, boolean isWall) {
         super(p, width, height);
+        this.isWall = isWall;
     }
 
     @Override
     public void draw() {
-        app.pushStyle();
+        if (isWall) {
+            // If the cell is a wall, draw the wall cell
+            drawWallCell();
+            // Draw the rope on top of the wall cell
+            drawRope();
+        } else {
+            // If the cell is not a wall, just draw an empty cell
+            drawEmptyCell();
+        }
+    }
 
+    private void drawWallCell() {
+        WallCell wallCell = new WallCell(p, getWidth(), getHeight());
+        wallCell.draw();
+    }
+
+    private void drawEmptyCell() {
+        // Draw an empty cell (e.g., a transparent rectangle)
+        app.noFill(); // Set fill color to transparent
+        app.rect(getX(), getY(), getWidth(), getHeight());
+    }
+
+    private void drawRope() {
+        app.pushStyle();
         app.stroke(0); // Set stroke color to black
         app.strokeWeight(4); // Set stroke weight as needed
 

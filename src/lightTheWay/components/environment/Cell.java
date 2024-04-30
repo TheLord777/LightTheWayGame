@@ -43,6 +43,7 @@ public abstract class Cell extends GameComponent {
         }
     }
 
+
     public boolean isEmpty() {
         return this instanceof EmptyCell;
     }
@@ -78,7 +79,7 @@ public abstract class Cell extends GameComponent {
             case 2:
                 return new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 3:
-                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), true);
             case 4:
                 return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 5:
@@ -90,7 +91,7 @@ public abstract class Cell extends GameComponent {
             case 8:
                 return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 9:
-                return new Stalactite(level, oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),200,300);
+                return new Stalactite(level, oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),20,500);
 
 
             default:

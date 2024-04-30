@@ -16,7 +16,7 @@ public class CampComponent extends LightComponent {
     }
 
     @Override
-    protected void draw() {
+    public void draw() {
         drawCamp();
 
         drawLogs();
