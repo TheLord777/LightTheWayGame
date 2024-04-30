@@ -2,6 +2,7 @@ package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
+import lightTheWay.components.LightComponent;
 import processing.core.PVector;
 
 import java.io.Serializable;
@@ -215,4 +216,19 @@ public class Level extends GameComponent implements Serializable {
     public void setDev(boolean b) {
         this.dev = b;
     }
+
+    public ArrayList<LightComponent> getLightComponents() {
+        ArrayList<LightComponent> lights = new ArrayList<>();
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                if (map[i][j] instanceof TorchCell) {
+                    lights.add(((TorchCell) map[i][j]).getLightComponent());
+                } else if (map[i][j] instanceof CampCell) {
+                    lights.add(((CampCell) map[i][j]).getLightComponent());
+                }
+            }
+        }
+        return lights;
+    }
+
 }

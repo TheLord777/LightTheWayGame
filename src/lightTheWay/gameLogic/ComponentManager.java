@@ -19,6 +19,7 @@ import lightTheWay.components.environment.Level;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
 
@@ -53,9 +54,13 @@ public abstract class ComponentManager extends GameEngine {
         // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
         hud = new HUDComponent(hero);
 
-        animationEngine.addComponent(new CampComponent(new PVector(150,app.height -200), 250));
+        // animationEngine.addComponent(new CampComponent(new PVector(150,app.height -200), 250));
 
+        ArrayList<LightComponent> lights = level.getLightComponents();
 
+        for (LightComponent light : lights) {
+            animationEngine.addComponent(light);
+        }
 
 //        // Initialize tileSize
 //        animationEngine.removeAllComponents();

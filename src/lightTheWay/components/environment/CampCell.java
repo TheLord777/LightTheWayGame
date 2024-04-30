@@ -25,4 +25,8 @@ public class CampCell extends Cell {
         campComponent.draw();
         lightComponent.draw();
     }
+
+    public LightComponent getLightComponent() {
+        return lightComponent;
+    }
 }

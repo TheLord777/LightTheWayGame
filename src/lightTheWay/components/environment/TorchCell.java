@@ -14,7 +14,7 @@ public class TorchCell extends Cell {
         // Initialize the torch light at the center of the cell
         float lightX = p.x + width / 2;
         float lightY = p.y + height / 2;
-        torchLight = new LightComponent(lightX, lightY, height / 2, 0);
+        torchLight = new LightComponent(lightX, lightY, width * 10, 0);
         wallcell = new WallCell(p, width, height);
     }
 
@@ -36,5 +36,9 @@ public class TorchCell extends Cell {
         // Draw the torch light
         torchLight.draw();
         app.popStyle();
+    }
+
+    public LightComponent getLightComponent() {
+        return torchLight;
     }
 }
