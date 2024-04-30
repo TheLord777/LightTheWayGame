@@ -4,39 +4,17 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class RopeCell extends Cell{
-    private boolean isWall;
-    private WallCell wallcell;
-    public RopeCell(PVector p, float width, float height, boolean isWall) {
+    private boolean isSpawnCell;
+
+    public RopeCell(PVector p, float width, float height, boolean isSpawnCell) {
         super(p, width, height);
-        this.isWall = isWall;
+        this.isSpawnCell = isSpawnCell;
     }
 
     @Override
     public void draw() {
-        if (isWall) {
-            // If the cell is a wall, draw the wall cell
-            drawWallCell();
-            // Draw the rope on top of the wall cell
-            drawRope();
-        } else {
-            // If the cell is not a wall, just draw an empty cell
-            drawEmptyCell();
-        }
-    }
-
-    private void drawWallCell() {
-        WallCell wallCell = new WallCell(p, getWidth(), getHeight());
-        wallCell.draw();
-    }
-
-    private void drawEmptyCell() {
-        // Draw an empty cell (e.g., a transparent rectangle)
-        app.noFill(); // Set fill color to transparent
-        app.rect(getX(), getY(), getWidth(), getHeight());
-    }
-
-    private void drawRope() {
         app.pushStyle();
+
         app.stroke(0); // Set stroke color to black
         app.strokeWeight(4); // Set stroke weight as needed
 
@@ -52,6 +30,24 @@ public class RopeCell extends Cell{
         app.popStyle();
     }
 
+    // Example usage of isSpawnCell in RopeCell
+    public void setToSpawn() {
+        if (isSpawnCell()) {
+            // Do something specific for spawn cells
+            app.fill(0,0,0);
+            System.out.println("set to spawn");
+        } else {
+            // Do something else
+        }
+    }
+
+    public boolean isSpawnCell() {
+        return isSpawnCell;
+    }
+
+    public void setSpawnCell(boolean spawnCell) {
+        isSpawnCell = spawnCell;
+    }
     @Override
     public boolean intersection(GameComponent ge) {
         return super.intersection(ge);

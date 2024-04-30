@@ -4,19 +4,16 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class LadderCell extends Cell{
-    private WallCell wallcell;
 
     public LadderCell(PVector p, float width, float height) {
         super(p, width, height);
-        wallcell = new WallCell(p, width, height);
-
     }
 
     @Override
     public void draw() {
 
         app.pushStyle(); // Save the current style settings
-        wallcell.draw();
+
         app.stroke(0); // Black color for ladder strokes
         app.strokeWeight(3); // Adjust the stroke weight as needed
 

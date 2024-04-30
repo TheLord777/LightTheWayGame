@@ -1,6 +1,9 @@
 package lightTheWay.components.environment;
 
+import gamecore.engine.AnimationEngine;
+import lightTheWay.components.CampComponent;
 import lightTheWay.components.LightComponent;
+import lightTheWay.gameLogic.ComponentManager;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -14,8 +17,9 @@ public class TorchCell extends Cell {
         // Initialize the torch light at the center of the cell
         float lightX = p.x + width / 2;
         float lightY = p.y + height / 2;
-        torchLight = new LightComponent(lightX, lightY, width * 10, 0);
+        torchLight = new LightComponent(lightX, lightY, width * 5, 0);
         wallcell = new WallCell(p, width, height);
+
     }
 
     @Override
@@ -27,7 +31,7 @@ public class TorchCell extends Cell {
 
         // Draw the torch handle
         float handleWidth = width / 4; // Adjust handle width as needed
-        float handleHeight = height / 2; // Adjust handle height as needed
+        float handleHeight = height ; // Adjust handle height as needed
         float handleX = p.x + (width - handleWidth) / 2; // Center the handle horizontally
         float handleY = p.y + (height - handleHeight) / 2; // Center the handle vertically
         app.fill(139, 69, 19); // Brown color for torch handle
@@ -35,6 +39,7 @@ public class TorchCell extends Cell {
 
         // Draw the torch light
         torchLight.draw();
+
         app.popStyle();
     }
 
