@@ -111,10 +111,10 @@ public class Level extends GameComponent implements Serializable {
         List<Cell> neighbours = getNeighbours(c);
 
         for (Cell neighbour : neighbours) {
-            if (!neighbour.isEmpty() && CollisionEngine.checkCollision(ge, neighbour)) return true;
+            if (neighbour.isWall() && CollisionEngine.checkCollision(ge, neighbour)) return true;
         }
 
-        return !c.isEmpty() && CollisionEngine.checkCollision(ge, c);
+        return c.isWall() && CollisionEngine.checkCollision(ge, c);
     }
 
 
@@ -126,7 +126,7 @@ public class Level extends GameComponent implements Serializable {
 
         List<Cell> neighbours = getNeighbours(current);
         for (Cell neighbour : neighbours) {
-            if (neighbour.isEmpty()) continue;
+            if (!neighbour.isWall()) continue;
             PVector p = neighbour.getClosestPoint(gc.getP());
             float d = PVector.dist(p, gc.getP());
             if (d < minDist) {
