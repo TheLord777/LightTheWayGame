@@ -76,7 +76,9 @@ public class PlayableCharacter extends Character {
             if (left) applyForce(new PVector(-speed, 0));
             if (right) applyForce(new PVector(speed, 0));
             if (up) applyForce(new PVector(0, -speed *30));
-            if (down) applyForce(new PVector(0, +speed *30));
+            if (down) {
+                applyForce(new PVector(0, +speed *30));
+            }
         } else {
             super.move();
         }
@@ -126,6 +128,12 @@ public class PlayableCharacter extends Character {
         } else if (closest instanceof TorchCell) {
             TorchCell torch = (TorchCell) closest;
             if (!torch.getIgnited()) torch.ignite();
+        }
+    }
+
+    public void useItem(boolean item) {
+        if (item) {
+            light.restore(0.5f);
         }
     }
 
