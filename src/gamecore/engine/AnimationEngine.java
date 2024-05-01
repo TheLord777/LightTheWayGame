@@ -27,7 +27,7 @@ final public class AnimationEngine {
 
     private final ArrayList<GameComponent> components; // Collection of all active components to render.
 
-    private AnimationEngine() {
+    public AnimationEngine() {
         components = new ArrayList<>();
     }
 
