@@ -4,6 +4,7 @@ import lightTheWay.components.LightComponent;
 import lightTheWay.components.environment.CampCell;
 import lightTheWay.components.environment.Cell;
 import lightTheWay.components.environment.Level;
+import lightTheWay.components.environment.TorchCell;
 import processing.core.PVector;
 
 public class PlayableCharacter extends Character {
@@ -43,5 +44,19 @@ public class PlayableCharacter extends Character {
         return light;
     }
 
+    public void showInteractions() {
+        
+    }
+
+    public void interact() {
+        // Handle state with special tiles
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+        System.out.println("interact");
+        if (current instanceof TorchCell) {
+            System.out.println("iffififif");
+            TorchCell torch = (TorchCell) current;
+            if (!torch.getIgnited()) torch.ignite();
+        }
+    }
 
 }

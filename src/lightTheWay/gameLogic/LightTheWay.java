@@ -65,6 +65,11 @@ public class LightTheWay extends ComponentManager {
 
     }
 
+    public void fKeyDown() {
+        System.out.println("hallo");
+        hero.interact();
+    }
+
     @Override
     public void rightKeyUp() {
         hero.setRight(false);

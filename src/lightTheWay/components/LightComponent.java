@@ -46,11 +46,23 @@ public class LightComponent extends GameComponent {
 
     @Override
     public void draw() {
-       app.fill(255, 165, 0);
-       drawFire(this.getLightDisplaySize() / 10);
+        draw(false);
+    }
 
-       app.fill(255, 0, 0);
-       drawFire(2 * this.getLightDisplaySize() / 30);
+    public void draw(boolean magical) {
+        if (magical) {
+            app.fill(0, 255, 0);
+        } else {
+            app.fill(255, 165, 0);
+        }
+        drawFire(this.getLightDisplaySize() / 10);
+
+        if (magical) {
+            app.fill(0, 255, 255);
+        } else {
+            app.fill(255, 0, 0);
+        }
+        drawFire(2 * this.getLightDisplaySize() / 30);
     }
 
     public void drawFire(float circleDiameter) {
@@ -190,5 +202,5 @@ public class LightComponent extends GameComponent {
     public void reignite() {
         setLightSize(defaultSize);
     }
-    
+
 }

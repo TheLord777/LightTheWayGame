@@ -5,8 +5,9 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public class TorchCell extends Cell {
+    private boolean ignited = false;
     private LightComponent torchLight; // LightComponent for the torch flame
-    private WallCell wallcell;
+    // private WallCell wallcell;
 
     public TorchCell(PVector p, float width, float height) {
         super(p, width, height);
@@ -14,16 +15,15 @@ public class TorchCell extends Cell {
         // Initialize the torch light at the center of the cell
         float lightX = p.x + width / 2;
         float lightY = p.y + height / 2;
-        torchLight = new LightComponent(lightX, lightY, width * 10, 0);
-        wallcell = new WallCell(p, width, height);
+        torchLight = new LightComponent(lightX, lightY, 0, 0);
+        // wallcell = new WallCell(p, width, height);
     }
 
     @Override
     public void draw() {
         app.pushStyle();
-        // Draw the wall cell
-        wallcell.draw();
-
+        // // Draw the wall cell
+        // wallcell.draw();
 
         // Draw the torch handle
         float handleWidth = width / 4; // Adjust handle width as needed
@@ -34,8 +34,17 @@ public class TorchCell extends Cell {
         app.rect(handleX, handleY, handleWidth, handleHeight);
 
         // Draw the torch light
-        torchLight.draw();
+        if (ignited) torchLight.draw(true);
         app.popStyle();
+    }
+
+    public boolean getIgnited() {
+        return ignited;
+    }
+
+    public void ignite() {
+        ignited = true;
+        torchLight.setLightSize(width * 10);
     }
 
     public LightComponent getLightComponent() {
