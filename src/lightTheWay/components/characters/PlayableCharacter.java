@@ -5,10 +5,13 @@ import java.util.List;
 import lightTheWay.components.LightComponent;
 import lightTheWay.components.environment.CampCell;
 import lightTheWay.components.environment.Cell;
+import lightTheWay.components.environment.LadderCell;
 import lightTheWay.components.environment.Level;
 import lightTheWay.components.environment.TorchCell;
 import processing.core.PConstants;
 import processing.core.PVector;
+
+import static lightTheWay.GameConfig.MAX_SPEED;
 
 public class PlayableCharacter extends Character {
 
@@ -17,12 +20,6 @@ public class PlayableCharacter extends Character {
 
     public PlayableCharacter(PVector p, float width, Level l) {
         super(p, width, l);
-    }
-
-
-    @Override
-    public void draw() {
-        super.draw();
     }
 
     @Override
@@ -47,6 +44,42 @@ public class PlayableCharacter extends Character {
 
     public LightComponent getLight() {
         return light;
+    }
+
+    @Override
+    public void draw() {
+        super.draw();
+    }
+
+    @Override
+    public boolean standing() {
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        return super.standing() || onLadder();
+    }
+
+    private boolean onLadder() {
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        return current instanceof LadderCell;
+    }
+
+    @Override
+    public void move() {
+        if (onLadder()) {
+            if (Math.abs(v.x) >= MAX_SPEED) {
+                v.x = MAX_SPEED * Math.signum(v.x);
+                return;
+            }
+
+            float speed = 500;
+            if (left) applyForce(new PVector(-speed, 0));
+            if (right) applyForce(new PVector(speed, 0));
+            if (up) applyForce(new PVector(0, -speed *30));
+            if (down) applyForce(new PVector(0, +speed *30));
+        } else {
+            super.move();
+        }
     }
 
     public Cell findInteractionTarget() {
