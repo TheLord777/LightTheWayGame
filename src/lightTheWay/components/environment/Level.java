@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.min;
+
 public class Level extends GameComponent implements Serializable {
 
     private int tileSize;
@@ -26,8 +28,9 @@ public class Level extends GameComponent implements Serializable {
         this.tileSize = tileSize;
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
-
+        float newTileSize = min(width, height) / 50;
         generateMap();
+        setCellSize(newTileSize);
     }
 
     private void generateMap() {
@@ -41,6 +44,16 @@ public class Level extends GameComponent implements Serializable {
         // Apply cellular automata rules to smooth the map
         for (int i = 0; i < generations; i++) applyAutomataRules();
 
+    }
+    public void setCellSize(float tileSize) {
+        // Iterate over each cell in the map
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                // Set the width and height of each cell to the specified tileSize
+                map[i][j].setWidth(tileSize);
+                map[i][j].setHeight(tileSize);
+            }
+        }
     }
 
 
@@ -206,6 +219,7 @@ public class Level extends GameComponent implements Serializable {
         int y = (int) (p.y / tileSize);
         return map[x][y];
     }
+
 
     public int getTileSize() {
         return tileSize;

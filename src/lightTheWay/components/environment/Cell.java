@@ -8,10 +8,12 @@ import processing.core.PVector;
 public abstract class Cell extends GameComponent {
 
     protected boolean isSpawnCell;
+    protected float width;
+    protected float height;
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
         this.collisionShape = CollisionShape.RECTANGLE;
-        this.isSpawnCell = false;
+        this.isSpawnCell = true;
 
     }
 
@@ -33,7 +35,13 @@ public abstract class Cell extends GameComponent {
         return false; // Placeholder, implement actual logic as needed
     }
 
+    protected void setWidth(float width) {
+        this.width = width;
+    }
 
+    protected void setHeight(float height) {
+        this.height = height;
+    }
 
     public boolean isEmpty() {
         return this instanceof EmptyCell;
