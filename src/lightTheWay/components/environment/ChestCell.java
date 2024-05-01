@@ -1,6 +1,7 @@
 package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
+import lightTheWay.components.characters.Character;
 import processing.core.PVector;
 
 
@@ -50,6 +51,30 @@ public class ChestCell extends Cell{
 
     @Override
     public boolean intersection(GameComponent ge) {
-        return super.intersection(ge);
+        if (ge instanceof Character) {
+            Character character = (Character) ge;
+            // Check if the character is within range of the chest
+            boolean isWithinRange = isWithinRangeOfCharacter(character);
+
+            // Open or close the chest based on character's proximity
+            if (isWithinRange) {
+                openChest();
+            } else {
+                closeChest();
+            }
+        }
+        return false;
+    }
+
+    private boolean isWithinRangeOfCharacter(Character character) {
+        // Get the position of the character
+        PVector characterPosition = character.getP();
+
+        // Calculate the distance between the character and the chest cell
+        float distance = PVector.dist(characterPosition, p);
+
+        // If the distance is less than or equal to the sum of half the character's width and half the chest cell's width,
+        // the character is considered within range
+        return distance <= (character.getWidth() / 2 + getWidth() / 2);
     }
 }

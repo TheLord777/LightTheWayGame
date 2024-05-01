@@ -46,8 +46,6 @@ public abstract class GameEngine {
 
             gameLoop();
         }
-        app.fill(255);
-        app.text("Frame Rate: " + app.frameRate, 100, 10);
     }
 
     /**

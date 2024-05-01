@@ -37,11 +37,11 @@ public class Collisions extends CollisionEngine {
                 lights.add((LightComponent) gc);
             } else {
                 nonLights.add(gc);
+                gc.setIlluminated(false);
             }
         }
         for (GameComponent gc : nonLights) {
             for (LightComponent lc : lights) {
-
                 if (gc instanceof Level) {
                     gc.setIlluminated(true);
                     float ls = lc.getLightSize() / 2;
@@ -53,8 +53,6 @@ public class Collisions extends CollisionEngine {
 
                 } else if (checkCollision(gc, lc)) {
                     gc.setIlluminated(true);
-                } else {
-                    gc.setIlluminated(false);
                 }
             }
         }

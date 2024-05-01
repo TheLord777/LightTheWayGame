@@ -7,11 +7,12 @@ import processing.core.PVector;
 
 public abstract class Cell extends GameComponent {
 
-    private int spawnType;
-
+    protected boolean isSpawnCell;
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
         this.collisionShape = CollisionShape.RECTANGLE;
+        this.isSpawnCell = false;
+
     }
 
 
@@ -33,13 +34,6 @@ public abstract class Cell extends GameComponent {
     }
 
 
-    private void setSpawnType(int spawnType) {
-        if (spawnType == 1) {
-            //spawn enemies
-        } else if (spawnType == 2) {
-            //spawn Player
-        }
-    }
 
     public boolean isEmpty() {
         return this instanceof EmptyCell;
@@ -63,11 +57,21 @@ public abstract class Cell extends GameComponent {
         return this instanceof WaterCell;
     }
 
+    // Getter method for isSpawnCell
+    public boolean isSpawnCell() {
+        return isSpawnCell;
+    }
+
+    // Setter method for isSpawnCell
+    public void setSpawnCell(boolean spawnCell) {
+        isSpawnCell = spawnCell;
+    }
+
     public static Cell createIntialCell(PVector p, float width, float height) {
         return Math.random() < .35 ? new EmptyCell(p, width, height) : new WallCell(p, width, height);
     }
 
-    public static Cell cellFromType(Cell oldCell, int t) {
+    public static Cell cellFromType(Cell oldCell, int t, Level level) {
         switch (t) {
             case 0:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
@@ -76,7 +80,7 @@ public abstract class Cell extends GameComponent {
             case 2:
                 return new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 3:
-                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), oldCell.isSpawnCell());
             case 4:
                 return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 5:
@@ -87,7 +91,8 @@ public abstract class Cell extends GameComponent {
                 return new SpawnCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 8:
                 return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-
+            case 9:
+                return new Stalactite(level, oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),20,500);
 
             default:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());

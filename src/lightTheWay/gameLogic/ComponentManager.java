@@ -7,7 +7,9 @@ import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PVector;
+import lightTheWay.components.CampComponent;
 import lightTheWay.components.ExampleComponent;
+import lightTheWay.components.HUDComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -17,6 +19,7 @@ import lightTheWay.components.environment.Level;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
 
@@ -24,6 +27,8 @@ public abstract class ComponentManager extends GameEngine {
     Level level;
 
     PlayableCharacter hero;
+
+    HUDComponent hud;
 
     protected ComponentManager() {
         super(Instance.getApp(), Collisions.getInstance());
@@ -38,7 +43,7 @@ public abstract class ComponentManager extends GameEngine {
 
 
 
-        hero = new PlayableCharacter(new PVector(150,app.height -150), level.getTileSize(), level);
+        hero = new PlayableCharacter(new PVector(150,app.height -200), level.getTileSize(), level);
 
         // Example of adding a component to the game
         animationEngine.addComponent(level);
@@ -46,6 +51,16 @@ public abstract class ComponentManager extends GameEngine {
         animationEngine.addComponent(hero.createLight(250));
 
 
+        // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
+        hud = new HUDComponent(hero);
+
+        // animationEngine.addComponent(new CampComponent(new PVector(150,app.height -200), 250));
+
+        ArrayList<LightComponent> lights = level.getLightComponents();
+
+        for (LightComponent light : lights) {
+            animationEngine.addComponent(light);
+        }
 
 //        // Initialize tileSize
 //        animationEngine.removeAllComponents();
@@ -75,7 +90,6 @@ public abstract class ComponentManager extends GameEngine {
         }
     }
 
-
     /**
      * This method handles the lighting for the game, by placing a shadow over the display and masking for light sources
      * Needs to run AFTER the latest round of rendering, as it takes a snapshot of the rendered elements
@@ -84,7 +98,7 @@ public abstract class ComponentManager extends GameEngine {
         // Apply Shadows and Lights
         PApplet app = Instance.getApp();
         // Get snapshot of current rendered display
-        PImage screen = app.get(0, 0, app.width, app.height);
+        PImage screen = app.get((int) app.screenX(0, 0), (int) app.screenY(0, 0), app.width, app.height);
         // Cover screen in shadow
         app.pushStyle();
         app.noStroke();
@@ -113,6 +127,7 @@ public abstract class ComponentManager extends GameEngine {
                 float baseSize = lc.getLightSize() / 2;
                 float addVal = lc.getLightDisplayIncrement();
                 float sizeIncrement = (lc.getLightDisplaySize() - baseSize) / 6;
+
                 for (int i = 0; i < 6; i++) {
                     lightMask.fill(addVal);
                     lightMask.ellipse(xCenter, yCenter,  baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
@@ -125,5 +140,19 @@ public abstract class ComponentManager extends GameEngine {
         // Draw the masked image
         app.image(screen, 0, 0);
     }
+
+    public void pushCameraPosition() {
+        PApplet app = Instance.getApp();
+
+        app.pushMatrix();
+        app.translate(app.width/2, app.height/2);
+        app.translate(-hero.getX(), -hero.getY());
+    }
+
+    public void popCameraPosition() {
+        PApplet app = Instance.getApp();
+
+        app.popMatrix();
+    }    
 
 }

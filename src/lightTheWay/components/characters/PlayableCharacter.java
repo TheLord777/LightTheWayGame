@@ -1,8 +1,17 @@
 package lightTheWay.components.characters;
 
+import java.util.List;
+
 import lightTheWay.components.LightComponent;
+import lightTheWay.components.environment.CampCell;
+import lightTheWay.components.environment.Cell;
+import lightTheWay.components.environment.LadderCell;
 import lightTheWay.components.environment.Level;
+import lightTheWay.components.environment.TorchCell;
+import processing.core.PConstants;
 import processing.core.PVector;
+
+import static lightTheWay.GameConfig.MAX_SPEED;
 
 public class PlayableCharacter extends Character {
 
@@ -13,16 +22,111 @@ public class PlayableCharacter extends Character {
         super(p, width, l);
     }
 
+    @Override
+    public void update() {
+        super.update();
+
+        // Handle state with special tiles
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+        if (current instanceof CampCell) {
+            light.reignite();
+        }
+
+        showInteractions();
+    }
+
+    public LightComponent createLight(float l) {
+        // light = new LightComponent(p, l, 5);
+        light = new LightComponent(p, l, 0);
+        light.setBurnTime(60);
+        return light;
+    }
+
+    public LightComponent getLight() {
+        return light;
+    }
 
     @Override
     public void draw() {
         super.draw();
     }
 
-    public LightComponent createLight(float l) {
-        light = new LightComponent(p, l, 5);
-        return light;
+    @Override
+    public boolean standing() {
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        return super.standing() || onLadder();
     }
 
+    private boolean onLadder() {
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        return current instanceof LadderCell;
+    }
+
+    @Override
+    public void move() {
+        if (onLadder()) {
+            if (Math.abs(v.x) >= MAX_SPEED) {
+                v.x = MAX_SPEED * Math.signum(v.x);
+                return;
+            }
+
+            float speed = 500;
+            if (left) applyForce(new PVector(-speed, 0));
+            if (right) applyForce(new PVector(speed, 0));
+            if (up) applyForce(new PVector(0, -speed *30));
+            if (down) applyForce(new PVector(0, +speed *30));
+        } else {
+            super.move();
+        }
+    }
+
+    public Cell findInteractionTarget() {
+        Cell closest = null;
+        float minDist = Float.MAX_VALUE;
+
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        List<Cell> neighbours = getEnvironment().getNeighbours(current);
+        neighbours.add(current);
+        for (Cell neighbour : neighbours) {
+            if (!(neighbour instanceof TorchCell)) continue;
+            PVector p = neighbour.getClosestPoint(this.getP());
+            float d = PVector.dist(p, this.getP());
+            if (d < minDist) {
+                minDist = d;
+                closest = neighbour;
+            }
+        }
+
+        return closest;
+    }
+
+    public void showInteractions() {
+        // Handle state with special tiles
+        Cell closest = findInteractionTarget();
+
+        if (closest == null) {
+            return;
+        } else if (closest instanceof TorchCell) {
+            TorchCell torch = (TorchCell) closest;
+            if (!torch.getIgnited()) {
+                torch.drawPrompt();
+            };
+        }
+    }
+
+    public void interact() {
+        // Handle state with special tiles
+        Cell closest = findInteractionTarget();
+
+        if (closest == null) {
+            return;
+        } else if (closest instanceof TorchCell) {
+            TorchCell torch = (TorchCell) closest;
+            if (!torch.getIgnited()) torch.ignite();
+        }
+    }
 
 }

@@ -2,6 +2,7 @@ package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
+import lightTheWay.components.LightComponent;
 import processing.core.PVector;
 
 import java.io.Serializable;
@@ -111,10 +112,10 @@ public class Level extends GameComponent implements Serializable {
         List<Cell> neighbours = getNeighbours(c);
 
 //        for (Cell neighbour : neighbours) {
-//            if (!neighbour.isEmpty() && CollisionEngine.checkCollision(ge, neighbour)) return true;
+//            if (neighbour.isWall() && CollisionEngine.checkCollision(ge, neighbour)) return true;
 //        }
 
-        return !c.isWall() && CollisionEngine.checkCollision(ge, c);
+        return c.isWall() && CollisionEngine.checkCollision(ge, c);
     }
 
 
@@ -126,7 +127,7 @@ public class Level extends GameComponent implements Serializable {
 
         List<Cell> neighbours = getNeighbours(current);
         for (Cell neighbour : neighbours) {
-            if (neighbour.isEmpty()) continue;
+            if (!neighbour.isWall()) continue;
             PVector p = neighbour.getClosestPoint(gc.getP());
             float d = PVector.dist(p, gc.getP());
             if (d < minDist) {
@@ -190,9 +191,7 @@ public class Level extends GameComponent implements Serializable {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
-        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t);
-
-
+        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
     }
 
 
@@ -216,4 +215,19 @@ public class Level extends GameComponent implements Serializable {
     public void setDev(boolean b) {
         this.dev = b;
     }
+
+    public ArrayList<LightComponent> getLightComponents() {
+        ArrayList<LightComponent> lights = new ArrayList<>();
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                if (map[i][j] instanceof TorchCell) {
+                    lights.add(((TorchCell) map[i][j]).getLightComponent());
+                } else if (map[i][j] instanceof CampCell) {
+                    lights.add(((CampCell) map[i][j]).getLightComponent());
+                }
+            }
+        }
+        return lights;
+    }
+
 }

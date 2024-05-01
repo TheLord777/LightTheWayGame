@@ -4,8 +4,11 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class RopeCell extends Cell{
-    public RopeCell(PVector p, float width, float height) {
+    private boolean isSpawnCell;
+
+    public RopeCell(PVector p, float width, float height, boolean isSpawnCell) {
         super(p, width, height);
+        this.isSpawnCell = isSpawnCell;
     }
 
     @Override
@@ -27,6 +30,24 @@ public class RopeCell extends Cell{
         app.popStyle();
     }
 
+    // Example usage of isSpawnCell in RopeCell
+    public void setToSpawn() {
+        if (isSpawnCell()) {
+            // Do something specific for spawn cells
+            app.fill(0,0,0);
+            System.out.println("set to spawn");
+        } else {
+            // Do something else
+        }
+    }
+
+    public boolean isSpawnCell() {
+        return isSpawnCell;
+    }
+
+    public void setSpawnCell(boolean spawnCell) {
+        isSpawnCell = spawnCell;
+    }
     @Override
     public boolean intersection(GameComponent ge) {
         return super.intersection(ge);
