@@ -3,6 +3,7 @@ package lightTheWay.components.environment;
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
 import lightTheWay.components.LightComponent;
+import lightTheWay.gameLogic.Collisions;
 import processing.core.PVector;
 
 import java.io.Serializable;
@@ -13,6 +14,7 @@ public class Level extends GameComponent implements Serializable {
 
     private int tileSize;
     private Cell[][] map;
+    private Cell playerSpawn, goal;
 
     private int generations = 5;
     private Background b;
@@ -41,6 +43,8 @@ public class Level extends GameComponent implements Serializable {
         // Apply cellular automata rules to smooth the map
         for (int i = 0; i < generations; i++) applyAutomataRules();
 
+        playerSpawn = map[0][0]; // default
+        goal = map[1][1];
     }
 
 
@@ -93,11 +97,20 @@ public class Level extends GameComponent implements Serializable {
         b.draw();
         for (Cell[] squares : map) {
             for (Cell square : squares) {
-                if (dev || square.getIlluminated())
+                if (dev || square.getIlluminated()) {
                     square.draw(); // Draw each MapSquare
-                    square.setIlluminated(false);
+                }
+                square.setIlluminated(false);
 
             }
+        }
+
+        if (dev) {
+            app.fill(255, 0 ,0);
+            app.rect(playerSpawn.getP().x, playerSpawn.getP().y, tileSize, tileSize);
+
+            app.fill(0, 255, 0);
+            app.rect(goal.getP().x, goal.getP().y, tileSize, tileSize);
         }
     }
 
@@ -191,6 +204,15 @@ public class Level extends GameComponent implements Serializable {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
+        switch (t){
+            case 7:
+                playerSpawn = map[xIndex][yIndex];
+                return;
+            case 11:
+                goal = map[xIndex][yIndex];
+        }
+
+
         map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
     }
 
@@ -230,4 +252,23 @@ public class Level extends GameComponent implements Serializable {
         return lights;
     }
 
+
+    public Cell getPlayerSpawn() {
+        return playerSpawn;
+    }
+
+    public boolean reachedGoal(GameComponent gc){
+        return Collisions.checkCollision(getCellFromGCPosition(gc), gc);
+    }
+
+
+    public List<Cell> getSpawnPoints(){
+        List<Cell> cs = new ArrayList<>();
+        for (Cell[] cells : map) {
+            for (Cell cell : cells) {
+            if (cell instanceof SpawnCell) cs.add(cell);
+            }
+        }
+        return cs;
+    }
 }

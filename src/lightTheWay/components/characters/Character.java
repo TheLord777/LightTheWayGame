@@ -172,4 +172,8 @@ public class Character extends DynamicComponent {
     private void setState(CharacterState state){
         this.state = state;
     }
+
+    public Level getEnvironment() {
+        return environment;
+    }
 }
