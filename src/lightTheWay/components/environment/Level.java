@@ -94,6 +94,7 @@ public class Level extends GameComponent implements Serializable {
             for (Cell square : squares) {
                 if (dev || square.getIlluminated())
                     square.draw(); // Draw each MapSquare
+                    square.setIlluminated(false);
 
             }
         }
@@ -109,11 +110,11 @@ public class Level extends GameComponent implements Serializable {
         Cell c = getCellFromGCPosition(ge);
         List<Cell> neighbours = getNeighbours(c);
 
-        for (Cell neighbour : neighbours) {
-            if (!neighbour.isEmpty() && CollisionEngine.checkCollision(ge, neighbour)) return true;
-        }
+//        for (Cell neighbour : neighbours) {
+//            if (!neighbour.isEmpty() && CollisionEngine.checkCollision(ge, neighbour)) return true;
+//        }
 
-        return !c.isEmpty() && CollisionEngine.checkCollision(ge, c);
+        return !c.isWall() && CollisionEngine.checkCollision(ge, c);
     }
 
 
