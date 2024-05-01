@@ -190,4 +190,5 @@ public class LightComponent extends GameComponent {
     public void reignite() {
         setLightSize(defaultSize);
     }
+    
 }

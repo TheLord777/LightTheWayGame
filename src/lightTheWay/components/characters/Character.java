@@ -123,4 +123,8 @@ public class Character extends DynamicComponent {
         Cell c = environment.getCellFromPoint(new PVector(p.x + width / 2, p.y));
         return c.isWall();
     }
+
+    public Level getEnvironment() {
+        return environment;
+    }
 }
