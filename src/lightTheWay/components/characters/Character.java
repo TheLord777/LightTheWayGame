@@ -75,6 +75,12 @@ public class Character extends DynamicComponent {
     }
 
     public void move() {
+        int tileSize = environment.getTileSize();
+        float speed = 500;
+
+        if (tileSize != 0) {
+            speed = 500*(tileSize / 22.0f); // Adjust speed based on tileSize
+        }
         if (Math.abs(v.x) >= MAX_SPEED) {
             v.x = MAX_SPEED * Math.signum(v.x);
             return;
@@ -83,8 +89,6 @@ public class Character extends DynamicComponent {
             v.y = MAX_SPEED * Math.signum(v.y);
             return;
         }
-
-        float speed = 500;
 
 //        if (!standing()) speed = 5;
 

@@ -24,14 +24,23 @@ public class Level extends GameComponent implements Serializable {
     private boolean dev = false;
 
 
-    public Level(float width, float height) {
+    public Level(float width, float height, int tileSize) {
         super(new PVector(0, 0), width, height);
         this.b = new Background();
-        this.tileSize = (int) (min(width, height) / 50);
+        this.tileSize = tileSize;
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
         generateMap();
+    }
+    private void updateTileSize() {
+        this.tileSize = min(app.width, app.height) / 50;
+    }
 
+    public void updateMap(float width, float height) {
+        this.width = width;
+        this.height = height;
+        updateTileSize();
+        generateMap();
     }
 
     private void generateMap() {

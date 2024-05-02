@@ -52,7 +52,8 @@ public abstract class ComponentManager extends GameEngine {
         }
 
         getMapFormation("map.ser");
-    //    level = new Level(app.width, appHeight, 50);
+        level.updateMap(app.width, app.height);
+//        level = new Level(app.width, appHeight, 50);
 
         // nextLevel();
 
