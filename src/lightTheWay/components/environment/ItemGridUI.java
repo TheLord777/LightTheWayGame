@@ -18,6 +18,20 @@ public class ItemGridUI extends GameComponent {
         this.height = height;
         this.itemSize = itemSize;
         this.items = new ArrayList<>();
+
+        float horizontalSpacing = (width - 3 * itemSize) / 4;
+        float verticalSpacing = (height - 2 * itemSize) / 3;
+
+        // Add items in a 3x2 grid
+        for (int row = 0; row < 2; row++) {
+            for (int col = 0; col < 3; col++) {
+                float x = position.x + (itemSize + horizontalSpacing) * col + horizontalSpacing / 2;
+                float y = position.y + (itemSize + verticalSpacing) * row + verticalSpacing / 2;
+                PVector itemPosition = new PVector(x, y);
+                Item circleItem = new Item(itemPosition, itemSize / 2);
+                items.add(circleItem);
+            }
+        }
     }
 
     public void addItem(Item item) {
@@ -31,18 +45,11 @@ public class ItemGridUI extends GameComponent {
     public void draw() {
         // Draw the background for the item grid
         app.fill(255);
-        app.rect(position.x, position.y, width, height);
+        app.rect(position.x, position.y, width* 2, height * 2);
 
         // Draw each item in the grid
-        float x = position.x + itemSize / 2;
-        float y = position.y + itemSize / 2;
         for (Item item : items) {
-            item.draw(x, y, itemSize);
-            x += itemSize;
-            if (x >= position.x + width) {
-                x = position.x + itemSize / 2;
-                y += itemSize;
-            }
+            item.draw();
         }
     }
 

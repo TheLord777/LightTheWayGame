@@ -32,7 +32,7 @@ public class LevelGenerator extends PApplet {
 
         if (map == null) {
             int tileSize = min(width, height) / 50; // Adjust as needed
-            map = new Level(width, height, tileSize);
+            map = new Level(width, height);
         }
 
     }
@@ -70,7 +70,7 @@ public class LevelGenerator extends PApplet {
         if (key == ' ') saveMap();
         if (key == 'n') {
             int tileSize = min(width, height) / 50; // Adjust as needed
-            map = new Level(width, height, tileSize);
+            map = new Level(width, height);
         }
 
     }

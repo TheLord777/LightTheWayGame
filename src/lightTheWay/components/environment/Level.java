@@ -24,15 +24,14 @@ public class Level extends GameComponent implements Serializable {
     private boolean dev = false;
 
 
-    public Level(float width, float height, int tileSize) {
+    public Level(float width, float height) {
         super(new PVector(0, 0), width, height);
         this.b = new Background();
-        this.tileSize = tileSize;
+        this.tileSize = (int) (min(width, height) / 50);
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
-        float newTileSize = min(width, height) / 50;
         generateMap();
-        setCellSize(newTileSize);
+
     }
 
     private void generateMap() {
@@ -48,16 +47,6 @@ public class Level extends GameComponent implements Serializable {
 
         playerSpawn = map[0][0]; // default
         goal = map[1][1];
-    }
-    public void setCellSize(float tileSize) {
-        // Iterate over each cell in the map
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < rows; j++) {
-                // Set the width and height of each cell to the specified tileSize
-                map[i][j].setWidth(tileSize);
-                map[i][j].setHeight(tileSize);
-            }
-        }
     }
 
 
