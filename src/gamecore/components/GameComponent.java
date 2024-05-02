@@ -147,6 +147,10 @@ public abstract class GameComponent implements Serializable {
         return illuminated;
     }
 
+    public void setP(PVector v) {
+        this.p = v;
+    }
+
     public void setIlluminated(boolean b) {
         this.illuminated = b;
     }

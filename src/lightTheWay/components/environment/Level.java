@@ -261,7 +261,7 @@ public class Level extends GameComponent implements Serializable {
     }
 
     public boolean reachedGoal(GameComponent gc){
-        return Collisions.checkCollision(getCellFromGCPosition(gc), gc);
+        return Collisions.checkCollision(goal, gc);
     }
 
 

@@ -26,6 +26,9 @@ import static processing.core.PApplet.*;
 public abstract class ComponentManager extends GameEngine {
     Level level;
 
+    ArrayList<Level> levels = new ArrayList<>();
+    int levelIndex = -1;
+
     PlayableCharacter hero;
 
     HUDComponent hud;
@@ -38,21 +41,34 @@ public abstract class ComponentManager extends GameEngine {
     @Override
     public void setupGame() {
         animationEngine.removeAllComponents();
+        ArrayList<String> levelfiles = new ArrayList<>();
+        levelfiles.add("map.ser");
+
+        for (String filename : levelfiles) {
+            Level newLevel = getMapFormation(filename);
+            if (newLevel != null) {
+                levels.add(newLevel);
+            }
+        }
+
         getMapFormation("map.ser");
-//        level = new Level(app.width, appHeight, 50);
+    //    level = new Level(app.width, appHeight, 50);
 
+        // nextLevel();
 
+        PVector spawnPosition = level.getPlayerSpawn().getP();
+        spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
+        hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
 
-        hero = new PlayableCharacter(new PVector(150,app.height -100), level.getTileSize(), level);
-
-        // Example of adding a component to the game
+        // // Example of adding a component to the game
         animationEngine.addComponent(level);
         animationEngine.addComponent(hero);
-        animationEngine.addComponent(hero.createLight(250));
+        animationEngine.addComponent(hero.createLight(level.getWidth() / 6.9f));
+
+        hud = new HUDComponent(hero);
 
 
         // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
-        hud = new HUDComponent(hero);
 
         // animationEngine.addComponent(new CampComponent(new PVector(150,app.height -200), 250));
 
@@ -73,20 +89,22 @@ public abstract class ComponentManager extends GameEngine {
     }
 
 
-    public void getMapFormation(String file) {
+    public Level getMapFormation(String file) {
         try {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream in = new ObjectInputStream(fileIn);
+            // Level newLevel = (Level) in.readObject();
             level = (Level) in.readObject();
             in.close();
             fileIn.close();
+            return null;
         } catch (IOException i) {
             i.printStackTrace();
-            return;
+            return null;
         } catch (ClassNotFoundException c) {
             System.out.println("MapFormation class not found");
             c.printStackTrace();
-            return;
+            return null;
         }
     }
 
@@ -153,6 +171,38 @@ public abstract class ComponentManager extends GameEngine {
         PApplet app = Instance.getApp();
 
         app.popMatrix();
-    }    
+    }
+    
+    /**
+     * Moves the game to the next level is available
+     * @return whether or not there is another level
+     */
+    public boolean nextLevel() {
+        levelIndex++;
+        if (levelIndex < levels.size()) {
+            level = levels.get(levelIndex);
+            animationEngine.removeAllComponents();
+            animationEngine.addComponent(level);
+            PVector spawnPosition = level.getPlayerSpawn().getP();
+            spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
+            if (hero == null) {
+                hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
+                hero.createLight(level.getWidth() / 6.9f);
+            } else {
+                hero.setPosition(spawnPosition);
+            }
+            animationEngine.addComponent(hero);
+            animationEngine.addComponent(hero.getLight());
+            if (hud == null) {
+                hud = new HUDComponent(hero);
+            }
+            ArrayList<LightComponent> lights = level.getLightComponents();
+            for (LightComponent light : lights) {
+                animationEngine.addComponent(light);
+            }
+            return true;
+        }
+        return false;
+    }
 
 }

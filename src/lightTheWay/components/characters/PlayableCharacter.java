@@ -147,4 +147,8 @@ public class PlayableCharacter extends Character {
         }
     }
 
+    public void movePosition(PVector position) {
+        setP(position);
+    }
+
 }
