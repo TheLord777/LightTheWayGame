@@ -148,7 +148,7 @@ public abstract class GameComponent implements Serializable {
     }
 
     public void setIlluminated(boolean b) {
-        illuminated = b;
+        this.illuminated = b;
     }
 
 }

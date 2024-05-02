@@ -43,7 +43,7 @@ public abstract class ComponentManager extends GameEngine {
 
 
 
-        hero = new PlayableCharacter(new PVector(150,app.height -200), level.getTileSize(), level);
+        hero = new PlayableCharacter(level.getPlayerSpawn().getP().copy(), level.getTileSize(), level);
 
         // Example of adding a component to the game
         animationEngine.addComponent(level);
