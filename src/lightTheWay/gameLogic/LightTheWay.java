@@ -31,7 +31,6 @@ public class LightTheWay extends ComponentManager {
             nextLevel();
         }
         if (hero.outOfLight()) {
-            System.out.println("death");
             respawnCharacter();
         }
     }
