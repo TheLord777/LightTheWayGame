@@ -3,16 +3,20 @@ package lightTheWay.components.environment;
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
 import lightTheWay.components.LightComponent;
+import lightTheWay.gameLogic.Collisions;
 import processing.core.PVector;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.min;
+
 public class Level extends GameComponent implements Serializable {
 
     private int tileSize;
     private Cell[][] map;
+    private Cell playerSpawn, goal;
 
     private int generations = 5;
     private Background b;
@@ -20,14 +24,14 @@ public class Level extends GameComponent implements Serializable {
     private boolean dev = false;
 
 
-    public Level(float width, float height, int tileSize) {
+    public Level(float width, float height) {
         super(new PVector(0, 0), width, height);
         this.b = new Background();
-        this.tileSize = tileSize;
+        this.tileSize = (int) (min(width, height) / 50);
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
-
         generateMap();
+
     }
 
     private void generateMap() {
@@ -41,6 +45,8 @@ public class Level extends GameComponent implements Serializable {
         // Apply cellular automata rules to smooth the map
         for (int i = 0; i < generations; i++) applyAutomataRules();
 
+        playerSpawn = map[0][0]; // default
+        goal = map[1][1];
     }
 
 
@@ -93,10 +99,20 @@ public class Level extends GameComponent implements Serializable {
         b.draw();
         for (Cell[] squares : map) {
             for (Cell square : squares) {
-                if (dev || square.getIlluminated())
+                if (dev || square.getIlluminated()) {
                     square.draw(); // Draw each MapSquare
-                    square.setIlluminated(false);
+                }
+                square.setIlluminated(false);
+
             }
+        }
+
+        if (dev) {
+            app.fill(255, 0 ,0);
+            app.rect(playerSpawn.getP().x, playerSpawn.getP().y, tileSize, tileSize);
+
+            app.fill(0, 255, 0);
+            app.rect(goal.getP().x, goal.getP().y, tileSize, tileSize);
         }
     }
 
@@ -110,9 +126,9 @@ public class Level extends GameComponent implements Serializable {
         Cell c = getCellFromGCPosition(ge);
         List<Cell> neighbours = getNeighbours(c);
 
-        for (Cell neighbour : neighbours) {
-            if (neighbour.isWall() && CollisionEngine.checkCollision(ge, neighbour)) return true;
-        }
+//        for (Cell neighbour : neighbours) {
+//            if (neighbour.isWall() && CollisionEngine.checkCollision(ge, neighbour)) return true;
+//        }
 
         return c.isWall() && CollisionEngine.checkCollision(ge, c);
     }
@@ -190,6 +206,15 @@ public class Level extends GameComponent implements Serializable {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
+        switch (t){
+            case 7:
+                playerSpawn = map[xIndex][yIndex];
+                return;
+            case 11:
+                goal = map[xIndex][yIndex];
+        }
+
+
         map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
     }
 
@@ -206,6 +231,7 @@ public class Level extends GameComponent implements Serializable {
         int y = (int) (p.y / tileSize);
         return map[x][y];
     }
+
 
     public int getTileSize() {
         return tileSize;
@@ -229,4 +255,23 @@ public class Level extends GameComponent implements Serializable {
         return lights;
     }
 
+
+    public Cell getPlayerSpawn() {
+        return playerSpawn;
+    }
+
+    public boolean reachedGoal(GameComponent gc){
+        return Collisions.checkCollision(getCellFromGCPosition(gc), gc);
+    }
+
+
+    public List<Cell> getSpawnPoints(){
+        List<Cell> cs = new ArrayList<>();
+        for (Cell[] cells : map) {
+            for (Cell cell : cells) {
+            if (cell instanceof SpawnCell) cs.add(cell);
+            }
+        }
+        return cs;
+    }
 }

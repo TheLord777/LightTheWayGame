@@ -3,9 +3,7 @@ import lightTheWay.Instance;
 import lightTheWay.components.environment.Level;
 import processing.core.PApplet;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 
 /**
@@ -13,13 +11,12 @@ import java.io.ObjectOutputStream;
  */
 public class LevelGenerator extends PApplet {
 
-    Level map;
+    static Level map;
 
     int type = 0;
 
     public void settings() {
         fullScreen();
-
     }
 
 
@@ -33,10 +30,10 @@ public class LevelGenerator extends PApplet {
         Instance.setApp(this);
         GameComponent.setApp(this);
 
-
-        int tileSize = min(width, height) / 50; // Adjust as needed
-        map = new Level(width, height, tileSize);
-
+        if (map == null) {
+            int tileSize = min(width, height) / 50; // Adjust as needed
+            map = new Level(width, height);
+        }
 
     }
 
@@ -58,10 +55,6 @@ public class LevelGenerator extends PApplet {
     public void keyPressed() {
         // space to fire
         key = Character.toLowerCase(key);
-//        if (key == 'a') ge.leftKeyDown();
-//        if (key == 'd') ge.rightKeyDown();
-//        if (key == 'w') ge.upKeyDown();
-//        if (key == 's') ge.downKeyDown();
         if (key == '0') type = 0;
         if (key == '1') type = 1;
         if (key == '2') type = 2;
@@ -69,19 +62,20 @@ public class LevelGenerator extends PApplet {
         if (key == '4') type = 4;
         if (key == '5') type = 5;
         if (key == '6') type = 6;
-        if (key == '7') type = 7;
+        if (key == 's') type = 7; // spawn
+        if (key == 'g') type = 11; // goal
         if (key == '8') type = 8;
         if (key == '9') type = 9;
         if (key == 'c') type = 10;
         if (key == ' ') saveMap();
         if (key == 'n') {
             int tileSize = min(width, height) / 50; // Adjust as needed
-            map = new Level(width, height, tileSize);
+            map = new Level(width, height);
         }
 
     }
 
-    public void saveMap(){
+    public void saveMap() {
         try {
             map.setDev(false);
             FileOutputStream fileOut = new FileOutputStream("map.ser");
@@ -123,10 +117,26 @@ public class LevelGenerator extends PApplet {
     }
 
 
-
-
-
-    public static void main(String... args) {
+    public static void main(String[] args) {
+        if (args.length == 1) getMapFormation(args[0]);
         PApplet.main("LevelGenerator");
+    }
+
+
+    public static void getMapFormation(String file) {
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            map = (Level) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch (IOException i) {
+            i.printStackTrace();
+            return;
+        } catch (ClassNotFoundException c) {
+            System.out.println("MapFormation class not found");
+            c.printStackTrace();
+            return;
+        }
     }
 }

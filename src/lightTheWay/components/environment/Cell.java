@@ -8,13 +8,13 @@ import processing.core.PVector;
 public abstract class Cell extends GameComponent {
 
     protected boolean isSpawnCell;
+
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
         this.collisionShape = CollisionShape.RECTANGLE;
-        this.isSpawnCell = false;
+        this.isSpawnCell = true;
 
     }
-
 
     @Override
     protected void update() {

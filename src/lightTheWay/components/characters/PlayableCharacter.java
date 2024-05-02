@@ -3,11 +3,7 @@ package lightTheWay.components.characters;
 import java.util.List;
 
 import lightTheWay.components.LightComponent;
-import lightTheWay.components.environment.CampCell;
-import lightTheWay.components.environment.Cell;
-import lightTheWay.components.environment.LadderCell;
-import lightTheWay.components.environment.Level;
-import lightTheWay.components.environment.TorchCell;
+import lightTheWay.components.environment.*;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -115,7 +111,13 @@ public class PlayableCharacter extends Character {
             TorchCell torch = (TorchCell) closest;
             if (!torch.getIgnited()) {
                 torch.drawPrompt();
-            };
+            } else if (closest instanceof ChestCell) {
+                ChestCell chest = (ChestCell) closest;
+                if (!chest.isOpen()) {
+                    // If chest is open, draw the item grid
+                    chest.openChest();
+                }
+            }
         }
     }
 
@@ -128,6 +130,13 @@ public class PlayableCharacter extends Character {
         } else if (closest instanceof TorchCell) {
             TorchCell torch = (TorchCell) closest;
             if (!torch.getIgnited()) torch.ignite();
+        } else if (closest instanceof ChestCell) {
+            ChestCell chest = (ChestCell) closest;
+            if (!chest.isOpen()) {
+                chest.openChest(); // Or any other action you want to perform when interacting with the chest
+            } else {
+                chest.closeChest(); // Or any other action for closing the chest
+            }
         }
     }
 
