@@ -33,7 +33,10 @@ public abstract class Cell extends GameComponent {
         return false; // Placeholder, implement actual logic as needed
     }
 
-
+    public void setSize(float size) {
+        this.setWidth(size);
+        this.setHeight(size);
+    }
 
     public boolean isEmpty() {
         return this instanceof EmptyCell;

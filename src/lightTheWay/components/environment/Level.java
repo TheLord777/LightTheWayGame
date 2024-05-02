@@ -34,13 +34,17 @@ public class Level extends GameComponent implements Serializable {
     }
     private void updateTileSize() {
         this.tileSize = min(app.width, app.height) / 50;
+        for (Cell[] squares : map) {
+            for (Cell square : squares) {
+                square.setSize(tileSize);
+            }
+        }
     }
 
     public void updateMap(float width, float height) {
         this.width = width;
         this.height = height;
         updateTileSize();
-        generateMap();
     }
 
     private void generateMap() {
