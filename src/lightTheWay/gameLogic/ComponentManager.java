@@ -42,6 +42,9 @@ public abstract class ComponentManager extends GameEngine {
     public void setupGame() {
         animationEngine.removeAllComponents();
         ArrayList<String> levelfiles = new ArrayList<>();
+        /**
+         * ADD NEW MAP NAMES HERE, FOR NOW IT WILL BE HARD CODED, LATER CHANGE WILL MAKE IT READ FROM A DIRECTORY OF FILE NAMES, BUT LEVELGENERATOR NEEDS TO BE ADAPTED FOR THIS
+         */
         levelfiles.add("map.ser");
 
         for (String filename : levelfiles) {
@@ -51,41 +54,7 @@ public abstract class ComponentManager extends GameEngine {
             }
         }
 
-        getMapFormation("map.ser");
-        level.updateMap(app.width, app.height);
-//        level = new Level(app.width, appHeight, 50);
-
-        // nextLevel();
-
-        PVector spawnPosition = level.getPlayerSpawn().getP();
-        spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
-        hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
-
-        // // Example of adding a component to the game
-        animationEngine.addComponent(level);
-        animationEngine.addComponent(hero);
-        animationEngine.addComponent(hero.createLight(level.getWidth() / 6.9f));
-
-        hud = new HUDComponent(hero);
-
-
-        // animationEngine.addComponent(new LightComponent(new PVector(250,app.height -150), 100, 0));
-
-        // animationEngine.addComponent(new CampComponent(new PVector(150,app.height -200), 250));
-
-        ArrayList<LightComponent> lights = level.getLightComponents();
-
-        for (LightComponent light : lights) {
-            animationEngine.addComponent(light);
-        }
-
-//        // Initialize tileSize
-//        animationEngine.removeAllComponents();
-//
-//        int tileSize = min(app.width, app.height) / 50; // Adjust as needed
-
-        // Create a new instance of MapFormation
-
+        nextLevel();
 
     }
 
@@ -94,11 +63,11 @@ public abstract class ComponentManager extends GameEngine {
         try {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            // Level newLevel = (Level) in.readObject();
-            level = (Level) in.readObject();
+            Level newLevel = (Level) in.readObject();
+            // level = (Level) in.readObject();
             in.close();
             fileIn.close();
-            return null;
+            return newLevel;
         } catch (IOException i) {
             i.printStackTrace();
             return null;
@@ -182,6 +151,7 @@ public abstract class ComponentManager extends GameEngine {
         levelIndex++;
         if (levelIndex < levels.size()) {
             level = levels.get(levelIndex);
+            level.updateMap(app.width, app.height);
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
             PVector spawnPosition = level.getPlayerSpawn().getP();
@@ -191,6 +161,8 @@ public abstract class ComponentManager extends GameEngine {
                 hero.createLight(level.getWidth() / 6.9f);
             } else {
                 hero.setPosition(spawnPosition);
+                hero.setEnvironment(level);
+                hero.createLight(level.getWidth() / 6.9f);
             }
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());

@@ -33,9 +33,9 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     protected void gameLoop() {
-        lighting();
+        // lighting();
         if (level.reachedGoal(hero)) {
-            System.out.println("Yippee");
+            nextLevel();
         }
     }
 

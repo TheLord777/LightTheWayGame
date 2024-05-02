@@ -180,4 +180,8 @@ public class Character extends DynamicComponent {
     public Level getEnvironment() {
         return environment;
     }
+
+    public void setEnvironment(Level l) {
+        environment = l;
+    }
 }
