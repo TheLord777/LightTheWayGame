@@ -30,6 +30,10 @@ public class LightTheWay extends ComponentManager {
         if (level.reachedGoal(hero)) {
             nextLevel();
         }
+        if (hero.outOfLight()) {
+            System.out.println("death");
+            respawnCharacter();
+        }
     }
 
     @Override

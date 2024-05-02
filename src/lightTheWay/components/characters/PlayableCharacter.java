@@ -34,7 +34,7 @@ public class PlayableCharacter extends Character {
     public LightComponent createLight(float l) {
         // light = new LightComponent(p, l, 5);
         light = new LightComponent(p, l, 0);
-        light.setBurnTime(60);
+        light.setBurnTime(10);
         return light;
     }
 
@@ -149,6 +149,10 @@ public class PlayableCharacter extends Character {
 
     public void movePosition(PVector position) {
         setP(position);
+    }
+
+    public boolean outOfLight() {
+        return !light.isBurning();
     }
 
 }

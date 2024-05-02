@@ -150,7 +150,7 @@ public abstract class ComponentManager extends GameEngine {
             level.updateMap(app.width, app.height);
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
-            PVector spawnPosition = level.getPlayerSpawn().getP();
+            PVector spawnPosition = level.getPlayerSpawn().getP().copy();
             spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
             if (hero == null) {
                 hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
@@ -158,7 +158,6 @@ public abstract class ComponentManager extends GameEngine {
             } else {
                 hero.setPosition(spawnPosition);
                 hero.setEnvironment(level);
-                hero.createLight(level.getWidth() / 6.9f);
             }
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());
@@ -172,6 +171,13 @@ public abstract class ComponentManager extends GameEngine {
             return true;
         }
         return false;
+    }
+
+    public void respawnCharacter() {
+        hero = null;
+        hud = null;
+        levelIndex = -1;
+        nextLevel();
     }
 
 }
