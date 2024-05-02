@@ -11,6 +11,10 @@ public class HUDComponent extends GameComponent {
 
     PlayableCharacter hero;
 
+    int selectedSlot = -1;
+    // boolean[] inventory = new boolean[6];
+    boolean[] inventory = {true, true, false, false, false, false};
+
     public HUDComponent(PlayableCharacter pc) {
         super();
         this.hero = pc;
@@ -42,8 +46,8 @@ public class HUDComponent extends GameComponent {
         app.rect(xPosition, yPosition - 10, height, height);
         xPosition += height;
         xPosition += padding;
-        for (int i = 1; i <= 6; i++) {
-            drawInventorySlot(xPosition, yPosition, i);
+        for (int i = 0; i < 6; i++) {
+            drawInventorySlot(xPosition, yPosition, i, selectedSlot == i);
             // app.rect(xPosition, yPosition, width / 10, width / 10);
             xPosition += width / 10;
             xPosition += padding;
@@ -58,13 +62,23 @@ public class HUDComponent extends GameComponent {
         app.rect(x, y, width / 6, width / 10);
     }
 
-    protected void drawInventorySlot(float x, float y, int slotNumber) {
-        app.fill(183, 183, 183);
+    protected void drawInventorySlot(float x, float y, int slotNumber, boolean selected) {
+        if (inventory[slotNumber]) {
+            app.fill(183, 255, 183);
+        } else {
+            app.fill(255, 183, 183);
+        }
+        if (selected) {
+            app.stroke(255, 100, 100);
+            app.strokeWeight(2);
+        } else {
+            app.strokeWeight(0);
+        }
         app.rect(x, y, width / 10, width / 10);
         app.fill(102, 102, 102);
         app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
         app.textSize(width / 10);
-        app.text(slotNumber, x + width / 20, y + width / 10);
+        app.text(slotNumber + 1, x + width / 20, y + width / 10);
         app.textSize(16);
     }
 
@@ -95,6 +109,20 @@ public class HUDComponent extends GameComponent {
     @Override
     public boolean intersection(GameComponent ge) {
         return false;
+    }
+
+    public void setSelectedSlot(int slot) {
+        selectedSlot = slot;
+    }
+
+    public boolean useSelectedSlot() {
+        if (selectedSlot >= 0) {
+            boolean slotContent = inventory[selectedSlot];
+            inventory[selectedSlot] = false;
+            return slotContent;
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -47,6 +47,38 @@ public class PlayableCharacter extends Character {
         super.draw();
     }
 
+    @Override
+    public boolean standing() {
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        return super.standing() || onLadder();
+    }
+
+    private boolean onLadder() {
+        Cell current = getEnvironment().getCellFromGCPosition(this);
+
+        return current instanceof LadderCell;
+    }
+
+    @Override
+    public void move() {
+        if (onLadder()) {
+            if (Math.abs(v.x) >= MAX_SPEED) {
+                v.x = MAX_SPEED * Math.signum(v.x);
+                return;
+            }
+
+            float speed = 500;
+            if (left) applyForce(new PVector(-speed, 0));
+            if (right) applyForce(new PVector(speed, 0));
+            if (up) applyForce(new PVector(0, -speed *30));
+            if (down) {
+                applyForce(new PVector(0, +speed *30));
+            }
+        } else {
+            super.move();
+        }
+    }
 
     public Cell findInteractionTarget() {
         Cell closest = null;
@@ -57,7 +89,7 @@ public class PlayableCharacter extends Character {
         List<Cell> neighbours = getEnvironment().getNeighbours(current);
         neighbours.add(current);
         for (Cell neighbour : neighbours) {
-            if (!(neighbour instanceof TorchCell)) continue;
+            if (!(neighbour instanceof TorchCell) && !(neighbour instanceof ChestCell)) continue;
             PVector p = neighbour.getClosestPoint(this.getP());
             float d = PVector.dist(p, this.getP());
             if (d < minDist) {
@@ -79,12 +111,13 @@ public class PlayableCharacter extends Character {
             TorchCell torch = (TorchCell) closest;
             if (!torch.getIgnited()) {
                 torch.drawPrompt();
-            } else if (closest instanceof ChestCell) {
-                ChestCell chest = (ChestCell) closest;
-                if (!chest.isOpen()) {
-                    // If chest is open, draw the item grid
-                    chest.openChest();
-                }
+            }
+        } else if (closest instanceof ChestCell) {
+            ChestCell chest = (ChestCell) closest;
+            if (chest.isOpen()) {
+                chest.drawItemGridUI();
+            } else {
+                chest.drawPrompt();
             }
         }
     }
@@ -105,6 +138,12 @@ public class PlayableCharacter extends Character {
             } else {
                 chest.closeChest(); // Or any other action for closing the chest
             }
+        }
+    }
+
+    public void useItem(boolean item) {
+        if (item) {
+            light.restore(0.5f);
         }
     }
 

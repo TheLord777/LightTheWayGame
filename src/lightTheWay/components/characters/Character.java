@@ -74,7 +74,7 @@ public class Character extends DynamicComponent {
 
     }
 
-    private void move() {
+    public void move() {
         if (Math.abs(v.x) >= MAX_SPEED) {
             v.x = MAX_SPEED * Math.signum(v.x);
             return;
@@ -143,7 +143,7 @@ public class Character extends DynamicComponent {
         this.down = down;
     }
 
-    private boolean standing() {
+    public boolean standing() {
         Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + width / 2));
         return c.isWall();
     }

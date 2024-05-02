@@ -203,4 +203,12 @@ public class LightComponent extends GameComponent {
         setLightSize(defaultSize);
     }
 
+    /**
+     * Restores a percentage of the default light size back to the light, to not exceed the default itself
+     * Percentage to be given in decimal form (i.e. 0.10 = 10%)
+     */
+    public void restore(float percentage) {
+        setLightSize(Math.min(getDefaultSize(), getLightSize() + getDefaultSize() * percentage));
+    }
+
 }

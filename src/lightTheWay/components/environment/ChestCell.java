@@ -3,10 +3,13 @@ package lightTheWay.components.environment;
 import gamecore.components.GameComponent;
 import lightTheWay.components.characters.Character;
 import lightTheWay.components.characters.PlayableCharacter;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 
 public class ChestCell extends Cell{
+    private float promptHeight = p.y - height * 1.5f;
+    private boolean promptDirection = false; // true -> upwards, false -> downwards
     private boolean isOpen;
     private ItemGridUI itemGridUI;
     public ChestCell(PVector p, float width, float height) {
@@ -41,7 +44,7 @@ public class ChestCell extends Cell{
     }
     public void openChest() {
         isOpen = true;
-        itemGridUI.draw();
+        // itemGridUI.draw();
     }
 
     public void closeChest() {
@@ -57,4 +60,37 @@ public class ChestCell extends Cell{
         return itemGridUI;
     }
 
+    public void drawItemGridUI() {
+        itemGridUI.draw();
+    }
+
+    public void drawPrompt() {
+        app.fill(200, 200, 200);
+        app.rect(p.x, promptHeight, width, height);
+        app.fill(100, 100, 100);
+        app.textSize(width);
+        app.textAlign(PConstants.CENTER, PConstants.CENTER);
+        app.text("F", p.x + width / 2, promptHeight + height / 2);
+        updatePromptPosition();
+    }
+
+    public PVector getPromptPosition() {
+        return new PVector(p.x, promptHeight);
+    }
+
+    public void updatePromptPosition() {
+        if (promptDirection) {
+            promptHeight -= height * 0.02f;
+            if (promptHeight <= p.y - height * 1.5f) {
+                promptDirection = false;
+                promptHeight = p.y - height * 1.5f;
+            }
+        } else {
+            promptHeight += height * 0.02f;
+            if (promptHeight >= p.y - height * 1.1f) {
+                promptDirection = true;
+                promptHeight = p.y - height * 1.1f;
+            }
+        }
+    }
 }

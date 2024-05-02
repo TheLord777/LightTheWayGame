@@ -33,7 +33,7 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     protected void gameLoop() {
-//        lighting();
+       lighting();
     }
 
     @Override
@@ -62,11 +62,20 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void downKeyDown() {
+        hero.setDown(true);
+    }
 
+    public void eKeyDown() {
+        hero.useItem(hud.useSelectedSlot());
     }
 
     public void fKeyDown() {
         hero.interact();
+    }
+
+    public void numKeyDown(char s) {
+        int number = Character.getNumericValue(s);
+        hud.setSelectedSlot(number - 1);
     }
 
     @Override
@@ -88,7 +97,7 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void downKeyUp() {
-
+        hero.setDown(false);
     }
 
 
