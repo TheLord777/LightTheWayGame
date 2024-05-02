@@ -31,7 +31,16 @@ public class Level extends GameComponent implements Serializable {
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
         generateMap();
+    }
+    private void updateTileSize() {
+        this.tileSize = (int) (min(app.width, app.height) / 50);
+    }
 
+    public void updateMap(float width, float height) {
+        this.width = width;
+        this.height = height;
+        updateTileSize();
+        generateMap();
     }
 
     private void generateMap() {

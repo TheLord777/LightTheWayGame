@@ -39,6 +39,7 @@ public abstract class ComponentManager extends GameEngine {
     public void setupGame() {
         animationEngine.removeAllComponents();
         getMapFormation("map.ser");
+        level.updateMap(app.width, app.height);
 //        level = new Level(app.width, appHeight, 50);
 
 
