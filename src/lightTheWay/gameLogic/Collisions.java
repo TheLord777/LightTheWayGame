@@ -3,13 +3,11 @@ package lightTheWay.gameLogic;
 import java.util.ArrayList;
 import java.util.List;
 
-import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
 import lightTheWay.components.LightComponent;
 import lightTheWay.components.environment.Cell;
 import lightTheWay.components.environment.Level;
-import processing.core.PVector;
 
 public class Collisions extends CollisionEngine {
 

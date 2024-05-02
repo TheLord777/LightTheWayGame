@@ -7,8 +7,6 @@ import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PVector;
-import lightTheWay.components.CampComponent;
-import lightTheWay.components.ExampleComponent;
 import lightTheWay.components.HUDComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
@@ -20,8 +18,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-
-import static processing.core.PApplet.*;
 
 public abstract class ComponentManager extends GameEngine {
     Level level;
