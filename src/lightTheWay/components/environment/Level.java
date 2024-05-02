@@ -33,7 +33,7 @@ public class Level extends GameComponent implements Serializable {
         generateMap();
     }
     private void updateTileSize() {
-        this.tileSize = (int) (min(app.width, app.height) / 50);
+        this.tileSize = min(app.width, app.height) / 50;
     }
 
     public void updateMap(float width, float height) {
