@@ -95,7 +95,7 @@ public class Level extends GameComponent implements Serializable {
             for (Cell square : squares) {
                 if (dev || square.getIlluminated())
                     square.draw(); // Draw each MapSquare
-
+                    square.setIlluminated(false);
             }
         }
     }
