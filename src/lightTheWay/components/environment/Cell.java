@@ -17,7 +17,6 @@ public abstract class Cell extends GameComponent {
 
     }
 
-
     @Override
     protected void update() {
         // Update logic for MapSquare goes here

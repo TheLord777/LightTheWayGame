@@ -7,9 +7,11 @@ import processing.core.PVector;
 
 public class ChestCell extends Cell{
     private boolean isOpen;
+    private ItemGridUI itemGridUI;
     public ChestCell(PVector p, float width, float height) {
         super(p, width, height);
         this.isOpen = false;
+        this.itemGridUI = new ItemGridUI(new PVector(p.x, p.y - height), width, height / 2, width / 3);
     }
 
     @Override
@@ -29,6 +31,11 @@ public class ChestCell extends Cell{
         app.line(getX() + chestWidth * 0.3f, getY() + chestHeight * 0.7f, getX() + chestWidth * 0.7f, getY() + chestHeight * 0.7f);
 
         app.popStyle();
+
+
+        if (isOpen) {
+            itemGridUI.draw();
+        }
     }
 
     private int generateChestColour() {
