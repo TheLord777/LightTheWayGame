@@ -78,7 +78,7 @@ public class LevelGenerator extends PApplet {
     public void saveMap() {
         try {
             map.setDev(false);
-            FileOutputStream fileOut = new FileOutputStream("map.ser");
+            FileOutputStream fileOut = new FileOutputStream("levels/map.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();

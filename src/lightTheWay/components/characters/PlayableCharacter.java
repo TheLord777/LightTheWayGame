@@ -154,6 +154,7 @@ public class PlayableCharacter extends Character {
 
     public void movePosition(PVector position) {
         setP(position);
+        light.setP(position);
     }
 
     public boolean outOfLight() {

@@ -1,9 +1,10 @@
 package lightTheWay.gameLogic;
 
-import gamecore.components.GameComponent;
+import java.io.File;
+import java.util.ArrayList;
+
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
-import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -41,6 +42,7 @@ public class LightTheWay extends ComponentManager {
     }
 
     private void setUpStart() {
+        win = false;
         state = GameState.START_MODE;
         animationEngine.removeAllComponents();
         startScreenLight.reignite();
@@ -80,17 +82,23 @@ public class LightTheWay extends ComponentManager {
     }
 
     private void startGame() {
-        setupGame();
+        File levelDirectory = new File("levels");
+        ArrayList<String> levelfiles = new ArrayList<>();
+        for (File file : levelDirectory.listFiles()) {
+            levelfiles.add("levels/" + file.getName());
+            System.out.println(file.getName());
+        }
+        setupGame(levelfiles);
         state = GameState.PLAY_MODE;
     }
 
     private void playMode() {
         if (showEndScreen && gamePaused || !gamePaused) {
-            pushCameraPosition();
+            // pushCameraPosition();
         }
         super.play();
         if (showEndScreen && gamePaused || !gamePaused) {
-            popCameraPosition();
+            // popCameraPosition();
             this.hud.step();
         }
         if (win) {
@@ -181,7 +189,6 @@ public class LightTheWay extends ComponentManager {
             return i + suffixes[i % 10];
         }
     }
-
     @Override
     public void mousePressed() {
         if (state == GameState.START_MODE) {
@@ -225,8 +232,14 @@ public class LightTheWay extends ComponentManager {
     }
 
     public void qKeyDown() {
-        if (win || gamePaused) {
-            setUpStart();
+        switch (state) {
+            case PLAY_MODE:
+                if (win || gamePaused) {
+                    setUpStart();
+                }
+                break;
+            default:
+                return;
         }
     }
 
@@ -243,13 +256,11 @@ public class LightTheWay extends ComponentManager {
     @Override
     public void leftKeyUp() {
         hero.setLeft(false);
-
     }
 
     @Override
     public void upKeyUp() {
-        hero.setUp(false
-        );
+        hero.setUp(false);
     }
 
     @Override
