@@ -78,4 +78,8 @@ public class Stalactite extends Cell {
         // Implement intersection logic if needed
         return super.intersection(ge);
     }
+
+    public ArrayList<Droplet> getDroplets() {
+        return droplets;
+    }
 }

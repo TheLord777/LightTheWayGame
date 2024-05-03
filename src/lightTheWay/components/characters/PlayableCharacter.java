@@ -2,6 +2,7 @@ package lightTheWay.components.characters;
 
 import java.util.List;
 
+import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
 import lightTheWay.components.environment.*;
 import processing.core.PConstants;
@@ -12,7 +13,8 @@ import static lightTheWay.GameConfig.MAX_SPEED;
 public class PlayableCharacter extends Character {
 
     private LightComponent light;
-
+    private int lastDamageTime = 0;
+    private int minimumDamageBuffer = 1000;
 
     public PlayableCharacter(PVector p, float width, Level l) {
         super(p, width, l);
@@ -34,7 +36,7 @@ public class PlayableCharacter extends Character {
     public LightComponent createLight(float l) {
         // light = new LightComponent(p, l, 5);
         light = new LightComponent(p, l, 0);
-        light.setBurnTime(10);
+        light.setBurnTime(60);
         return light;
     }
 
@@ -156,6 +158,17 @@ public class PlayableCharacter extends Character {
 
     public boolean outOfLight() {
         return !light.isBurning();
+    }
+
+    /**
+     * Decrements the size of the player light by a percentage (given in decimal) of its default size
+     */
+    public void damage(float f) {
+        int currentTime = Instance.getApp().millis();
+        if (Instance.getApp().millis() >= lastDamageTime + minimumDamageBuffer) {
+            light.decrementLightPercentage(f);
+            lastDamageTime = currentTime;
+        }
     }
 
 }

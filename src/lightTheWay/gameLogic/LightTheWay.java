@@ -8,6 +8,8 @@ public class LightTheWay extends ComponentManager {
 
     float endScreenAlpha = 0;
     int nextGenNumber = 2;
+    boolean win = false;
+    String runTimeString = "";
 
     public LightTheWay() {
         super();
@@ -23,7 +25,24 @@ public class LightTheWay extends ComponentManager {
             popCameraPosition();
             this.hud.step();
         }
-        if (hero.outOfLight() && endScreenAlpha < 255) {
+        if (win) {
+            PApplet app = Instance.getApp();
+            if (endScreenAlpha < 255) {
+                endScreenAlpha += 255 / (5 * app.frameRate);
+                endScreenAlpha = Math.min(255, endScreenAlpha);
+            }
+            app.fill(255, 255, 255, endScreenAlpha);
+            app.rect(0, 0, app.width, app.height);
+            app.fill(0, 0, 0, endScreenAlpha);
+
+            app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
+            float fontSize = Math.min(app.width / 20, 50);
+            app.textSize(fontSize);
+            app.text("Light has returned to the world once more", app.width / 2, app.height / 2 - fontSize * 2f);
+            app.text("The work of your predecessors ends with you", app.width / 2, app.height / 2 - fontSize);
+            app.text("The journey took " + runTimeString + "ms", app.width / 2, app.height / 2 + fontSize);
+            app.text("The " + ordinal(nextGenNumber) + " Generation has lit the path.", app.width / 2, app.height / 2 + fontSize * 2f);
+        } else if (hero.outOfLight() && endScreenAlpha < 255) {
             PApplet app = Instance.getApp();
             endScreenAlpha += 255 / (5 * app.frameRate);
             app.fill(255, 255, 255, endScreenAlpha);
@@ -38,6 +57,7 @@ public class LightTheWay extends ComponentManager {
             app.text("The " + ordinal(nextGenNumber) + " Generation will carry the torch in your place...", app.width / 2, app.height / 2 + fontSize * 1.5f);
         }
         app.fill(255);
+        app.textSize(16);
         app.textAlign(PConstants.CENTER, PConstants.TOP);
         app.text("Frame Rate: " + app.frameRate, 100, 10);
     }
@@ -46,8 +66,30 @@ public class LightTheWay extends ComponentManager {
     @Override
     protected void gameLoop() {
         // lighting();
+        checkPlayerForDanger();
+        if (win) {
+            return;
+        }
         if (level.reachedGoal(hero)) {
-            nextLevel();
+            if (!nextLevel()) {
+                nextGenNumber--;
+                int runEndTime = Instance.getApp().millis();
+                int runTime = runEndTime - runStartTime;
+                int hours = runTime / (3600000);
+                runTime = runTime % (3600000);
+                int minutes = runTime / (60000);
+                runTime = runTime % (60000);
+                int seconds = runTime / (1000);
+                runTime = runTime % (1000);
+                if (hours > 0) {
+                    runTimeString = hours + ":" + minutes + ":" + seconds + "." +  String.format("%03d", runTime);
+                } else if (minutes > 0) {
+                    runTimeString = minutes + ":" + seconds + "." +  String.format("%03d", runTime);
+                } else {
+                    runTimeString = seconds + "." + String.format("%03d", runTime);
+                }
+                win = true;
+            }
         }
         if (hero.outOfLight()) {
             if (endScreenAlpha >= 255) {

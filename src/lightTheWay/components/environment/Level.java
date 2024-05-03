@@ -268,6 +268,18 @@ public class Level extends GameComponent implements Serializable {
         return lights;
     }
 
+    public ArrayList<Stalactite> getStalactites() {
+        ArrayList<Stalactite> stalactites = new ArrayList<>();
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                if (map[i][j] instanceof Stalactite) {
+                    stalactites.add(((Stalactite) map[i][j]));
+                }
+            }
+        }
+        return stalactites;
+    }
+
 
     public Cell getPlayerSpawn() {
         return playerSpawn;

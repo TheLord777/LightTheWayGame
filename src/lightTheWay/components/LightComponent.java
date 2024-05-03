@@ -182,6 +182,14 @@ public class LightComponent extends GameComponent {
     }
 
     /**
+     * Decrements the size of this light by a percentage (given in decimal) of its default size
+     */
+    public void decrementLightPercentage(float percentage) {
+        float decrement = defaultSize * percentage;
+        setLightSize(Math.max(0, lightSize - decrement));
+    }
+
+    /**
      * Set the decrement rate of this light component using the expected time for it to burn
      * @param s Time in seconds that the light should burn for
      */

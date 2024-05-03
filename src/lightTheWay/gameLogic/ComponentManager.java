@@ -3,6 +3,7 @@ package lightTheWay.gameLogic;
 import gamecore.Config;
 import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
+import gamecore.engine.CollisionEngine;
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
@@ -12,7 +13,11 @@ import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import lightTheWay.components.environment.Cell;
+import lightTheWay.components.environment.Droplet;
 import lightTheWay.components.environment.Level;
+import lightTheWay.components.environment.Stalactite;
+import lightTheWay.components.environment.WaterCell;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,6 +33,10 @@ public abstract class ComponentManager extends GameEngine {
     PlayableCharacter hero;
 
     HUDComponent hud;
+
+    int runStartTime = 0;
+
+    ArrayList<Stalactite> stalactites = new ArrayList<>();
 
     protected ComponentManager() {
         super(Instance.getApp(), Collisions.getInstance());
@@ -50,10 +59,36 @@ public abstract class ComponentManager extends GameEngine {
             }
         }
 
+        runStartTime = Instance.getApp().millis();
+
         nextLevel();
 
     }
 
+    public void checkPlayerForDanger() {
+        // If the player enters a water cell, the torch extinguishes at quadruple speed
+        Cell current = level.getCellFromGCPosition(hero);
+        if (current instanceof WaterCell) {
+            System.out.println("in water");
+            hero.getLight().decrementLight();
+            hero.getLight().decrementLight();
+            hero.getLight().decrementLight();
+        }
+        // If the player is hit by a droplet, takes 20% of the default time away
+        // ADD A CHECK FOR COOLDOWN!!!!!
+        for (Stalactite stalactite : stalactites) {
+            boolean hitDetected = false;
+            ArrayList<Droplet> droplets = stalactite.getDroplets();
+            for (Droplet droplet : droplets) {
+                if (CollisionEngine.checkCollision(droplet, hero)) {
+                    hero.damage(0.20f);
+                    hitDetected = true;
+                    break;
+                }
+            }
+            if (hitDetected) break;
+        }
+    }
 
     public Level getMapFormation(String file) {
         try {
@@ -168,6 +203,7 @@ public abstract class ComponentManager extends GameEngine {
             for (LightComponent light : lights) {
                 animationEngine.addComponent(light);
             }
+            stalactites = level.getStalactites();
             return true;
         }
         return false;

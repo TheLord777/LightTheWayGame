@@ -1,5 +1,6 @@
 package lightTheWay.components.environment;
 
+import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
 
 import processing.core.PVector;
@@ -18,7 +19,7 @@ public class Droplet extends GameComponent {
         this.velocity = new PVector(0, 0);
         this.level = level;
         this.stalactite = stalactite;
-
+        this.collisionShape = CollisionShape.CIRCLE;
     }
 
     @Override
