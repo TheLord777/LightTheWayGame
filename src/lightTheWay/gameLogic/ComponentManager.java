@@ -66,13 +66,13 @@ public abstract class ComponentManager extends GameEngine {
     }
 
     public void checkPlayerForDanger() {
-        // If the player enters a water cell, the torch extinguishes at quadruple speed
+        // If the player enters a water cell, the torch extinguishes entirely
         Cell current = level.getCellFromGCPosition(hero);
         if (current instanceof WaterCell) {
-            System.out.println("in water");
-            hero.getLight().decrementLight();
-            hero.getLight().decrementLight();
-            hero.getLight().decrementLight();
+            // hero.getLight().decrementLight();
+            // hero.getLight().decrementLight();
+            // hero.getLight().decrementLight();
+            hero.damage(0.99f);
         }
         // If the player is hit by a droplet, takes 20% of the default time away
         // ADD A CHECK FOR COOLDOWN!!!!!
