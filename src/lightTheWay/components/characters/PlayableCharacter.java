@@ -34,7 +34,7 @@ public class PlayableCharacter extends Character {
     public LightComponent createLight(float l) {
         // light = new LightComponent(p, l, 5);
         light = new LightComponent(p, l, 0);
-        light.setBurnTime(60);
+        light.setBurnTime(10);
         return light;
     }
 
@@ -62,6 +62,9 @@ public class PlayableCharacter extends Character {
 
     @Override
     public void move() {
+        if (outOfLight()) {
+            return;
+        }
         if (onLadder()) {
             if (Math.abs(v.x) >= MAX_SPEED) {
                 v.x = MAX_SPEED * Math.signum(v.x);
