@@ -19,7 +19,6 @@ import lightTheWay.components.environment.Level;
 import lightTheWay.components.environment.Stalactite;
 import lightTheWay.components.environment.WaterCell;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,11 +48,6 @@ public abstract class ComponentManager extends GameEngine {
 
     public void setupGame(ArrayList<String> filenames) {
         animationEngine.removeAllComponents();
-        /**
-         * ADD NEW MAP NAMES HERE, FOR NOW IT WILL BE HARD CODED, LATER CHANGE WILL MAKE IT READ FROM A DIRECTORY OF FILE NAMES, BUT LEVELGENERATOR NEEDS TO BE ADAPTED FOR THIS
-         */
-        // levelfiles.add("map.ser");
-
         for (String filename : filenames) {
             Level newLevel = getMapFormation(filename);
             if (newLevel != null) {

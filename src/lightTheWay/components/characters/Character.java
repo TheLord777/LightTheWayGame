@@ -4,7 +4,6 @@ import gamecore.components.CollisionShape;
 import gamecore.components.DynamicComponent;
 import gamecore.components.GameComponent;
 import lightTheWay.GameConfig;
-import lightTheWay.Instance;
 import lightTheWay.components.environment.Level;
 import lightTheWay.components.environment.Cell;
 import processing.core.PVector;

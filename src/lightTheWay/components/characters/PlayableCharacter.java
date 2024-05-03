@@ -5,7 +5,6 @@ import java.util.List;
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
 import lightTheWay.components.environment.*;
-import processing.core.PConstants;
 import processing.core.PVector;
 
 import static lightTheWay.GameConfig.MAX_SPEED;
@@ -51,7 +50,7 @@ public class PlayableCharacter extends Character {
 
     @Override
     public boolean standing() {
-        Cell current = getEnvironment().getCellFromGCPosition(this);
+        // Cell current = getEnvironment().getCellFromGCPosition(this);
 
         return super.standing() || onLadder();
     }
