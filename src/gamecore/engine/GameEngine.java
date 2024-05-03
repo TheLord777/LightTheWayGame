@@ -19,7 +19,7 @@ public abstract class GameEngine {
         this.ce = ce;
         appWidth = app.displayWidth;
         appHeight = app.displayHeight;
-        gamePaused = true;
+        gamePaused = false;
         showEndScreen = false;
     }
 

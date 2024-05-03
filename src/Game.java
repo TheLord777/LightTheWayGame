@@ -30,7 +30,7 @@ public class Game extends PApplet {
 
         // create and setup new game engine.
         ge = new LightTheWay();
-        ge.setupGame();
+        // ge.setupGame();
     }
 
 

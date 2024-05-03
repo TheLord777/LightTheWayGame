@@ -1,22 +1,87 @@
 package lightTheWay.gameLogic;
 
 import lightTheWay.Instance;
+import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PVector;
 
 public class LightTheWay extends ComponentManager {
 
     float endScreenAlpha = 0;
     int nextGenNumber = 2;
+    GameState state = GameState.START_MODE;
+    LightComponent startScreenLight = new LightComponent(new PVector(app.width / 2, 3 * app.height / 4), app.width, 0);
     boolean win = false;
     String runTimeString = "";
 
     public LightTheWay() {
         super();
+        setUpStart();
     }
 
     @Override
     public void play() {
+        switch (state) {
+            case START_MODE:
+                startMode();
+                break;
+            case TRANSITION_TO_PLAY:
+                transitionToPlay();
+                break;
+            case PLAY_MODE:
+                playMode();
+                break;
+        }
+        app.fill(255);
+        app.textSize(16);
+        app.textAlign(PConstants.CENTER, PConstants.TOP);
+        app.text("Frame Rate: " + app.frameRate, 100, 10);
+    }
+
+    private void setUpStart() {
+        startScreenLight.setDefaultSize(appWidth);
+        startScreenLight.setDecrementRate(0);
+        animationEngine.addComponent(startScreenLight);
+    }
+
+    private void startMode() {
+        app.fill(55, 44, 44);
+        app.rect(0, 0, app.width, app.height);
+        startScreenLight.setIlluminated(true);
+        app.fill(139, 69, 19);
+        app.rect(app.width / 2 - startScreenLight.getDefaultSize() / 60, 3 * app.height / 4, startScreenLight.getDefaultSize() / 30, app.height / 4);
+
+        app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
+        app.fill(200, 200, 200);
+        float fontSize = app.width / 10;
+        app.textSize(fontSize);
+        app.text("Light The Way", app.width / 2, app.height / 2);
+        fontSize = app.width / 30;
+        app.textSize(fontSize);
+        app.text("Extinguish the light to begin", app.width / 2, app.height / 2 + app.width / 20);
+
+        lighting();
+        animationEngine.step();
+    }
+
+    private void transitionToPlay() {
+        if (state == GameState.START_MODE) {
+            state = GameState.TRANSITION_TO_PLAY;
+            startScreenLight.setBurnTime(2);
+        } else if (state == GameState.TRANSITION_TO_PLAY && !startScreenLight.isBurning()) {
+            startGame();
+        } else if (state == GameState.TRANSITION_TO_PLAY) {
+            startMode();
+        }
+    }
+
+    private void startGame() {
+        setupGame();
+        state = GameState.PLAY_MODE;
+    }
+
+    private void playMode() {
         if (showEndScreen && gamePaused || !gamePaused) {
             pushCameraPosition();
         }
@@ -26,46 +91,47 @@ public class LightTheWay extends ComponentManager {
             this.hud.step();
         }
         if (win) {
-            PApplet app = Instance.getApp();
-            if (endScreenAlpha < 255) {
-                endScreenAlpha += 255 / (5 * app.frameRate);
-                endScreenAlpha = Math.min(255, endScreenAlpha);
-            }
-            app.fill(255, 255, 255, endScreenAlpha);
-            app.rect(0, 0, app.width, app.height);
-            app.fill(0, 0, 0, endScreenAlpha);
-
-            app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
-            float fontSize = Math.min(app.width / 20, 50);
-            app.textSize(fontSize);
-            app.text("Light has returned to the world once more", app.width / 2, app.height / 2 - fontSize * 2f);
-            app.text("The work of your predecessors ends with you", app.width / 2, app.height / 2 - fontSize);
-            app.text("The journey took " + runTimeString + "ms", app.width / 2, app.height / 2 + fontSize);
-            app.text("The " + ordinal(nextGenNumber) + " Generation has lit the path.", app.width / 2, app.height / 2 + fontSize * 2f);
+            drawWinScreen();
         } else if (hero.outOfLight() && endScreenAlpha < 255) {
-            PApplet app = Instance.getApp();
-            endScreenAlpha += 255 / (5 * app.frameRate);
-            app.fill(255, 255, 255, endScreenAlpha);
-            app.rect(0, 0, app.width, app.height);
-            app.fill(0, 0, 0, endScreenAlpha);
-
-            app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
-            float fontSize = Math.min(app.width / 20, 50);
-            app.textSize(fontSize);
-            app.text("Your time is up", app.width / 2, app.height / 2 - fontSize * 1.5f);
-            app.text("You may return to the light", app.width / 2, app.height / 2);
-            app.text("The " + ordinal(nextGenNumber) + " Generation will carry the torch in your place...", app.width / 2, app.height / 2 + fontSize * 1.5f);
+            drawDeathScreen();
         }
-        app.fill(255);
-        app.textSize(16);
-        app.textAlign(PConstants.CENTER, PConstants.TOP);
-        app.text("Frame Rate: " + app.frameRate, 100, 10);
     }
 
+    private void drawWinScreen() {
+        if (endScreenAlpha < 255) {
+            endScreenAlpha += 255 / (5 * app.frameRate);
+            endScreenAlpha = Math.min(255, endScreenAlpha);
+        }
+        app.fill(255, 255, 255, endScreenAlpha);
+        app.rect(0, 0, app.width, app.height);
+        app.fill(0, 0, 0, endScreenAlpha);
+
+        app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
+        float fontSize = Math.min(app.width / 20, 50);
+        app.textSize(fontSize);
+        app.text("Light has returned to the world once more", app.width / 2, app.height / 2 - fontSize * 2f);
+        app.text("The work of your predecessors ends with you", app.width / 2, app.height / 2 - fontSize);
+        app.text("The journey took " + runTimeString + "ms", app.width / 2, app.height / 2 + fontSize);
+        app.text("The " + ordinal(nextGenNumber) + " Generation has lit the path.", app.width / 2, app.height / 2 + fontSize * 2f);
+    }
+
+    private void drawDeathScreen() {
+        endScreenAlpha += 255 / (5 * app.frameRate);
+        app.fill(255, 255, 255, endScreenAlpha);
+        app.rect(0, 0, app.width, app.height);
+        app.fill(0, 0, 0, endScreenAlpha);
+
+        app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
+        float fontSize = Math.min(app.width / 20, 50);
+        app.textSize(fontSize);
+        app.text("Your time is up", app.width / 2, app.height / 2 - fontSize * 1.5f);
+        app.text("You may return to the light", app.width / 2, app.height / 2);
+        app.text("The " + ordinal(nextGenNumber) + " Generation will carry the torch in your place...", app.width / 2, app.height / 2 + fontSize * 1.5f);
+    }
 
     @Override
     protected void gameLoop() {
-        // lighting();
+        lighting();
         checkPlayerForDanger();
         if (win) {
             return;
@@ -119,7 +185,7 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void spaceKey() {
-    setupGame();
+        transitionToPlay();
     }
 
     @Override
