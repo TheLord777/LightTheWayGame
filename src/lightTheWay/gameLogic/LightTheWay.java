@@ -40,7 +40,9 @@ public class LightTheWay extends ComponentManager {
     }
 
     private void setUpStart() {
-        startScreenLight.setDefaultSize(appWidth);
+        state = GameState.START_MODE;
+        animationEngine.removeAllComponents();
+        startScreenLight.reignite();
         startScreenLight.setDecrementRate(0);
         animationEngine.addComponent(startScreenLight);
     }
@@ -214,6 +216,12 @@ public class LightTheWay extends ComponentManager {
 
     public void fKeyDown() {
         hero.interact();
+    }
+
+    public void qKeyDown() {
+        if (win || gamePaused) {
+            setUpStart();
+        }
     }
 
     public void numKeyDown(char s) {

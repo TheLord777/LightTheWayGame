@@ -58,6 +58,7 @@ public class Game extends PApplet {
         if (key == 's') ge.downKeyDown();
         if (key == 'e') ge.eKeyDown();
         if (key == 'f') ge.fKeyDown();
+        if (key == 'q') ge.qKeyDown();
         if (key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6') ge.numKeyDown(key);
         if (key == ' ') ge.spaceKey();
         if (key == '\n') ge.enterKey();
