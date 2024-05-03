@@ -1,5 +1,6 @@
 package lightTheWay.gameLogic;
 
+import gamecore.components.GameComponent;
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
@@ -183,6 +184,11 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void mousePressed() {
+        if (state == GameState.START_MODE) {
+            if (Collisions.checkCollisionCirclePoint(startScreenLight.getP(), startScreenLight.getLightDisplaySize() / 10, new PVector(app.mouseX, app.mouseY))) {
+                transitionToPlay();
+            }
+        }
     }
 
     @Override
