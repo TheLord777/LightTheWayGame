@@ -192,7 +192,7 @@ public abstract class ComponentManager extends GameEngine {
             spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
             System.out.println(spawnPosition);
             if (hero == null) {
-                hero = new PlayableCharacter(new PVector(150,app.height -150), level.getTileSize(), level);
+                hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
                 hero.createLight(level.getWidth() / 6.9f);
             } else {
                 hero.movePosition(spawnPosition);
