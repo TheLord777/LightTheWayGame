@@ -11,6 +11,7 @@ public class ChestCell extends Cell{
     private float promptHeight = p.y - height * 1.5f;
     private boolean promptDirection = false; // true -> upwards, false -> downwards
     private boolean isOpen;
+    private ItemType content = ItemType.NO_ITEM;
     private ItemGridUI itemGridUI;
     public ChestCell(PVector p, float width, float height) {
         super(p, width, height);
@@ -42,8 +43,9 @@ public class ChestCell extends Cell{
         float noiseValue = app.noise(getX() * 0.1f, getY() * 0.1f);
         return app.color(255 * noiseValue, 150 * noiseValue, 100 * noiseValue);
     }
-    public void openChest() {
+    public ItemType openChest() {
         isOpen = true;
+        return content;
         // itemGridUI.draw();
     }
 
@@ -92,5 +94,13 @@ public class ChestCell extends Cell{
                 promptHeight = p.y - height * 1.1f;
             }
         }
+    }
+
+    public void setContent(ItemType type) {
+        content = type;
+    }
+
+    public ItemType getContent() {
+        return content;
     }
 }

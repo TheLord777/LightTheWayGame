@@ -215,20 +215,22 @@ public class Level extends GameComponent implements Serializable {
 
     }
 
-    public void edit(int x, int y, int t) {
+    public Cell edit(int x, int y, int t) {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
         switch (t){
             case 7:
                 playerSpawn = map[xIndex][yIndex];
-                return;
+                return map[xIndex][yIndex];
             case 11:
                 goal = map[xIndex][yIndex];
+                return map[xIndex][yIndex];
         }
 
 
         map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
+        return map[xIndex][yIndex];
     }
 
 

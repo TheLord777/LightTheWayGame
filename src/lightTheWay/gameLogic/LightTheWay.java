@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
+import lightTheWay.components.environment.CampCell;
+import lightTheWay.components.environment.ItemType;
+import lightTheWay.components.environment.TorchCell;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -43,6 +46,8 @@ public class LightTheWay extends ComponentManager {
 
     private void setUpStart() {
         win = false;
+        endScreenAlpha = 0;
+        nextGenNumber = 2;
         state = GameState.START_MODE;
         animationEngine.removeAllComponents();
         startScreenLight.reignite();
@@ -224,7 +229,17 @@ public class LightTheWay extends ComponentManager {
     }
 
     public void eKeyDown() {
-        hero.useItem(hud.useSelectedSlot());
+        ItemType type = hud.getSelectedType();
+        boolean success = hud.useSelectedSlot();
+        if (success) {
+            if (type == ItemType.TORCH) {
+                TorchCell torch = (TorchCell) level.getCellFromGCPosition(hero);
+                animationEngine.addComponent(torch.getLightComponent());
+            } else if (type == ItemType.BONFIRE) {
+                CampCell camp = (CampCell) level.getCellFromGCPosition(hero);
+                animationEngine.addComponent(camp.getLightComponent());
+            }
+        }
     }
 
     public void fKeyDown() {

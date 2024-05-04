@@ -47,6 +47,9 @@ public abstract class ComponentManager extends GameEngine {
     public void setupGame() {}
 
     public void setupGame(ArrayList<String> filenames) {
+        runStartTime = 0;
+        levelIndex = -1;
+        levels = new ArrayList<>();
         animationEngine.removeAllComponents();
         for (String filename : filenames) {
             Level newLevel = getMapFormation(filename);
