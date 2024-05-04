@@ -23,6 +23,8 @@ public class Level extends GameComponent implements Serializable {
     private int rows, cols;
     private boolean dev = false;
 
+    private List<Droplet> droplets;
+
 
     public Level(float width, float height, int tileSize) {
         super(new PVector(0, 0), width, height);
@@ -30,7 +32,9 @@ public class Level extends GameComponent implements Serializable {
         this.tileSize = tileSize;
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
+        droplets = new ArrayList<>();
         generateMap();
+
     }
     private void updateTileSize() {
         this.tileSize = min(app.width, app.height) / 50;
@@ -278,6 +282,13 @@ public class Level extends GameComponent implements Serializable {
             }
         }
         return stalactites;
+    }
+    public void addDroplet(Droplet droplet) {
+        droplets.add(droplet);
+    }
+
+    public List<Droplet> getDroplets() {
+        return droplets;
     }
 
 
