@@ -96,7 +96,8 @@ public abstract class Cell extends GameComponent {
                 return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 9:
                 return new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-
+            case 12:
+                return new DoorCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             default:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
         }
