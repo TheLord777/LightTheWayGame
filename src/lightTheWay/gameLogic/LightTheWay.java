@@ -19,7 +19,7 @@ public class LightTheWay extends ComponentManager {
     LightComponent startScreenLight = new LightComponent(new PVector(app.width / 2, 3 * app.height / 4), app.width, 0);
     boolean win = false;
     String runTimeString = "";
-    ItemGridUI itemGridUI;
+    // ItemGridUI itemGridUI;
 
     public LightTheWay() {
         super();
@@ -205,15 +205,15 @@ public class LightTheWay extends ComponentManager {
             }
         }
 
-        if (state == GameState.PLAY_MODE && itemGridUI != null) {
-            ArrayList<Item> items = itemGridUI.getItems();
-            for (Item item : items) {
-                if (item.clicked(app.mouseX, app.mouseY)) {
-                    System.out.println("hello");
-                    break;
-                }
-            }
-        }
+        // if (state == GameState.PLAY_MODE && itemGridUI != null) {
+        //     ArrayList<Item> items = itemGridUI.getItems();
+        //     for (Item item : items) {
+        //         if (item.clicked(app.mouseX, app.mouseY)) {
+        //             System.out.println("hello");
+        //             break;
+        //         }
+        //     }
+        // }
     }
 
     @Override

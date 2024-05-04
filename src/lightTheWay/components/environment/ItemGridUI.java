@@ -28,7 +28,7 @@ public class ItemGridUI extends GameComponent {
             float y = position.y + verticalSpacing / 2;
             PVector itemPosition = new PVector(x, y);
             // Item circleItem = new Item(itemPosition, itemSize / 2);
-            items.add(circleItem);
+            // items.add(circleItem);
         }
     }
 
