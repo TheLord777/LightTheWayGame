@@ -53,7 +53,7 @@ public abstract class Cell extends GameComponent {
 
 
     public boolean isRope() {
-        return this instanceof RopeCell;
+        return this instanceof LockCell;
     }
 
     public boolean isWater() {
@@ -83,7 +83,7 @@ public abstract class Cell extends GameComponent {
             case 2:
                 return new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 3:
-                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), oldCell.isSpawnCell());
+                return new LockCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 4:
                 return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 5:

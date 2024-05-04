@@ -94,7 +94,7 @@ public class PlayableCharacter extends Character {
         List<Cell> neighbours = getEnvironment().getNeighbours(current);
         neighbours.add(current);
         for (Cell neighbour : neighbours) {
-            if (!(neighbour instanceof TorchCell) && !(neighbour instanceof ChestCell)) continue;
+            if (!(neighbour instanceof TorchCell) && !(neighbour instanceof ChestCell) && !(neighbour instanceof LockCell)) continue;
             if (neighbour instanceof ChestCell) {
                 ChestCell chest = (ChestCell) neighbour;
                 if (chest.isOpen()) continue;
@@ -126,6 +126,11 @@ public class PlayableCharacter extends Character {
             if (!chest.isOpen()) {
                 chest.drawPrompt();
             }
+        } else if (closest instanceof LockCell) {
+            LockCell lock = (LockCell) closest;
+            if (getNextKeySlot() >= 0) {
+                lock.drawPrompt();
+            }
         }
     }
 
@@ -145,7 +150,22 @@ public class PlayableCharacter extends Character {
                 inventory[nextSlot] = chest.openChest(); // Opens the chest
                 System.out.println(inventory[nextSlot]);
             }
+        } else if (closest instanceof LockCell) {
+            int nextSlot = getNextKeySlot();
+            if (nextSlot >= 0) {
+                getEnvironment().edit((int) closest.getP().x, (int) closest.getP().y, 0);
+                inventory[nextSlot] = ItemType.NO_ITEM;
+            }
         }
+    }
+
+    public int getNextKeySlot() {
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == ItemType.KEY) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public int getNextEmptySlot() {
@@ -176,8 +196,7 @@ public class PlayableCharacter extends Character {
                 inventory[slotNumber] = ItemType.NO_ITEM;
                 return true;
             case KEY:
-                
-                return true;
+                return false;
             case TORCH:
                 if (getEnvironment().getCellFromGCPosition(this) instanceof EmptyCell) {
                     getEnvironment().edit((int) p.x, (int) p.y, 8);
