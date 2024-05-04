@@ -16,7 +16,7 @@ public class ChestCell extends Cell{
     public ChestCell(PVector p, float width, float height) {
         super(p, width, height);
         this.isOpen = false;
-        this.itemGridUI = new ItemGridUI(new PVector(p.x, p.y - height), width, height / 2, width / 3);
+        this.itemGridUI = new ItemGridUI(new PVector(p.x, p.y - height), width, height, width);
     }
 
     @Override
@@ -36,6 +36,7 @@ public class ChestCell extends Cell{
         app.line(getX() + chestWidth * 0.3f, getY() + chestHeight * 0.7f, getX() + chestWidth * 0.7f, getY() + chestHeight * 0.7f);
 
         app.popStyle();
+
 
     }
 
@@ -63,6 +64,7 @@ public class ChestCell extends Cell{
     }
 
     public void drawItemGridUI() {
+        ItemGridUI itemGridUI = new ItemGridUI(new PVector(p.x - width, p.y - height), width*2, height, 20);
         itemGridUI.draw();
     }
 

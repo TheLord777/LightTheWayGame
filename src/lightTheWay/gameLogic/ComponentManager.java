@@ -3,26 +3,27 @@ package lightTheWay.gameLogic;
 import gamecore.Config;
 import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
+
 import gamecore.engine.CollisionEngine;
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
+import lightTheWay.components.environment.*;
 import processing.core.PVector;
 import lightTheWay.components.HUDComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import lightTheWay.components.environment.Cell;
-import lightTheWay.components.environment.Droplet;
-import lightTheWay.components.environment.Level;
-import lightTheWay.components.environment.Stalactite;
-import lightTheWay.components.environment.WaterCell;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 
 public abstract class ComponentManager extends GameEngine {
     Level level;
@@ -37,6 +38,8 @@ public abstract class ComponentManager extends GameEngine {
     int runStartTime = 0;
 
     ArrayList<Stalactite> stalactites = new ArrayList<>();
+
+    Map<Stalactite, Integer> lastDropletTimes = new HashMap<>();
 
     protected ComponentManager() {
         super(Instance.getApp(), Collisions.getInstance());
@@ -75,17 +78,17 @@ public abstract class ComponentManager extends GameEngine {
         }
         // If the player is hit by a droplet, takes 20% of the default time away
         // ADD A CHECK FOR COOLDOWN!!!!!
-        for (Stalactite stalactite : stalactites) {
-            boolean hitDetected = false;
-            ArrayList<Droplet> droplets = stalactite.getDroplets();
-            for (Droplet droplet : droplets) {
+
+        Iterator<GameComponent> iterator = animationEngine.getComponents().iterator();
+        while (iterator.hasNext()) {
+            GameComponent gc = iterator.next();
+            if (gc instanceof Droplet) {
+                Droplet droplet = (Droplet) gc;
                 if (CollisionEngine.checkCollision(droplet, hero)) {
                     hero.damage(0.20f);
-                    hitDetected = true;
-                    break;
+                    iterator.remove(); // Remove the droplet using iterator
                 }
             }
-            if (hitDetected) break;
         }
     }
 
@@ -148,7 +151,7 @@ public abstract class ComponentManager extends GameEngine {
 
                 for (int i = 0; i < 6; i++) {
                     lightMask.fill(addVal);
-                    lightMask.ellipse(xCenter, yCenter,  baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
+                    lightMask.ellipse(xCenter, yCenter, baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
                 }
             }
         }
@@ -163,7 +166,7 @@ public abstract class ComponentManager extends GameEngine {
         PApplet app = Instance.getApp();
 
         app.pushMatrix();
-        app.translate(app.width/2, app.height/2);
+        app.translate(app.width / 2, app.height / 2);
         app.translate(-hero.getX(), -hero.getY());
     }
 
@@ -172,9 +175,10 @@ public abstract class ComponentManager extends GameEngine {
 
         app.popMatrix();
     }
-    
+
     /**
      * Moves the game to the next level is available
+     *
      * @return whether or not there is another level
      */
     public boolean nextLevel() {
@@ -188,7 +192,7 @@ public abstract class ComponentManager extends GameEngine {
             spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
             System.out.println(spawnPosition);
             if (hero == null) {
-                hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
+                hero = new PlayableCharacter(new PVector(150,app.height -150), level.getTileSize(), level);
                 hero.createLight(level.getWidth() / 6.9f);
             } else {
                 hero.movePosition(spawnPosition);
@@ -208,6 +212,37 @@ public abstract class ComponentManager extends GameEngine {
         }
         return false;
     }
+
+    public void dropDroplets() {
+        int currentTime = Instance.getApp().millis();
+        int dropletInterval = 2000; // Droplet drop interval: once every 2 seconds
+
+        ArrayList<Droplet> dropletsToRemove = new ArrayList<>();
+        for (Stalactite stalactite : stalactites) {
+            int lastDropletTime = lastDropletTimes.getOrDefault(stalactite, 0);
+            if (currentTime - lastDropletTime >= dropletInterval) {
+                float dropletX = stalactite.getP().x + stalactite.getWidth() / 2;
+                float dropletY = stalactite.getP().y;
+                Droplet droplet = new Droplet(new PVector(dropletX, dropletY), 10);
+
+                animationEngine.addComponent(droplet);
+                lastDropletTimes.put(stalactite, currentTime);
+            }
+        }
+        // Check for collision with wall cells and mark droplets for removal
+        for (GameComponent gc : animationEngine.getComponents()) {
+            if (gc instanceof Droplet droplet) {
+                if (level.getCellFromGCPosition(droplet) instanceof WallCell) {
+                    dropletsToRemove.add(droplet);
+                }
+            }
+        }
+        // Remove marked droplets
+        for (Droplet droplet : dropletsToRemove) {
+            animationEngine.removeComponent(droplet);
+        }
+    }
+
 
     public void respawnCharacter() {
         hero = null;

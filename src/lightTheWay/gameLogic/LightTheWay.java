@@ -19,6 +19,7 @@ public class LightTheWay extends ComponentManager {
     LightComponent startScreenLight = new LightComponent(new PVector(app.width / 2, 3 * app.height / 4), app.width, 0);
     boolean win = false;
     String runTimeString = "";
+    ItemGridUI itemGridUI;
 
     public LightTheWay() {
         super();
@@ -148,6 +149,7 @@ public class LightTheWay extends ComponentManager {
     @Override
     protected void gameLoop() {
         lighting();
+        dropDroplets();
         checkPlayerForDanger();
         if (win) {
             return;
@@ -194,11 +196,22 @@ public class LightTheWay extends ComponentManager {
             return i + suffixes[i % 10];
         }
     }
+
     @Override
     public void mousePressed() {
         if (state == GameState.START_MODE) {
             if (Collisions.checkCollisionCirclePoint(startScreenLight.getP(), startScreenLight.getLightDisplaySize() / 10, new PVector(app.mouseX, app.mouseY))) {
                 transitionToPlay();
+            }
+        }
+
+        if (state == GameState.PLAY_MODE && itemGridUI != null) {
+            ArrayList<Item> items = itemGridUI.getItems();
+            for (Item item : items) {
+                if (item.clicked(app.mouseX, app.mouseY)) {
+                    System.out.println("hello");
+                    break;
+                }
             }
         }
     }

@@ -143,7 +143,7 @@ public abstract class CollisionEngine {
      * @param r The rectangle game component
      * @return Whether or not the circle is colliding with the rectangle
      */
-    protected static boolean checkCollisionCircleRectangle(GameComponent c, GameComponent r) {
+    public static boolean checkCollisionCircleRectangle(GameComponent c, GameComponent r) {
         return checkCollisionCircleRectangle(c.getP(), c.getWidth() / 2, r.getP(), r.getWidth(), r.getHeight());
     }
 
