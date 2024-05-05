@@ -1,8 +1,6 @@
 package lightTheWay.components.environment;
 
 import gamecore.components.GameComponent;
-import lightTheWay.Instance;
-import processing.core.PApplet;
 import processing.core.PVector;
 
 public class Item extends GameComponent {
@@ -32,7 +30,7 @@ public class Item extends GameComponent {
     public ItemType getType() {
         return type;
     }
-    
+
     public boolean clicked(float x, float y) {
         // Check if the given point (x, y) is within the circle
         float distanceSquared = (x - p.x) * (x - p.x) + (y - p.y) * (y - p.y);

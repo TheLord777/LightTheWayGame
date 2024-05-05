@@ -3,8 +3,6 @@ package lightTheWay.components.environment;
 import gamecore.components.GameComponent;
 import processing.core.PVector;
 
-import java.util.ArrayList;
-
 public class Stalactite extends Cell {
     private float baseWidth;
     private float height;

@@ -1,6 +1,7 @@
 package gamecore.engine;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 /**
  * This class is the base class for all game engines. It provides the basic game loop and input handling.
@@ -84,7 +85,7 @@ public abstract class GameEngine {
     protected void drawPausedScreen() {
         app.background(50);
         app.fill(255);
-        app.textAlign(app.CENTER);
+        app.textAlign(PConstants.CENTER);
         app.text("Game Paused: \nPress 'Enter' to start", (float) app.width / 2, (float) app.height / 2);
     }
 
@@ -102,7 +103,7 @@ public abstract class GameEngine {
         app.rect(0, (float) app.height / 2 - 50, app.width, 100);
 
         app.fill(255);
-        app.textAlign(app.CENTER, app.CENTER);
+        app.textAlign(PConstants.CENTER, PConstants.CENTER);
         app.text(s, (float) app.width / 2, (float) app.height / 2);
     }
 

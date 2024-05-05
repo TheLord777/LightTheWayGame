@@ -6,13 +6,12 @@ import lightTheWay.components.LightComponent;
 import lightTheWay.gameLogic.Collisions;
 import processing.core.PVector;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.min;
 
-public class Level extends GameComponent implements Serializable {
+public class Level extends GameComponent {
 
     private int tileSize;
     private Cell[][] map;
@@ -155,12 +154,6 @@ public class Level extends GameComponent implements Serializable {
     @Override
     public boolean intersection(GameComponent ge) {
         Cell c = getCellFromGCPosition(ge);
-        List<Cell> neighbours = getNeighbours(c);
-
-//        for (Cell neighbour : neighbours) {
-//            if (neighbour.isWall() && CollisionEngine.checkCollision(ge, neighbour)) return true;
-//        }
-
         return c.isWall() && CollisionEngine.checkCollision(ge, c);
     }
 

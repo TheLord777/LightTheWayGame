@@ -1,7 +1,5 @@
 import gamecore.components.GameComponent;
 import lightTheWay.Instance;
-import lightTheWay.components.environment.Cell;
-import lightTheWay.components.environment.ChestCell;
 import lightTheWay.components.environment.ItemType;
 import lightTheWay.components.environment.Level;
 import processing.core.PApplet;

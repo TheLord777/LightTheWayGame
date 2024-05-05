@@ -4,7 +4,6 @@ import gamecore.components.CollisionShape;
 import gamecore.components.GameComponent;
 import lightTheWay.Instance;
 import lightTheWay.components.characters.PlayableCharacter;
-import lightTheWay.components.environment.Item;
 import lightTheWay.components.environment.ItemType;
 import processing.core.PApplet;
 import processing.core.PConstants;

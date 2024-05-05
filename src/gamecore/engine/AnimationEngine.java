@@ -1,14 +1,7 @@
 package gamecore.engine;
 
-
-import gamecore.components.CollisionShape;
 import gamecore.components.Explosion;
 import gamecore.components.GameComponent;
-import lightTheWay.Instance;
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
-import processing.core.PImage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,7 +82,7 @@ final public class AnimationEngine {
         components.clear();
         components.add(toRetain);
     }
-    private void processFrame(){
+    // private void processFrame(){
 
-    }
+    // }
 }
