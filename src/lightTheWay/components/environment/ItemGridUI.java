@@ -19,18 +19,16 @@ public class ItemGridUI extends GameComponent {
         this.itemSize = itemSize;
         this.items = new ArrayList<>();
 
-        float horizontalSpacing = (width - 3 * itemSize) / 4;
-        float verticalSpacing = (height - 2 * itemSize) / 3;
+        float horizontalSpacing = (width - 3 * itemSize) / 4; // Adjusted for 3 columns
+        float verticalSpacing = (height - itemSize) / 2; // Adjusted for 1 row
 
-        // Add items in a 3x2 grid
-        for (int row = 0; row < 2; row++) {
-            for (int col = 0; col < 3; col++) {
-                float x = position.x + (itemSize + horizontalSpacing) * col + horizontalSpacing / 2;
-                float y = position.y + (itemSize + verticalSpacing) * row + verticalSpacing / 2;
-                PVector itemPosition = new PVector(x, y);
-                Item circleItem = new Item(itemPosition, itemSize / 2);
-                items.add(circleItem);
-            }
+        // Add items in a 1x3 grid
+        for (int col = 0; col < 3; col++) {
+            float x = position.x + (itemSize + horizontalSpacing) * col + horizontalSpacing / 2;
+            float y = position.y + verticalSpacing / 2;
+            PVector itemPosition = new PVector(x, y);
+            // Item circleItem = new Item(itemPosition, itemSize / 2);
+            // items.add(circleItem);
         }
     }
 
@@ -43,19 +41,20 @@ public class ItemGridUI extends GameComponent {
     }
 
     public void draw() {
-        // Draw the background for the item grid
-        app.fill(255);
-        app.rect(position.x, position.y, width* 2, height * 2);
-
+        app.fill(255); // Use the specified background color
+        app.rect(position.x, position.y, this.width, this.height);
         // Draw each item in the grid
         for (Item item : items) {
             item.draw();
         }
     }
+    public ArrayList<Item> getItems() {
+        return this.items;
+    }
 
     @Override
     protected void update() {
-
+        // Update any necessary logic for the item grid
     }
 
     @Override
@@ -65,6 +64,3 @@ public class ItemGridUI extends GameComponent {
 
     // Add methods for interaction with items
 }
-
-
-

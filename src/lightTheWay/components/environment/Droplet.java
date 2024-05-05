@@ -1,43 +1,31 @@
 package lightTheWay.components.environment;
 
 import gamecore.components.CollisionShape;
+import gamecore.components.DynamicComponent;
 import gamecore.components.GameComponent;
-
 import processing.core.PVector;
 
-public class Droplet extends GameComponent {
+public class Droplet extends DynamicComponent {
 
-    private PVector velocity;
-    private double gravity;
-    private float diameter;
-    private Level level;
-    private Stalactite stalactite;
 
-    public Droplet(Level level,Stalactite stalactite, PVector position, double gravity, float diameter) {
+    public Droplet(PVector position, float diameter) {
         super(position, diameter); // Adjust size as needed
-        this.gravity = gravity;
-        this.velocity = new PVector(0, 0);
-        this.level = level;
-        this.stalactite = stalactite;
+
         this.collisionShape = CollisionShape.CIRCLE;
     }
 
     @Override
-    public void update() {
-        // Apply gravity to the velocity
-        velocity.y += gravity;
-
-        // Update position based on velocity
-        p.add(velocity);
-
-        // Check for collisions with walls
-        Cell cell = level.getCellFromPoint(p);
-        if (cell instanceof WallCell) {
-            // Droplet has hit a wall, remove it from the game
-            stalactite.removeDroplet(this);
-        }
+    protected float mass() {
+        // Set mass based on the size of the droplet
+        // For simplicity, let's assume the mass is proportional to the area of the circle
+        return (float) (Math.PI * Math.pow(width / 2, 2));
     }
 
+    @Override
+    public void update() {
+        applyGravity(); // Apply gravity force
+        super.update(); // Update position and velocity using laws of projectile motion
+    }
 
     @Override
     public boolean intersection(GameComponent ge) {
@@ -50,12 +38,4 @@ public class Droplet extends GameComponent {
         app.fill(0, 0, 255); // Blue color
         app.ellipse(p.x, p.y, width, height);
     }
-
-    // Method to reset the droplet position and velocity when needed
-    public void reset(PVector position) {
-        this.p = position.copy();
-        this.velocity.set(0, 0);
-    }
-
-
 }

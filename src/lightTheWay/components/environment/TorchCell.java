@@ -1,10 +1,6 @@
 package lightTheWay.components.environment;
 
-import gamecore.engine.AnimationEngine;
-import lightTheWay.components.CampComponent;
 import lightTheWay.components.LightComponent;
-import lightTheWay.gameLogic.ComponentManager;
-import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 

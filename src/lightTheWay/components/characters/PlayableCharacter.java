@@ -5,13 +5,13 @@ import java.util.List;
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
 import lightTheWay.components.environment.*;
-import processing.core.PConstants;
 import processing.core.PVector;
 
 import static lightTheWay.GameConfig.MAX_SPEED;
 
 public class PlayableCharacter extends Character {
 
+    public ItemType[] inventory = {ItemType.NO_ITEM, ItemType.NO_ITEM, ItemType.NO_ITEM, ItemType.NO_ITEM, ItemType.NO_ITEM, ItemType.NO_ITEM};
     private LightComponent light;
     private int lastDamageTime = 0;
     private int minimumDamageBuffer = 1000;
@@ -51,7 +51,7 @@ public class PlayableCharacter extends Character {
 
     @Override
     public boolean standing() {
-        Cell current = getEnvironment().getCellFromGCPosition(this);
+        // Cell current = getEnvironment().getCellFromGCPosition(this);
 
         return super.standing() || onLadder();
     }
@@ -94,7 +94,11 @@ public class PlayableCharacter extends Character {
         List<Cell> neighbours = getEnvironment().getNeighbours(current);
         neighbours.add(current);
         for (Cell neighbour : neighbours) {
-            if (!(neighbour instanceof TorchCell) && !(neighbour instanceof ChestCell)) continue;
+            if (!(neighbour instanceof TorchCell) && !(neighbour instanceof ChestCell) && !(neighbour instanceof LockCell)) continue;
+            if (neighbour instanceof ChestCell) {
+                ChestCell chest = (ChestCell) neighbour;
+                if (chest.isOpen()) continue;
+            }
             PVector p = neighbour.getClosestPoint(this.getP());
             float d = PVector.dist(p, this.getP());
             if (d < minDist) {
@@ -119,10 +123,13 @@ public class PlayableCharacter extends Character {
             }
         } else if (closest instanceof ChestCell) {
             ChestCell chest = (ChestCell) closest;
-            if (chest.isOpen()) {
-                chest.drawItemGridUI();
-            } else {
+            if (!chest.isOpen()) {
                 chest.drawPrompt();
+            }
+        } else if (closest instanceof LockCell) {
+            LockCell lock = (LockCell) closest;
+            if (getNextKeySlot() >= 0) {
+                lock.drawPrompt();
             }
         }
     }
@@ -138,22 +145,83 @@ public class PlayableCharacter extends Character {
             if (!torch.getIgnited()) torch.ignite();
         } else if (closest instanceof ChestCell) {
             ChestCell chest = (ChestCell) closest;
-            if (!chest.isOpen()) {
-                chest.openChest(); // Or any other action you want to perform when interacting with the chest
-            } else {
-                chest.closeChest(); // Or any other action for closing the chest
+            int nextSlot = getNextEmptySlot();
+            if (!chest.isOpen() && nextSlot >= 0) {
+                inventory[nextSlot] = chest.openChest(); // Opens the chest
+                System.out.println(inventory[nextSlot]);
+            }
+        } else if (closest instanceof LockCell) {
+            int nextSlot = getNextKeySlot();
+            if (nextSlot >= 0) {
+                getEnvironment().edit((int) closest.getP().x, (int) closest.getP().y, 0);
+                inventory[nextSlot] = ItemType.NO_ITEM;
             }
         }
     }
 
-    public void useItem(boolean item) {
-        if (item) {
-            light.restore(0.5f);
+    public int getNextKeySlot() {
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == ItemType.KEY) {
+                return i;
+            }
         }
+        return -1;
+    }
+
+    public int getNextEmptySlot() {
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == ItemType.NO_ITEM) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public boolean useItem(int slotNumber) {
+        ItemType item = inventory[slotNumber];
+        switch (item) {
+            case SMALL_REFILL:
+                light.restore(0.1f);
+                inventory[slotNumber] = ItemType.NO_ITEM;
+                return true;
+            case MEDIUM_REFILL:
+                light.restore(0.25f);
+                inventory[slotNumber] = ItemType.NO_ITEM;
+                return true;
+            case LARGE_REFILL:
+                light.restore(0.5f);
+                inventory[slotNumber] = ItemType.NO_ITEM;
+                return true;
+            case FULL_REFILL:
+                light.reignite();
+                inventory[slotNumber] = ItemType.NO_ITEM;
+                return true;
+            case KEY:
+                return false;
+            case TORCH:
+                if (getEnvironment().getCellFromGCPosition(this) instanceof EmptyCell) {
+                    getEnvironment().edit((int) p.x, (int) p.y, 8);
+                    inventory[slotNumber] = ItemType.NO_ITEM;
+                    return true;
+                } else {
+                    return false;
+                }
+            case BONFIRE:
+                if (getEnvironment().getCellFromGCPosition(this) instanceof EmptyCell && standing()) {
+                    getEnvironment().edit((int) p.x, (int) p.y, 6);
+                    inventory[slotNumber] = ItemType.NO_ITEM;
+                    return true;
+                } else {
+                    return false;
+                }
+            case NO_ITEM:
+                return true;
+        }
+        return false;
     }
 
     public void movePosition(PVector position) {
         setP(position);
+        light.setP(position);
     }
 
     public boolean outOfLight() {

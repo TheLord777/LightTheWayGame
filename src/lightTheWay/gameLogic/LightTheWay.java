@@ -1,9 +1,13 @@
 package lightTheWay.gameLogic;
 
-import gamecore.components.GameComponent;
+import java.io.File;
+import java.util.ArrayList;
+
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
-import processing.core.PApplet;
+import lightTheWay.components.environment.CampCell;
+import lightTheWay.components.environment.ItemType;
+import lightTheWay.components.environment.TorchCell;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -15,6 +19,7 @@ public class LightTheWay extends ComponentManager {
     LightComponent startScreenLight = new LightComponent(new PVector(app.width / 2, 3 * app.height / 4), app.width, 0);
     boolean win = false;
     String runTimeString = "";
+    // ItemGridUI itemGridUI;
 
     public LightTheWay() {
         super();
@@ -41,6 +46,9 @@ public class LightTheWay extends ComponentManager {
     }
 
     private void setUpStart() {
+        win = false;
+        endScreenAlpha = 0;
+        nextGenNumber = 2;
         state = GameState.START_MODE;
         animationEngine.removeAllComponents();
         startScreenLight.reignite();
@@ -80,17 +88,23 @@ public class LightTheWay extends ComponentManager {
     }
 
     private void startGame() {
-        setupGame();
+        File levelDirectory = new File("levels");
+        ArrayList<String> levelfiles = new ArrayList<>();
+        for (File file : levelDirectory.listFiles()) {
+            levelfiles.add("levels/" + file.getName());
+            System.out.println(file.getName());
+        }
+        setupGame(levelfiles);
         state = GameState.PLAY_MODE;
     }
 
     private void playMode() {
         if (showEndScreen && gamePaused || !gamePaused) {
-            pushCameraPosition();
+            // pushCameraPosition();
         }
         super.play();
         if (showEndScreen && gamePaused || !gamePaused) {
-            popCameraPosition();
+            // popCameraPosition();
             this.hud.step();
         }
         if (win) {
@@ -135,6 +149,7 @@ public class LightTheWay extends ComponentManager {
     @Override
     protected void gameLoop() {
         lighting();
+        dropDroplets();
         checkPlayerForDanger();
         if (win) {
             return;
@@ -189,6 +204,16 @@ public class LightTheWay extends ComponentManager {
                 transitionToPlay();
             }
         }
+
+        // if (state == GameState.PLAY_MODE && itemGridUI != null) {
+        //     ArrayList<Item> items = itemGridUI.getItems();
+        //     for (Item item : items) {
+        //         if (item.clicked(app.mouseX, app.mouseY)) {
+        //             System.out.println("hello");
+        //             break;
+        //         }
+        //     }
+        // }
     }
 
     @Override
@@ -217,7 +242,17 @@ public class LightTheWay extends ComponentManager {
     }
 
     public void eKeyDown() {
-        hero.useItem(hud.useSelectedSlot());
+        ItemType type = hud.getSelectedType();
+        boolean success = hud.useSelectedSlot();
+        if (success) {
+            if (type == ItemType.TORCH) {
+                TorchCell torch = (TorchCell) level.getCellFromGCPosition(hero);
+                animationEngine.addComponent(torch.getLightComponent());
+            } else if (type == ItemType.BONFIRE) {
+                CampCell camp = (CampCell) level.getCellFromGCPosition(hero);
+                animationEngine.addComponent(camp.getLightComponent());
+            }
+        }
     }
 
     public void fKeyDown() {
@@ -225,8 +260,14 @@ public class LightTheWay extends ComponentManager {
     }
 
     public void qKeyDown() {
-        if (win || gamePaused) {
-            setUpStart();
+        switch (state) {
+            case PLAY_MODE:
+                if (win || gamePaused) {
+                    setUpStart();
+                }
+                break;
+            default:
+                return;
         }
     }
 
@@ -243,13 +284,11 @@ public class LightTheWay extends ComponentManager {
     @Override
     public void leftKeyUp() {
         hero.setLeft(false);
-
     }
 
     @Override
     public void upKeyUp() {
-        hero.setUp(false
-        );
+        hero.setUp(false);
     }
 
     @Override

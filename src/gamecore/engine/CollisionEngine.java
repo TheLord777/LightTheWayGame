@@ -131,7 +131,7 @@ public abstract class CollisionEngine {
      * @param height The height of the rectangle
      * @return Whether or not the circle is colliding with the rectangle
      */
-    protected static boolean checkCollisionCircleRectangle(PVector cp, float r, PVector rp, float width, float height) {
+    public static boolean checkCollisionCircleRectangle(PVector cp, float r, PVector rp, float width, float height) {
         float cx = PApplet.constrain(cp.x, rp.x, rp.x + width);
         float cy = PApplet.constrain(cp.y, rp.y, rp.y + height);
 
@@ -143,7 +143,7 @@ public abstract class CollisionEngine {
      * @param r The rectangle game component
      * @return Whether or not the circle is colliding with the rectangle
      */
-    protected static boolean checkCollisionCircleRectangle(GameComponent c, GameComponent r) {
+    public static boolean checkCollisionCircleRectangle(GameComponent c, GameComponent r) {
         return checkCollisionCircleRectangle(c.getP(), c.getWidth() / 2, r.getP(), r.getWidth(), r.getHeight());
     }
 

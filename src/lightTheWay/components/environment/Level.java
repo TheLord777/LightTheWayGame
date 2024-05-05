@@ -23,6 +23,8 @@ public class Level extends GameComponent implements Serializable {
     private int rows, cols;
     private boolean dev = false;
 
+    private List<Droplet> droplets;
+
 
     public Level(float width, float height, int tileSize) {
         super(new PVector(0, 0), width, height);
@@ -30,7 +32,9 @@ public class Level extends GameComponent implements Serializable {
         this.tileSize = tileSize;
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
+        droplets = new ArrayList<>();
         generateMap();
+
     }
     private void updateTileSize() {
         this.tileSize = min(app.width, app.height) / 50;
@@ -62,6 +66,20 @@ public class Level extends GameComponent implements Serializable {
         goal = map[1][1];
     }
 
+    public void addDecor() {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                EmptyCell target;
+                if (j < (rows - 1) && map[i][j] instanceof EmptyCell && map[i][j + 1] instanceof EmptyCell) {
+                    target = (EmptyCell) map[i][j];
+                    target.setRandomCarving();
+                } else if (j > 0 && map[i][j] instanceof WallCell && map[i][j - 1] instanceof EmptyCell) {
+                    target = (EmptyCell) map[i][j - 1];
+                    target.setRandomFloorDecor();
+                }
+            }
+        }
+    }
 
     private void applyAutomataRules() {
         Cell[][] newMap = new Cell[cols][rows];
@@ -210,22 +228,27 @@ public class Level extends GameComponent implements Serializable {
 
     }
 
-    public void edit(int x, int y, int t) {
+    public Cell edit(int x, int y, int t) {
+        return edit(x, y, t, ItemType.NO_ITEM);
+    }
+
+    public Cell edit(int x, int y, int t, ItemType itemType) {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
         switch (t){
             case 7:
                 playerSpawn = map[xIndex][yIndex];
-                return;
+                return map[xIndex][yIndex];
             case 11:
                 goal = map[xIndex][yIndex];
+                return map[xIndex][yIndex];
         }
 
 
-        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
+        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this, itemType);
+        return map[xIndex][yIndex];
     }
-
 
     public Cell getCellFromGCPosition(GameComponent gc) {
         int x = (int) (gc.getP().x / tileSize);
@@ -273,6 +296,13 @@ public class Level extends GameComponent implements Serializable {
             }
         }
         return stalactites;
+    }
+    public void addDroplet(Droplet droplet) {
+        droplets.add(droplet);
+    }
+
+    public List<Droplet> getDroplets() {
+        return droplets;
     }
 
 

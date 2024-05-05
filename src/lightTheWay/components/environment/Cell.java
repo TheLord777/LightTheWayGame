@@ -53,7 +53,7 @@ public abstract class Cell extends GameComponent {
 
 
     public boolean isRope() {
-        return this instanceof RopeCell;
+        return this instanceof LockCell;
     }
 
     public boolean isWater() {
@@ -74,7 +74,7 @@ public abstract class Cell extends GameComponent {
         return Math.random() < .35 ? new EmptyCell(p, width, height) : new WallCell(p, width, height);
     }
 
-    public static Cell cellFromType(Cell oldCell, int t, Level level) {
+    public static Cell cellFromType(Cell oldCell, int t, Level level, ItemType itemType) {
         switch (t) {
             case 0:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
@@ -83,11 +83,11 @@ public abstract class Cell extends GameComponent {
             case 2:
                 return new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 3:
-                return new RopeCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), oldCell.isSpawnCell());
+                return new LockCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 4:
                 return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 5:
-                return new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+                return new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), itemType);
             case 6:
                 return new CampCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 7:
@@ -95,8 +95,9 @@ public abstract class Cell extends GameComponent {
             case 8:
                 return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 9:
-                return new Stalactite(level, oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(),20,500);
-
+                return new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 12:
+                return new DoorCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             default:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
         }

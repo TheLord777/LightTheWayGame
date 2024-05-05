@@ -1,8 +1,5 @@
 package lightTheWay.components.environment;
 
-import gamecore.components.GameComponent;
-import lightTheWay.components.characters.Character;
-import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -11,11 +8,17 @@ public class ChestCell extends Cell{
     private float promptHeight = p.y - height * 1.5f;
     private boolean promptDirection = false; // true -> upwards, false -> downwards
     private boolean isOpen;
+    private ItemType content = ItemType.NO_ITEM;
     private ItemGridUI itemGridUI;
     public ChestCell(PVector p, float width, float height) {
         super(p, width, height);
         this.isOpen = false;
-        this.itemGridUI = new ItemGridUI(new PVector(p.x, p.y - height), width, height / 2, width / 3);
+        this.itemGridUI = new ItemGridUI(new PVector(p.x, p.y - height), width, height, width);
+    }
+
+    public ChestCell(PVector p, float width, float height, ItemType itemType) {
+        super(p, width, height);
+        this.content = itemType;
     }
 
     @Override
@@ -36,14 +39,16 @@ public class ChestCell extends Cell{
 
         app.popStyle();
 
+
     }
 
     private int generateChestColour() {
         float noiseValue = app.noise(getX() * 0.1f, getY() * 0.1f);
         return app.color(255 * noiseValue, 150 * noiseValue, 100 * noiseValue);
     }
-    public void openChest() {
+    public ItemType openChest() {
         isOpen = true;
+        return content;
         // itemGridUI.draw();
     }
 
@@ -61,6 +66,7 @@ public class ChestCell extends Cell{
     }
 
     public void drawItemGridUI() {
+        ItemGridUI itemGridUI = new ItemGridUI(new PVector(p.x - width, p.y - height), width*2, height, 20);
         itemGridUI.draw();
     }
 
@@ -92,5 +98,13 @@ public class ChestCell extends Cell{
                 promptHeight = p.y - height * 1.1f;
             }
         }
+    }
+
+    public void setContent(ItemType type) {
+        content = type;
+    }
+
+    public ItemType getContent() {
+        return content;
     }
 }
