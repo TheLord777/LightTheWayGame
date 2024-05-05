@@ -159,42 +159,49 @@ public class LevelGenerator extends PApplet {
      * Handle mouse presses.
      */
     public void mousePressed() {
-        Cell cell = map.edit(mouseX, mouseY, type);
+        // Cell cell = map.edit(mouseX, mouseY, type);
         if (type == 5) {
-            ChestCell chest = (ChestCell) cell;
-            System.out.println(itemType);
             switch (itemType) {
                 case 0:
-                    chest.setContent(ItemType.SMALL_REFILL);
+                    // chest.setContent(ItemType.SMALL_REFILL);
+                    map.edit(mouseX, mouseY, type, ItemType.SMALL_REFILL);
                     break;
                 case 1:
-                    chest.setContent(ItemType.MEDIUM_REFILL);
+                    // chest.setContent(ItemType.MEDIUM_REFILL);
+                    map.edit(mouseX, mouseY, type, ItemType.MEDIUM_REFILL);
                     break;
                 case 2:
-                    chest.setContent(ItemType.LARGE_REFILL);
+                    // chest.setContent(ItemType.LARGE_REFILL);
+                    map.edit(mouseX, mouseY, type, ItemType.LARGE_REFILL);
                     break;
                 case 3:
-                    chest.setContent(ItemType.FULL_REFILL);
+                    // chest.setContent(ItemType.FULL_REFILL);
+                    map.edit(mouseX, mouseY, type, ItemType.FULL_REFILL);
                     break;
                 case 4:
-                    chest.setContent(ItemType.KEY);
+                    // chest.setContent(ItemType.KEY);
+                    map.edit(mouseX, mouseY, type, ItemType.KEY);
                     break;
                 case 5:
-                    chest.setContent(ItemType.TORCH);
+                    // chest.setContent(ItemType.TORCH);
+                    map.edit(mouseX, mouseY, type, ItemType.TORCH);
                     break;
                 case 6:
-                    chest.setContent(ItemType.BONFIRE);
+                    // chest.setContent(ItemType.BONFIRE);
+                    map.edit(mouseX, mouseY, type, ItemType.BONFIRE);
                     break;
                 default:
                     return;
             }
-            System.out.println(chest.getContent());
+        } else {
+            map.edit(mouseX, mouseY, type);
         }
     }
 
 
     public void mouseDragged() {
-        map.edit(mouseX, mouseY, type);
+        mousePressed();
+        // map.edit(mouseX, mouseY, type);
     }
 
 

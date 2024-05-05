@@ -19,6 +19,11 @@ public class ChestCell extends Cell{
         this.itemGridUI = new ItemGridUI(new PVector(p.x, p.y - height), width, height, width);
     }
 
+    public ChestCell(PVector p, float width, float height, ItemType itemType) {
+        super(p, width, height);
+        this.content = itemType;
+    }
+
     @Override
     public void draw() {
         app.pushStyle();

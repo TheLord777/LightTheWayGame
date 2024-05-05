@@ -220,6 +220,10 @@ public class Level extends GameComponent implements Serializable {
     }
 
     public Cell edit(int x, int y, int t) {
+        return edit(x, y, t, ItemType.NO_ITEM);
+    }
+
+    public Cell edit(int x, int y, int t, ItemType itemType) {
         int xIndex = (x / tileSize);
         int yIndex = (y / tileSize);
 
@@ -233,10 +237,9 @@ public class Level extends GameComponent implements Serializable {
         }
 
 
-        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this);
+        map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this, itemType);
         return map[xIndex][yIndex];
     }
-
 
     public Cell getCellFromGCPosition(GameComponent gc) {
         int x = (int) (gc.getP().x / tileSize);

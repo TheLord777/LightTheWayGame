@@ -74,7 +74,7 @@ public abstract class Cell extends GameComponent {
         return Math.random() < .35 ? new EmptyCell(p, width, height) : new WallCell(p, width, height);
     }
 
-    public static Cell cellFromType(Cell oldCell, int t, Level level) {
+    public static Cell cellFromType(Cell oldCell, int t, Level level, ItemType itemType) {
         switch (t) {
             case 0:
                 return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
@@ -87,7 +87,7 @@ public abstract class Cell extends GameComponent {
             case 4:
                 return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 5:
-                return new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+                return new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), itemType);
             case 6:
                 return new CampCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 7:
