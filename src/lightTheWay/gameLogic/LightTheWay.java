@@ -223,25 +223,30 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void rightKeyDown() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setRight(true);
     }
 
     @Override
     public void leftKeyDown() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setLeft(true);
     }
 
     @Override
     public void upKeyDown() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setUp(true);
     }
 
     @Override
     public void downKeyDown() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setDown(true);
     }
 
     public void eKeyDown() {
+        if (state != GameState.PLAY_MODE) return;
         ItemType type = hud.getSelectedType();
         boolean success = hud.useSelectedSlot();
         if (success) {
@@ -256,6 +261,7 @@ public class LightTheWay extends ComponentManager {
     }
 
     public void fKeyDown() {
+        if (state != GameState.PLAY_MODE) return;
         hero.interact();
     }
 
@@ -272,27 +278,32 @@ public class LightTheWay extends ComponentManager {
     }
 
     public void numKeyDown(char s) {
+        if (state != GameState.PLAY_MODE) return;
         int number = Character.getNumericValue(s);
         hud.setSelectedSlot(number - 1);
     }
 
     @Override
     public void rightKeyUp() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setRight(false);
     }
 
     @Override
     public void leftKeyUp() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setLeft(false);
     }
 
     @Override
     public void upKeyUp() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setUp(false);
     }
 
     @Override
     public void downKeyUp() {
+        if (state != GameState.PLAY_MODE) return;
         hero.setDown(false);
     }
 
