@@ -15,6 +15,7 @@ public class EmptyCell extends Cell{
     }
 
     public void setRandomFloorDecor() {
+        if (decor != DecorType.NO_DECOR) return;
         int decorRandom = (int) Math.floor(Math.random() * 12);
         switch (decorRandom) {
             case 0:
@@ -27,6 +28,7 @@ public class EmptyCell extends Cell{
     }
 
     public void setRandomCarving() {
+        if (decor != DecorType.NO_DECOR) return;
         int decorRandom = (int) Math.floor(Math.random() * 24);
         if (decorRandom == 2) {
             decor = DecorType.CARVING;
