@@ -244,7 +244,6 @@ public abstract class ComponentManager extends GameEngine {
         }
     }
 
-
     public void respawnCharacter() {
         hero = null;
         hud = null;

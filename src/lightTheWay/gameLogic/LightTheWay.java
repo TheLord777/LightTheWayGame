@@ -105,6 +105,7 @@ public class LightTheWay extends ComponentManager {
         super.play();
         if (showEndScreen && gamePaused || !gamePaused) {
             // popCameraPosition();
+            this.hud.setAltitude(calculateAltitude());
             this.hud.step();
         }
         if (win) {
@@ -112,6 +113,15 @@ public class LightTheWay extends ComponentManager {
         } else if (hero.outOfLight() && endScreenAlpha < 255) {
             drawDeathScreen();
         }
+    }
+
+    private int calculateAltitude() {
+        int climbedHeight = 0;
+        for (int i = 0; i < Math.min(levelIndex, levels.size() - 1); i++) {
+            climbedHeight += levels.get(i).getLevelHeight();
+        }
+        int currentHeight = (int) (level.getPlayerSpawn().getP().y  / level.getTileSize()) - (int) (hero.getP().y / level.getTileSize());
+        return climbedHeight + currentHeight;
     }
 
     private void drawWinScreen() {

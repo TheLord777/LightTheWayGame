@@ -14,6 +14,7 @@ public class HUDComponent extends GameComponent {
 
     PlayableCharacter hero;
 
+    int altitude = 0;
     int selectedSlot = -1;
     // boolean[] inventory = new boolean[6];
     // boolean[] inventory = {true, true, false, false, false, false};
@@ -43,7 +44,6 @@ public class HUDComponent extends GameComponent {
 
         app.fill(183, 183, 183);
         drawAltimeter(xPosition, yPosition);
-        // app.rect(xPosition, yPosition, width / 6, width / 10);
         xPosition += width / 6;
         xPosition += padding;
         app.rect(xPosition, yPosition - 10, height, height);
@@ -51,11 +51,10 @@ public class HUDComponent extends GameComponent {
         xPosition += padding;
         for (int i = 0; i < 6; i++) {
             drawInventorySlot(xPosition, yPosition, i, selectedSlot == i);
-            // app.rect(xPosition, yPosition, width / 10, width / 10);
             xPosition += width / 10;
             xPosition += padding;
         }
-        app.strokeWeight(0);
+        app.noStroke();
 
         drawFire();
     }
@@ -63,6 +62,10 @@ public class HUDComponent extends GameComponent {
     protected void drawAltimeter(float x, float y) {
         app.fill(183, 183, 183);
         app.rect(x, y, width / 6, width / 10);
+        app.fill(102, 102, 102);
+        app.textAlign(PConstants.CENTER, PConstants.CENTER);
+        app.textSize(width / 16);
+        app.text(altitude + "m", x + width / 12, y + width / 20);
     }
 
     protected void drawInventorySlot(float x, float y, int slotNumber, boolean selected) {
@@ -199,6 +202,10 @@ public class HUDComponent extends GameComponent {
     @Override
     public void setIlluminated(boolean b) {
         this.illuminated = true; // can never not be illuminated
+    }
+
+    public void setAltitude(int a) {
+        altitude = a;
     }
     
 }

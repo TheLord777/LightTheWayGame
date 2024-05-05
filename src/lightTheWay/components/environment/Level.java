@@ -335,4 +335,8 @@ public class Level extends GameComponent implements Serializable {
         }
         return cs;
     }
+
+    public int getLevelHeight() {
+        return((int) (playerSpawn.getP().y  / tileSize) - (int) (goal.getP().y / tileSize));
+    }
 }
