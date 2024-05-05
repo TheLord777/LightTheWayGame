@@ -243,10 +243,16 @@ public class Level extends GameComponent implements Serializable {
 
         switch (t){
             case 7:
+                if (!(map[xIndex][yIndex] instanceof EmptyCell)) return map[xIndex][yIndex];
                 playerSpawn = map[xIndex][yIndex];
                 return map[xIndex][yIndex];
             case 11:
+                if (!(map[xIndex][yIndex] instanceof EmptyCell)) return map[xIndex][yIndex];
+                if (goal != null) {
+                    goal.setGoalCell(false);
+                }
                 goal = map[xIndex][yIndex];
+                goal.setGoalCell(true);
                 return map[xIndex][yIndex];
         }
 

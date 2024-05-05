@@ -8,6 +8,7 @@ import processing.core.PVector;
 public abstract class Cell extends GameComponent {
 
     protected boolean isSpawnCell;
+    protected boolean isGoalCell = false;
 
     public Cell(PVector p, float width, float height) {
         super(p, width, height);
@@ -68,6 +69,10 @@ public abstract class Cell extends GameComponent {
     // Setter method for isSpawnCell
     public void setSpawnCell(boolean spawnCell) {
         isSpawnCell = spawnCell;
+    }
+
+    public void setGoalCell(boolean b) {
+        isGoalCell = b;
     }
 
     public static Cell createIntialCell(PVector p, float width, float height) {

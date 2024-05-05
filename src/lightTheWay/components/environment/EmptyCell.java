@@ -113,7 +113,16 @@ public class EmptyCell extends Cell{
                 app.popStyle();
                 break;
             default:
-                return;
+                break;
+        }
+        if (isGoalCell) {
+            app.pushStyle();
+            app.fill(0, 255, 0);
+            app.triangle(p.x + width / 2, p.y, p.x + width, p.y + height / 4, p.x + width / 2, p.y + height / 2);
+            app.stroke(200, 200, 200);
+            app.strokeWeight(width / 8);
+            app.line(p.x + width / 2, p.y + height / 16, p.x + width / 2, p.y + 15 * height / 16);
+            app.popStyle();
         }
     }
 }
