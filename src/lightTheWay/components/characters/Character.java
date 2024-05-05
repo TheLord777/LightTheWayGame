@@ -51,10 +51,10 @@ public class Character extends DynamicComponent {
         move();
         super.update();
 
-        if (headHit()) v.y = 0;
-        if (leftHit() || rightHit()) v.x = 0;
+//        if (headHit()) v.y = 0;
+//        if (leftHit() || rightHit()) v.x = 0;
 
-        fixClipping();
+        if (!environment.intersection(this)) fixClipping();
 
 //        if (!environment.intersection(this)) return;
 //
@@ -72,6 +72,20 @@ public class Character extends DynamicComponent {
     }
 
     private void fixClipping() {
+        if (jumping() && headHit()) v.y = 0;
+        else if(standing()) v.y = 0;
+       else  if (rightHit() || leftHit()) v.x = 0;
+        else {return;}
+
+        PVector cp = environment.getClosestPoint(this);
+        if (cp == null) return;
+//
+//        // Calculate the vector from the closest point to the character.
+        PVector v1 = PVector.sub(p, cp).setMag((width / 2) + 1);
+//
+//        // Set the position of the character to the closest point on the map without clipping.
+        p.set(cp.add(v1));
+
 
     }
 
@@ -80,7 +94,7 @@ public class Character extends DynamicComponent {
         float speed = 500;
 
         if (tileSize != 0) {
-            speed = 500*(tileSize / 22.0f); // Adjust speed based on tileSize
+            speed = 500 * (tileSize / 22.0f); // Adjust speed based on tileSize
         }
         if (Math.abs(v.x) >= MAX_SPEED) {
             v.x = MAX_SPEED * Math.signum(v.x);
@@ -97,12 +111,12 @@ public class Character extends DynamicComponent {
             if (climbing()) applyForce(new PVector(-speed / 4, 0));
             else applyForce(new PVector(-speed, 0));
         }
-        if (right){
+        if (right) {
             if (climbing()) applyForce(new PVector(speed / 4, 0));
             else applyForce(new PVector(speed, 0));
         }
 
-        if (up){
+        if (up) {
             if (climbing()) climb();
             else if (standing()) jump();
         }
@@ -118,13 +132,13 @@ public class Character extends DynamicComponent {
     }
 
 
-    private void jump(){
+    private void jump() {
         applyForce(new PVector(0, -GameConfig.JUMP_FORCE));
         setState(CharacterState.JUMPING);
     }
 
-    private void climb(){
-        if (state != CharacterState.CLIMBING) v.x /=4;
+    private void climb() {
+        if (state != CharacterState.CLIMBING) v.x /= 4;
         v.y = -2;
 //        applyForce(new PVector(0, -GameConfig.CHARACTER_A * 2));
         setState(CharacterState.CLIMBING);
@@ -158,6 +172,10 @@ public class Character extends DynamicComponent {
         return c.isLadder() || c.isRope();
     }
 
+    private boolean jumping() {
+        return state == CharacterState.JUMPING;
+    }
+
     private boolean headHit() {
         Cell c = environment.getCellFromPoint(new PVector(p.x, p.y - width / 2));
         return c.isWall();
@@ -174,7 +192,7 @@ public class Character extends DynamicComponent {
     }
 
 
-    private void setState(CharacterState state){
+    private void setState(CharacterState state) {
         this.state = state;
     }
 
@@ -185,4 +203,6 @@ public class Character extends DynamicComponent {
     public void setEnvironment(Level l) {
         environment = l;
     }
+
+
 }

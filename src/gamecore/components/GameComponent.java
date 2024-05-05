@@ -1,5 +1,6 @@
 package gamecore.components;
 
+import lightTheWay.components.environment.Background;
 import processing.core.PApplet;
 import processing.core.PVector;
 

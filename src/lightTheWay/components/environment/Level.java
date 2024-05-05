@@ -137,13 +137,8 @@ public class Level extends GameComponent implements Serializable {
     @Override
     public boolean intersection(GameComponent ge) {
         Cell c = getCellFromGCPosition(ge);
-        List<Cell> neighbours = getNeighbours(c);
 
-//        for (Cell neighbour : neighbours) {
-//            if (neighbour.isWall() && CollisionEngine.checkCollision(ge, neighbour)) return true;
-//        }
-
-        return c.isWall() && CollisionEngine.checkCollision(ge, c);
+        return !c.isEmpty() && CollisionEngine.checkCollision(ge, c);
     }
 
 
@@ -155,7 +150,7 @@ public class Level extends GameComponent implements Serializable {
 
         List<Cell> neighbours = getNeighbours(current);
         for (Cell neighbour : neighbours) {
-            if (!neighbour.isWall()) continue;
+            if (!neighbour.isEmpty()) continue;
             PVector p = neighbour.getClosestPoint(gc.getP());
             float d = PVector.dist(p, gc.getP());
             if (d < minDist) {
@@ -163,9 +158,9 @@ public class Level extends GameComponent implements Serializable {
                 res = p;
             }
         }
-
         return res;
     }
+
 
     public List<Cell> touch(GameComponent gc) {
         Cell c = getCellFromGCPosition(gc);
