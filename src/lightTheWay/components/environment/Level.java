@@ -66,6 +66,20 @@ public class Level extends GameComponent implements Serializable {
         goal = map[1][1];
     }
 
+    public void addDecor() {
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                EmptyCell target;
+                if (j < (rows - 1) && map[i][j] instanceof EmptyCell && map[i][j + 1] instanceof EmptyCell) {
+                    target = (EmptyCell) map[i][j];
+                    target.setRandomCarving();
+                } else if (j > 0 && map[i][j] instanceof WallCell && map[i][j - 1] instanceof EmptyCell) {
+                    target = (EmptyCell) map[i][j - 1];
+                    target.setRandomFloorDecor();
+                }
+            }
+        }
+    }
 
     private void applyAutomataRules() {
         Cell[][] newMap = new Cell[cols][rows];

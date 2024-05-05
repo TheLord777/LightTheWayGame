@@ -186,6 +186,7 @@ public abstract class ComponentManager extends GameEngine {
         if (levelIndex < levels.size()) {
             level = levels.get(levelIndex);
             level.updateMap(app.width, app.height);
+            level.addDecor();
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
             PVector spawnPosition = level.getPlayerSpawn().getP().copy();

@@ -1,8 +1,5 @@
 package lightTheWay.components.environment;
 
-import gamecore.components.GameComponent;
-import lightTheWay.components.characters.Character;
-import lightTheWay.components.characters.PlayableCharacter;
 import processing.core.PConstants;
 import processing.core.PVector;
 
