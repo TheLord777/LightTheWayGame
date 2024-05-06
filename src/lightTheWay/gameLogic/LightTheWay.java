@@ -121,7 +121,7 @@ public class LightTheWay extends ComponentManager {
         for (int i = 0; i < Math.min(levelIndex, levels.size() - 1); i++) {
             climbedHeight += levels.get(i).getLevelHeight();
         }
-        int currentHeight = (int) (level.getPlayerSpawn().getP().y  / level.getTileSize()) - (int) (hero.getP().y / level.getTileSize());
+        int currentHeight = (int) (level.getPlayerSpawn().getP().y  / level.getCellHeight()) - (int) (hero.getP().y / level.getCellHeight());
         return climbedHeight + currentHeight;
     }
 

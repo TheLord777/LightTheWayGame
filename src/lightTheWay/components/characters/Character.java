@@ -23,7 +23,7 @@ public abstract class Character extends DynamicComponent {
         this.setShape(CollisionShape.CIRCLE);
         this.environment = l;
         this.state = CharacterState.IDLE;
-        this.alive = false;
+        this.alive = true;
     }
 
     @Override
@@ -57,8 +57,11 @@ public abstract class Character extends DynamicComponent {
 
         move();
 
-        fixClipping();
-
+        try {
+            fixClipping();
+        } catch (ArrayIndexOutOfBoundsException e){
+            kill();
+        }
     }
 
     protected void fixClipping() {

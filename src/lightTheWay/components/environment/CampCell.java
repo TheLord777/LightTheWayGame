@@ -14,6 +14,7 @@ public class CampCell extends Cell {
         float componentX = p.x + width / 2;
         float componentY = p.y + height / 2;
         lightComponent = new LightComponent(componentX, componentY, 250);
+        campComponent = new CampComponent(p.x + width / 2, p.y + height / 2, 250);
     }
 
     @Override
@@ -21,12 +22,21 @@ public class CampCell extends Cell {
         // Draw other elements of the cell if needed
 
         // Draw the camp component
-        new CampComponent(p.x + width / 2, p.y + height / 2, 250).draw();
+        campComponent.draw();
         lightComponent.draw();
     }
 
     public LightComponent getLightComponent() {
         return lightComponent;
+    }
+
+    @Override
+    public void setP(PVector v) {
+        super.setP(v);
+        float componentX = p.x + width / 2;
+        float componentY = p.y + height / 2;
+        lightComponent = new LightComponent(componentX, componentY, 250);
+        campComponent = new CampComponent(p.x + width / 2, p.y + height / 2, 250);
     }
 
     @Override

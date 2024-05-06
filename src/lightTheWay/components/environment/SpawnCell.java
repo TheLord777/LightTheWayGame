@@ -12,5 +12,7 @@ public class SpawnCell extends Cell {
 
     @Override
     public void draw() {
+        app.fill(0,255,255);
+        app.rect(p.x, p.y, width, height);
     }
 }

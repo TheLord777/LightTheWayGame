@@ -134,9 +134,12 @@ public class Level extends GameComponent {
         b.draw();
         for (Cell[] squares : map) {
             for (Cell square : squares) {
-//                if (dev || square.getIlluminated()) {
+                if (dev || square.getIlluminated()) {
+                    if (square instanceof SpawnCell && !dev) continue;
                     square.draw(); // Draw each MapSquare
-//                }
+                }
+
+
                 square.setIlluminated(false);
 
             }
@@ -252,18 +255,16 @@ public class Level extends GameComponent {
         int yIndex = (int) (y / cheight);
 
         switch (t){
-            case 12:
+            case 21:
                 if (!(map[xIndex][yIndex] instanceof EmptyCell)) return map[xIndex][yIndex];
                 playerSpawn = map[xIndex][yIndex];
                 return map[xIndex][yIndex];
             case 20:
-
                 if (!(map[xIndex][yIndex] instanceof EmptyCell)) return map[xIndex][yIndex];
-                if (goal != null) {
-                    goal.setGoalCell(false);
-                }
+
+                removeCurrentGoal();
+
                 goal = Cell.cellFromType(map[xIndex][yIndex], t, this, itemType);
-                goal.setGoalCell(true);
                 map[xIndex][yIndex] = goal;
                 return goal;
         }
@@ -271,6 +272,13 @@ public class Level extends GameComponent {
 
         map[xIndex][yIndex] = Cell.cellFromType(map[xIndex][yIndex], t, this, itemType);
         return map[xIndex][yIndex];
+    }
+
+    private void removeCurrentGoal(){
+        float cwidth = width / cols, cheight= height / rows;
+        int x = Math.round(goal.getX() / cwidth);
+        int y = Math.round(goal.getY() / cheight);
+        map[x][y] = Cell.cellFromType(map[x][y], 0, this, ItemType.NO_ITEM);
     }
 
     public Cell getCellFromGCPosition(GameComponent gc)  {
@@ -358,6 +366,6 @@ public class Level extends GameComponent {
     }
 
     public int getLevelHeight() {
-        return((int) (playerSpawn.getP().y  / tileSize) - (int) (goal.getP().y / tileSize));
+        return((int) (playerSpawn.getP().y  / getLevelHeight()) - (int) (goal.getP().y / getHeight()));
     }
 }

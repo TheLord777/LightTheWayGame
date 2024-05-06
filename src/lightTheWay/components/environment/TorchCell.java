@@ -1,5 +1,6 @@
 package lightTheWay.components.environment;
 
+import lightTheWay.components.CampComponent;
 import lightTheWay.components.LightComponent;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -83,4 +84,13 @@ public class TorchCell extends Cell {
             }
         }
     }
+
+    @Override
+    public void setP(PVector v) {
+        super.setP(v);
+        float lightX = p.x + width / 2;
+        float lightY = p.y + height / 2;
+        torchLight = new LightComponent(lightX, lightY, 0, 0);
+    }
+
 }
