@@ -144,6 +144,15 @@ public class Level extends GameComponent {
             app.fill(0, 255, 0);
             app.rect(goal.getP().x, goal.getP().y, tileSize, tileSize);
         }
+
+        for (Cell[] squares : map) {
+            for (Cell square : squares) {
+                if (square instanceof CampCell) {
+                    square.draw(); // Draw each MapSquare
+                }
+                square.setIlluminated(false);
+            }
+        }
     }
 
     @Override

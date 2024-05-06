@@ -28,24 +28,27 @@ public class CampComponent extends LightComponent {
         PApplet app = Instance.getApp();
         app.fill(205,133,63);
         float diameter = this.getLightSize() / 10;
-        
-        app.quad(p.x - diameter / 2 - 5, p.y + diameter / 2 - 5, 
-                 p.x - diameter / 2, p.y + diameter / 2 - 10, 
-                 p.x + diameter / 2 + 5, p.y + diameter / 2 + 5, 
-                 p.x + diameter / 2, p.y + diameter / 2 + 10);
+        app.rect(p.x - diameter / 2, p.y + diameter / 3, diameter, diameter / 4);
 
-        app.quad(p.x + diameter / 2 + 5, p.y + diameter / 2 - 5, 
-                 p.x + diameter / 2, p.y + diameter / 2 - 10, 
-                 p.x - diameter / 2 - 5, p.y + diameter / 2 + 5, 
-                 p.x - diameter / 2, p.y + diameter / 2 + 10);
+        // float diameter = this.getLightSize() / 10;
+        
+        // app.quad(p.x - diameter / 2 - 5, p.y + diameter / 2 - 5, 
+        //          p.x - diameter / 2, p.y + diameter / 2 - 10, 
+        //          p.x + diameter / 2 + 5, p.y + diameter / 2 + 5, 
+        //          p.x + diameter / 2, p.y + diameter / 2 + 10);
+
+        // app.quad(p.x + diameter / 2 + 5, p.y + diameter / 2 - 5, 
+        //          p.x + diameter / 2, p.y + diameter / 2 - 10, 
+        //          p.x - diameter / 2 - 5, p.y + diameter / 2 + 5, 
+        //          p.x - diameter / 2, p.y + diameter / 2 + 10);
     }
 
     protected void drawCamp() {
         float diameter = this.getLightSize() / 10;
 
-        float yPosition = p.y + diameter / 2 + 5;
+        float yPosition = p.y + diameter / 2;
 
-        drawTent(p.x - 5 * diameter / 4, yPosition - 5, true, 1);
+        drawTent(p.x - 5 * diameter / 4, yPosition, true, 1);
 
         drawTent(p.x + diameter, yPosition, true, 0);
 
