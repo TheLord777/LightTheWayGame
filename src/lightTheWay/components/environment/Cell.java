@@ -97,4 +97,8 @@ public abstract class Cell extends GameComponent {
         };
     }
 
+    public PVector getCentre(){
+        return new PVector(p.x + width /2, p.y + height /2);
+    }
+
 }

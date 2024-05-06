@@ -3,6 +3,7 @@ package lightTheWay.components.environment;
 import processing.core.PVector;
 
 public class DoorCell extends Cell {
+
     public DoorCell(PVector p, float width, float height) {
         super(p, width, height);
     }
@@ -29,5 +30,7 @@ public class DoorCell extends Cell {
 
         app.popStyle();
     }
+
+
 }
 

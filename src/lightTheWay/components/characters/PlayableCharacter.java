@@ -75,7 +75,7 @@ public class PlayableCharacter extends Character {
 
     @Override
     protected float getMaxSpeed() {
-        return .1f * environment.getCellWidth();
+        return .2f * environment.getCellWidth();
     }
 
     private boolean onLadder() {
@@ -153,7 +153,7 @@ public class PlayableCharacter extends Character {
         } else if (closest instanceof LockCell) {
             int nextSlot = getNextKeySlot();
             if (nextSlot >= 0) {
-                getEnvironment().edit((int) closest.getP().x, (int) closest.getP().y, 0);
+                getEnvironment().edit((int) closest.getCentre().x, (int) closest.getCentre().y, 0);
                 inventory[nextSlot] = ItemType.NO_ITEM;
             }
         }

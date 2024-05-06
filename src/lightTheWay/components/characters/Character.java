@@ -4,6 +4,7 @@ import gamecore.components.CollisionShape;
 import gamecore.components.DynamicComponent;
 import gamecore.components.GameComponent;
 import lightTheWay.GameConfig;
+import lightTheWay.components.environment.DoorCell;
 import lightTheWay.components.environment.Level;
 import lightTheWay.components.environment.Cell;
 import processing.core.PVector;
@@ -16,6 +17,7 @@ public abstract class Character extends DynamicComponent {
     protected boolean left = false, right = false, up = false, down = false, sprint = false, alive;
     protected Level environment;
     protected CharacterState state;
+    protected boolean jumpBoost;
 
 
     protected Character(PVector p, float width, Level l) {
@@ -33,8 +35,10 @@ public abstract class Character extends DynamicComponent {
 
     @Override
     public void draw() {
-        app.fill(255, 0, 0);
+        app.stroke(0);
+        app.fill(255, 100, 1001);
         app.ellipse(p.x, p.y, width, width);
+        app.noStroke();
     }
 
     @Override
@@ -136,6 +140,7 @@ public abstract class Character extends DynamicComponent {
         if (up) {
             if (climbing()) climb();
             else if (standing()) jump();
+            else if (Math.abs(v.y) < .1 && !jumpBoost) jumpBoost();
         }
 
 
@@ -149,8 +154,16 @@ public abstract class Character extends DynamicComponent {
     protected void jump() {
         if (v.y != 0) return;
         applyForce(new PVector(0, -jumpForce()));
+        jumpBoost = false;
         setState(CharacterState.JUMPING);
     }
+
+    protected void jumpBoost() {
+        applyForce(new PVector(0, -jumpForce()));
+        jumpBoost = true;
+        setState(CharacterState.JUMPING);
+    }
+
 
     private float jumpForce() {
         return environment.getHeight() * 7;
@@ -227,7 +240,7 @@ public abstract class Character extends DynamicComponent {
 
     protected boolean rightHit() {
         Cell c = environment.getCellFromPoint(new PVector(p.x + width / 2, p.y));
-        return c.isWall();
+        return c.isWall() ;
     }
 
 

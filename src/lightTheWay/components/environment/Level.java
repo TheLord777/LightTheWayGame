@@ -249,6 +249,7 @@ public class Level extends GameComponent {
         return edit(x, y, t, ItemType.NO_ITEM);
     }
 
+
     public Cell edit(int x, int y, int t, ItemType itemType) {
         float cwidth = width / cols, cheight= height / rows;
         int xIndex = (int) (x / cwidth);
@@ -256,7 +257,7 @@ public class Level extends GameComponent {
 
         switch (t){
             case 21:
-                if (!(map[xIndex][yIndex] instanceof EmptyCell)) return map[xIndex][yIndex];
+                if (!(map[xIndex][yIndex] instanceof EmptyCell) && !(map[xIndex][yIndex] instanceof CampCell)) return map[xIndex][yIndex];
                 playerSpawn = map[xIndex][yIndex];
                 return map[xIndex][yIndex];
             case 20:
@@ -366,6 +367,6 @@ public class Level extends GameComponent {
     }
 
     public int getLevelHeight() {
-        return((int) (playerSpawn.getP().y  / getLevelHeight()) - (int) (goal.getP().y / getHeight()));
+        return((int) (playerSpawn.getP().y  / getHeight()) - (int) (goal.getP().y / getHeight()));
     }
 }

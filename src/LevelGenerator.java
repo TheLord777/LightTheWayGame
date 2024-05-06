@@ -109,7 +109,7 @@ public class LevelGenerator extends PApplet {
             }
             typeAlphaValue = 254;
         }
-        if (key == '6') type = 6;
+        if (key == '6') type = 6; // camp
         if (key == '7') type = 7;
         if (key == 's') type = 21; // spawn
         if (key == 'g') type = 20; // goal
@@ -128,7 +128,7 @@ public class LevelGenerator extends PApplet {
     public void saveMap() {
         try {
             map.setDev(false);
-            FileOutputStream fileOut = new FileOutputStream("levels/map.ser");
+            FileOutputStream fileOut = new FileOutputStream("levels/h1.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();

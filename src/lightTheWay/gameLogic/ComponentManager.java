@@ -92,18 +92,25 @@ public abstract class ComponentManager extends GameEngine {
                 Droplet droplet = (Droplet) gc;
                 if (CollisionEngine.checkCollision(droplet, hero)) {
                     hero.damage(0.20f);
-                    damageShake =50;
+                    damageShake = 50;
                     iterator.remove(); // Remove the droplet using iterator
                 }
             }
 
-            if (gc instanceof AICharacter){
-                if (Collisions.checkCollision(hero, gc)){
+            if (gc instanceof AICharacter) {
+                if (Collisions.checkCollision(hero, gc)) {
                     hero.damage(0.2f);
                     damageShake = 50;
 
                 }
             }
+        }
+    }
+
+    public void captureCheckpoint() {
+        Cell c = level.getCellFromGCPosition(hero);
+        if (c instanceof CampCell && Collisions.checkCollision(hero, c) && c.getY() < level.getPlayerSpawn().getY()) {
+            level.edit((int) hero.getX(), (int) hero.getY(), 21);
         }
     }
 
@@ -167,13 +174,13 @@ public abstract class ComponentManager extends GameEngine {
                 for (int i = 0; i < 6; i++) {
                     if (damageShake == 0) lightMask.fill(addVal);
                     else {
-                        lightMask.fill(app.random(25,30));
+                        lightMask.fill(app.random(25, 30));
                     }
 
                     lightMask.ellipse(xCenter, yCenter, baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
                 }
 
-                if (damageShake != 0){
+                if (damageShake != 0) {
                     damageShake--;
                 }
             }
@@ -213,8 +220,10 @@ public abstract class ComponentManager extends GameEngine {
             }
 
             level = levels.get(levelIndex);
-            level.updateMap(app.width, app.height - hud.getHeight());
-            Config.setGravity(level.getHeight() / 10000);
+            if (level.getHeight() != app.height - hud.getHeight())
+                level.updateMap(app.width, app.height - hud.getHeight());
+
+            Config.setGravity(level.getHeight() / 5000);
             level.addDecor();
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
