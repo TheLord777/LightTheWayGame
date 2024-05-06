@@ -110,7 +110,7 @@ public class LightTheWay extends ComponentManager {
         }
         if (win) {
             drawWinScreen();
-        } else if (hero.outOfLight() && endScreenAlpha < 255) {
+        } else if (hero.outOfLight() || hero.killed() && endScreenAlpha < 255) {
             drawDeathScreen();
         }
     }
@@ -151,7 +151,7 @@ public class LightTheWay extends ComponentManager {
     protected void gameLoop() {
         lighting();
         dropDroplets();
-        checkPlayerForDanger();
+        if (!hero.killed()) checkPlayerForDanger();
         if (win) {
             return;
         }
@@ -176,7 +176,7 @@ public class LightTheWay extends ComponentManager {
                 win = true;
             }
         }
-        if (hero.outOfLight()) {
+        if (hero.outOfLight() || hero.killed()) {
             if (endScreenAlpha >= 255) {
                 endScreenAlpha = 0;
                 respawnCharacter();

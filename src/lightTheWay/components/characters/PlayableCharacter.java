@@ -27,6 +27,8 @@ public class PlayableCharacter extends Character {
     public void update() {
         super.update();
 
+        if (killed()) return;
+
         // Handle state with special tiles
         Cell current = getEnvironment().getCellFromGCPosition(this);
         if (current instanceof CampCell) {

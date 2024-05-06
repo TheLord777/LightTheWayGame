@@ -45,9 +45,15 @@ public abstract class Character extends DynamicComponent {
 
     @Override
     public void update() {
-        if (!standing() || climbing()) applyGravity();
+        try {
+            if (!standing() || climbing()) applyGravity();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            kill();
+        }
 
         super.update();
+
+        if (killed()) return;
 
         move();
 

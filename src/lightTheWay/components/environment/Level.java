@@ -260,7 +260,7 @@ public class Level extends GameComponent implements Serializable {
         return map[xIndex][yIndex];
     }
 
-    public Cell getCellFromGCPosition(GameComponent gc) {
+    public Cell getCellFromGCPosition(GameComponent gc)  {
         float cwidth = width / cols, cheight= height / rows;
         int x = (int) (gc.getP().x / cwidth);
         int y = (int) (gc.getP().y / cheight);
