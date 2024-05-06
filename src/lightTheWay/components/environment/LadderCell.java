@@ -14,7 +14,7 @@ public class LadderCell extends Cell{
 
         app.pushStyle(); // Save the current style settings
 
-        app.stroke(0); // Black color for ladder strokes
+        app.stroke(150); // Black color for ladder strokes
         app.strokeWeight(3); // Adjust the stroke weight as needed
 
         // Calculate the dimensions for the ladder within the cell

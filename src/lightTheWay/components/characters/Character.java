@@ -45,7 +45,7 @@ public abstract class Character extends DynamicComponent {
 
     @Override
     public void update() {
-        if (!standing()) applyGravity();
+        if (!standing() || climbing()) applyGravity();
 
         super.update();
 
@@ -59,7 +59,7 @@ public abstract class Character extends DynamicComponent {
         if (jumping()) {
             if (headHit()) v.y = 0;
         } else if (standing()) {
-            v.y = 0;
+            if (!environment.getCellFromGCPosition(this).isLadder()) v.y = 0;
             f.y = 0;
             p.y = getStandingCell().getY() - (width / 2);
         }
@@ -107,7 +107,7 @@ public abstract class Character extends DynamicComponent {
 //            return;
 //        }
 
-        if (!left && !right && standing()) {
+        if (!left && !right && (standing() || climbing())) {
             if (v.x < 0) applyForce(new PVector(speed, 0));
             else applyForce(new PVector(-speed, 0));
 
@@ -115,15 +115,18 @@ public abstract class Character extends DynamicComponent {
         }
 
         if (left) {
-            if (climbing()) applyForce(new PVector(-speed / 4, 0));
+            if (climbing() && !standing()) v.x = -1;
             else if (!jumping()) applyForce(new PVector(-speed, 0));
             else if (v.x >= -1) v.x = -1;
         }
         if (right) {
-            if (climbing()) applyForce(new PVector(speed / 4, 0));
+            if (climbing() && !standing()) v.x = 1;
             else if (!jumping()) applyForce(new PVector(speed, 0));
             else if (v.x <= 1) v.x = 1;
         }
+
+        if (!up && climbing()) v.y =0;
+        if (down & climbing()) v.y = 2;
 
         if (up) {
             if (climbing()) climb();
@@ -172,7 +175,7 @@ public abstract class Character extends DynamicComponent {
     }
 
     public boolean standing() {
-        Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
+      Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
         if (c.isWall()) {
             state = CharacterState.Standing;
         } else {

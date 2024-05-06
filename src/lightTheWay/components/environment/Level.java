@@ -42,9 +42,10 @@ public class Level extends GameComponent implements Serializable {
                 map[i][j].setWidth(cwidth);
                 map[i][j].setHeight(cheight);
                 map[i][j].setP(new PVector(i * cwidth, j * cheight));
-
             }
         }
+
+
     }
 
     public void updateMap(float width, float height) {
@@ -146,9 +147,10 @@ public class Level extends GameComponent implements Serializable {
             app.fill(255, 0 ,0);
             app.rect(playerSpawn.getP().x, playerSpawn.getP().y, cwidth, cheight);
 
-            app.fill(0, 255, 0);
-            app.rect(goal.getP().x, goal.getP().y, cwidth, cheight);
+
         }
+
+        goal.draw();
     }
 
     @Override
@@ -246,9 +248,11 @@ public class Level extends GameComponent implements Serializable {
             case 12:
                 playerSpawn = map[xIndex][yIndex];
                 return map[xIndex][yIndex];
-            case 11:
-                goal = map[xIndex][yIndex];
-                return map[xIndex][yIndex];
+            case 20:
+
+                goal = Cell.cellFromType(map[xIndex][yIndex], t, this, itemType);
+                map[xIndex][yIndex] = goal;
+                return goal;
         }
 
 
@@ -285,6 +289,8 @@ public class Level extends GameComponent implements Serializable {
                     lights.add(((TorchCell) map[i][j]).getLightComponent());
                 } else if (map[i][j] instanceof CampCell) {
                     lights.add(((CampCell) map[i][j]).getLightComponent());
+                } else if (map[i][j] instanceof GoalCell){
+                    lights.add(((GoalCell) map[i][j]).getLightComponent());
                 }
             }
         }

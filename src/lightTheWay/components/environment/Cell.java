@@ -86,6 +86,7 @@ public abstract class Cell extends GameComponent {
             case 7 -> new SpawnCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 8 -> new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 9 -> new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 20 -> new GoalCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             case 12 -> new DoorCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
             default -> new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
         };

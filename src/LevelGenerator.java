@@ -114,7 +114,7 @@ public class LevelGenerator extends PApplet {
         if (key == '6') type = 6;
         if (key == '7') type = 7;
         if (key == 's') type = 12; // spawn
-        if (key == 'g') type = 11; // goal
+        if (key == 'g') type = 20; // goal
         if (key == '8') type = 8;
         if (key == '9') type = 9;
         if (key == 'c') type = 10;

@@ -63,7 +63,7 @@ public class PlayableCharacter extends Character {
     public boolean standing() {
         // Cell current = getEnvironment().getCellFromGCPosition(this);
 
-        return super.standing() || onLadder();
+        return super.standing();
     }
 
     @Override
@@ -82,28 +82,6 @@ public class PlayableCharacter extends Character {
         return current instanceof LadderCell;
     }
 
-    @Override
-    public void move() {
-        if (outOfLight()) {
-            return;
-        }
-        if (onLadder()) {
-            if (Math.abs(v.x) >= MAX_SPEED) {
-                v.x = MAX_SPEED * Math.signum(v.x);
-                return;
-            }
-
-            float speed = 500;
-            if (left) applyForce(new PVector(-speed, 0));
-            if (right) applyForce(new PVector(speed, 0));
-            if (up) applyForce(new PVector(0, -speed *30));
-            if (down) {
-                applyForce(new PVector(0, +speed *30));
-            }
-        } else {
-            super.move();
-        }
-    }
 
     public Cell findInteractionTarget() {
         Cell closest = null;
