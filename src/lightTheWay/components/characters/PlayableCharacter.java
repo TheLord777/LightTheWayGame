@@ -1,6 +1,7 @@
 package lightTheWay.components.characters;
 
 import java.util.List;
+import java.util.Random;
 
 import lightTheWay.Instance;
 import lightTheWay.components.LightComponent;
@@ -15,9 +16,11 @@ public class PlayableCharacter extends Character {
     private LightComponent light;
     private int lastDamageTime = 0;
     private int minimumDamageBuffer = 1000;
+    private int damageFlash;
 
     public PlayableCharacter(PVector p, float width, Level l) {
         super(p, width, l);
+        damageFlash = 0;
     }
 
     @Override
@@ -31,6 +34,10 @@ public class PlayableCharacter extends Character {
         }
 
         showInteractions();
+
+        if (damageFlash !=0){
+            damageFlash--;
+        }
     }
 
     public LightComponent createLight(float l) {
@@ -46,6 +53,9 @@ public class PlayableCharacter extends Character {
 
     @Override
     public void draw() {
+        if (damageFlash > 0 && damageFlash % 10 > 5) {
+            return;
+        }
         super.draw();
     }
 
@@ -58,12 +68,12 @@ public class PlayableCharacter extends Character {
 
     @Override
     protected float getSpeed() {
-        return 500;
+        return environment.getWidth() / width;
     }
 
     @Override
     protected float getMaxSpeed() {
-        return 5;
+        return .1f * environment.getCellWidth();
     }
 
     private boolean onLadder() {
@@ -242,11 +252,13 @@ public class PlayableCharacter extends Character {
      * Decrements the size of the player light by a percentage (given in decimal) of its default size
      */
     public void damage(float f) {
+        if (damageFlash > 0) return;
         int currentTime = Instance.getApp().millis();
         if (Instance.getApp().millis() >= lastDamageTime + minimumDamageBuffer) {
             light.decrementLightPercentage(f);
             lastDamageTime = currentTime;
         }
+        damageFlash = 50;
     }
 
 }

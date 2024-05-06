@@ -13,8 +13,8 @@ public abstract class Config {
     public static int SCREEN_DISPLACEMENT = 50;
 
 
-    public static void setGravity(PVector gravity) {
-        GRAVITY = gravity;
+    public static void setGravity(float gravity) {
+        GRAVITY = new PVector(0, gravity);
     }
 
 }

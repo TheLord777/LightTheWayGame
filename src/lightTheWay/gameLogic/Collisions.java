@@ -8,10 +8,14 @@ import gamecore.components.Frame;
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
 import lightTheWay.components.LightComponent;
+import lightTheWay.components.characters.AICharacter;
+import lightTheWay.components.characters.Character;
+import lightTheWay.components.characters.PlayableCharacter;
 import lightTheWay.components.environment.Cell;
 import lightTheWay.components.environment.Level;
 
 public class Collisions extends CollisionEngine {
+
 
     private static final CollisionEngine instance = new Collisions();
 
@@ -23,10 +27,12 @@ public class Collisions extends CollisionEngine {
         super();
     }
 
+
     @Override
     public void collisions() {
         lightCollisions();
     }
+
 
     public void lightCollisions() {
         // Get all light sources

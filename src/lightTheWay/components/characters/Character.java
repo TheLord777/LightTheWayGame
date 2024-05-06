@@ -13,7 +13,7 @@ import static lightTheWay.GameConfig.MAX_SPEED;
 
 public abstract class Character extends DynamicComponent {
 
-    protected boolean left = false, right = false, up = false, down = false, sprint = false;
+    protected boolean left = false, right = false, up = false, down = false, sprint = false, alive;
     protected Level environment;
     protected CharacterState state;
 
@@ -23,6 +23,7 @@ public abstract class Character extends DynamicComponent {
         this.setShape(CollisionShape.CIRCLE);
         this.environment = l;
         this.state = CharacterState.IDLE;
+        this.alive = false;
     }
 
     @Override
@@ -65,20 +66,22 @@ public abstract class Character extends DynamicComponent {
 
         if (leftHit()) {
             Cell lc = getLeftCell();
-            p.x = lc.getX()  + lc.getWidth() + (width / 2);
+            p.x = lc.getX() + lc.getWidth() + (width / 2);
 
-            if (left)
+            if (left) {
                 f.x = 0;
                 v.x = 0;
+            }
         }
         if (rightHit()) {
             p.x = getRightCell().getX() - (width / 2);
-            if (right)
+            if (right) {
                 f.x = 0;
                 v.x = 0;
+            }
         }
 
-        if (headHit()){
+        if (headHit()) {
             Cell tc = getTopCell();
             v.y = 0;
             f.y = 0;
@@ -99,10 +102,10 @@ public abstract class Character extends DynamicComponent {
             v.x = getMaxSpeed() * Math.signum(v.x);
             return;
         }
-        if (Math.abs(v.y) >= getMaxSpeed() && v.y < 0) {
-            v.y = getMaxSpeed() * Math.signum(v.y);
-            return;
-        }
+//        if (Math.abs(v.y) >= getMaxSpeed() && v.y < 0) {
+//            v.y = getMaxSpeed() * Math.signum(v.y);
+//            return;
+//        }
 
         if (!left && !right && standing()) {
             if (v.x < 0) applyForce(new PVector(speed, 0));
@@ -114,22 +117,21 @@ public abstract class Character extends DynamicComponent {
         if (left) {
             if (climbing()) applyForce(new PVector(-speed / 4, 0));
             else if (!jumping()) applyForce(new PVector(-speed, 0));
-            else if (v.x >= -1) v.x =-1;
+            else if (v.x >= -1) v.x = -1;
         }
         if (right) {
             if (climbing()) applyForce(new PVector(speed / 4, 0));
             else if (!jumping()) applyForce(new PVector(speed, 0));
-            else if (v.x <= 1) v.x =1;
+            else if (v.x <= 1) v.x = 1;
         }
 
         if (up) {
             if (climbing()) climb();
             else if (standing()) jump();
         }
-        
 
 
-        if (jumping()){
+        if (jumping()) {
             if (Math.abs(v.x) < 1) v.x = 0;
         }
 
@@ -137,14 +139,17 @@ public abstract class Character extends DynamicComponent {
 
 
     protected void jump() {
-        applyForce(new PVector(0, -GameConfig.JUMP_FORCE));
+        applyForce(new PVector(0, -jumpForce()));
         setState(CharacterState.JUMPING);
+    }
+
+    private float jumpForce() {
+        return environment.getHeight() * 7;
     }
 
     protected void climb() {
         if (state != CharacterState.CLIMBING) v.x /= 4;
         v.y = -2;
-//        applyForce(new PVector(0, -GameConfig.CHARACTER_A * 2));
         setState(CharacterState.CLIMBING);
     }
 
@@ -170,6 +175,8 @@ public abstract class Character extends DynamicComponent {
         Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
         if (c.isWall()) {
             state = CharacterState.Standing;
+        } else {
+            state = CharacterState.JUMPING;
         }
         return c.isWall();
     }
@@ -197,9 +204,10 @@ public abstract class Character extends DynamicComponent {
         return environment.getCellFromPoint(new PVector(p.x - width / 2, p.y));
     }
 
-    protected Cell getTopCell(){
+    protected Cell getTopCell() {
         return environment.getCellFromPoint(new PVector(p.x, p.y - width / 2));
     }
+
     protected Cell getRightCell() {
         return environment.getCellFromPoint(new PVector(p.x + width / 2, p.y));
     }
@@ -231,4 +239,11 @@ public abstract class Character extends DynamicComponent {
     protected abstract float getMaxSpeed();
 
 
+    public boolean killed() {
+        return !alive;
+    }
+
+    public void kill() {
+        alive = false;
+    }
 }

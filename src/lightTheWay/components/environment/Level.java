@@ -243,7 +243,7 @@ public class Level extends GameComponent implements Serializable {
         int yIndex = (int) (y / cheight);
 
         switch (t){
-            case 7:
+            case 12:
                 playerSpawn = map[xIndex][yIndex];
                 return map[xIndex][yIndex];
             case 11:

@@ -75,32 +75,20 @@ public abstract class Cell extends GameComponent {
     }
 
     public static Cell cellFromType(Cell oldCell, int t, Level level, ItemType itemType) {
-        switch (t) {
-            case 0:
-                return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 1:
-                return new WallCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 2:
-                return new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 3:
-                return new LockCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 4:
-                return new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 5:
-                return new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), itemType);
-            case 6:
-                return new CampCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 7:
-                return new SpawnCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 8:
-                return new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 9:
-                return new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            case 12:
-                return new DoorCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-            default:
-                return new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
-        }
+        return switch (t) {
+            case 0 -> new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 1 -> new WallCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 2 -> new WaterCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 3 -> new LockCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 4 -> new LadderCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 5 -> new ChestCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight(), itemType);
+            case 6 -> new CampCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 7 -> new SpawnCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 8 -> new TorchCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 9 -> new Stalactite(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            case 12 -> new DoorCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+            default -> new EmptyCell(oldCell.getP(), oldCell.getWidth(), oldCell.getHeight());
+        };
     }
 
 }

@@ -33,6 +33,7 @@ public abstract class ComponentManager extends GameEngine {
 
     ArrayList<Level> levels = new ArrayList<>();
     int levelIndex = -1;
+    int damageShake;
 
     PlayableCharacter hero;
 
@@ -46,7 +47,7 @@ public abstract class ComponentManager extends GameEngine {
 
     protected ComponentManager() {
         super(Instance.getApp(), Collisions.getInstance());
-        Config.setGravity(new PVector(0, .15f));
+
     }
 
     @Override
@@ -56,6 +57,7 @@ public abstract class ComponentManager extends GameEngine {
     public void setupGame(ArrayList<String> filenames) {
         runStartTime = 0;
         levelIndex = -1;
+        damageShake = 0;
         levels = new ArrayList<>();
         animationEngine.removeAllComponents();
         for (String filename : filenames) {
@@ -90,7 +92,16 @@ public abstract class ComponentManager extends GameEngine {
                 Droplet droplet = (Droplet) gc;
                 if (CollisionEngine.checkCollision(droplet, hero)) {
                     hero.damage(0.20f);
+                    damageShake =50;
                     iterator.remove(); // Remove the droplet using iterator
+                }
+            }
+
+            if (gc instanceof AICharacter){
+                if (Collisions.checkCollision(hero, gc)){
+                    hero.damage(0.2f);
+                    damageShake = 50;
+
                 }
             }
         }
@@ -154,8 +165,16 @@ public abstract class ComponentManager extends GameEngine {
                 float sizeIncrement = (lc.getLightDisplaySize() - baseSize) / 6;
 
                 for (int i = 0; i < 6; i++) {
-                    lightMask.fill(addVal);
+                    if (damageShake == 0) lightMask.fill(addVal);
+                    else {
+                        lightMask.fill(app.random(25,30));
+                    }
+
                     lightMask.ellipse(xCenter, yCenter, baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
+                }
+
+                if (damageShake != 0){
+                    damageShake--;
                 }
             }
         }
@@ -195,6 +214,7 @@ public abstract class ComponentManager extends GameEngine {
 
             level = levels.get(levelIndex);
             level.updateMap(app.width, app.height - hud.getHeight());
+            Config.setGravity(level.getHeight() / 10000);
             level.addDecor();
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
@@ -210,7 +230,11 @@ public abstract class ComponentManager extends GameEngine {
             hud.setHero(hero);
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());
-            animationEngine.addComponent(new AICharacter(spawnPosition.copy(), level.getCellHeight(), level));
+
+            for (Cell spawnPoint : level.getSpawnPoints()) {
+                animationEngine.addComponent(new AICharacter(spawnPoint.getP().copy().add(level.getCellWidth() / 2, level.getCellHeight() / 2), level.getCellHeight(), level, hero));
+            }
+
 
             ArrayList<LightComponent> lights = level.getLightComponents();
             for (LightComponent light : lights) {

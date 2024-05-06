@@ -103,6 +103,7 @@ public class LightTheWay extends ComponentManager {
             // pushCameraPosition();
         }
         super.play();
+
         if (showEndScreen && gamePaused || !gamePaused) {
             // popCameraPosition();
             this.hud.step();
@@ -205,15 +206,6 @@ public class LightTheWay extends ComponentManager {
             }
         }
 
-        // if (state == GameState.PLAY_MODE && itemGridUI != null) {
-        //     ArrayList<Item> items = itemGridUI.getItems();
-        //     for (Item item : items) {
-        //         if (item.clicked(app.mouseX, app.mouseY)) {
-        //             System.out.println("hello");
-        //             break;
-        //         }
-        //     }
-        // }
     }
 
     @Override
