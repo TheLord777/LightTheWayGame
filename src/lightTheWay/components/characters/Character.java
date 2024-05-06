@@ -102,10 +102,6 @@ public abstract class Character extends DynamicComponent {
             v.x = getMaxSpeed() * Math.signum(v.x);
             return;
         }
-//        if (Math.abs(v.y) >= getMaxSpeed() && v.y < 0) {
-//            v.y = getMaxSpeed() * Math.signum(v.y);
-//            return;
-//        }
 
         if (!left && !right && (standing() || climbing())) {
             if (v.x < 0) applyForce(new PVector(speed, 0));
@@ -125,7 +121,7 @@ public abstract class Character extends DynamicComponent {
             else if (v.x <= 1) v.x = 1;
         }
 
-        if (!up && climbing()) v.y =0;
+        if (!up && climbing()) v.y = 0;
         if (down & climbing()) v.y = 2;
 
         if (up) {
@@ -142,6 +138,7 @@ public abstract class Character extends DynamicComponent {
 
 
     protected void jump() {
+        if (v.y != 0) return;
         applyForce(new PVector(0, -jumpForce()));
         setState(CharacterState.JUMPING);
     }
@@ -175,7 +172,7 @@ public abstract class Character extends DynamicComponent {
     }
 
     public boolean standing() {
-      Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
+        Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
         if (c.isWall()) {
             state = CharacterState.Standing;
         } else {
