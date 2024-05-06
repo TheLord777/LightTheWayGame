@@ -4,10 +4,15 @@ import gamecore.components.GameComponent;
 
 public class Background extends GameComponent {
 
+
+    public Background(float height){
+        setHeight(height);
+    }
+
     @Override
     public void draw() {
-        app.fill(55, 44, 44);
-        app.rect(0, 0, app.width,app.height);
+//        app.fill(55, 44, 44);
+//        app.rect(0, 0, app.width,height);
     }
 
     @Override

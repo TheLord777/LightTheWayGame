@@ -15,7 +15,7 @@ public class LightComponent extends GameComponent {
     private int frames = 0;
     private float decrementRate = 0; // the amount that the size of a light should decrease per second
 
-    public LightComponent(PVector p , float l, float d) {
+    public LightComponent(PVector p, float l, float d) {
         super(p, l, l);
         this.setShape(CollisionShape.CIRCLE);
         this.setDefaultSize(l);
@@ -155,6 +155,7 @@ public class LightComponent extends GameComponent {
 
     /**
      * Get the display size of the light, such that it accounts for flickering
+     *
      * @return Display size of the light
      */
     public float getLightDisplaySize() {
@@ -164,6 +165,7 @@ public class LightComponent extends GameComponent {
 
     /**
      * Get the displayed brightness increment of the light, such that it accounts for flickering
+     *
      * @return Increment value of the light
      */
     public float getLightDisplayIncrement() {
@@ -191,6 +193,7 @@ public class LightComponent extends GameComponent {
 
     /**
      * Set the decrement rate of this light component using the expected time for it to burn
+     *
      * @param s Time in seconds that the light should burn for
      */
     public void setBurnTime(int s) {

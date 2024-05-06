@@ -13,7 +13,6 @@ public class CampCell extends Cell {
         // Initialize CampComponent with position adjusted to the center of the cell
         float componentX = p.x + width / 2;
         float componentY = p.y + height / 2;
-        campComponent = new CampComponent(componentX, componentY, 250);
         lightComponent = new LightComponent(componentX, componentY, 250);
     }
 
@@ -22,11 +21,16 @@ public class CampCell extends Cell {
         // Draw other elements of the cell if needed
 
         // Draw the camp component
-        campComponent.draw();
+        new CampComponent(p.x + width / 2, p.y + height / 2, 250).draw();
         lightComponent.draw();
     }
 
     public LightComponent getLightComponent() {
         return lightComponent;
+    }
+
+    @Override
+    protected void update() {
+        super.update();
     }
 }

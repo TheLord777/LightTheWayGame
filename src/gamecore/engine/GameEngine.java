@@ -42,6 +42,7 @@ public abstract class GameEngine {
         } else if (gamePaused) {
             drawPausedScreen();
         } else {
+
             animationEngine.step();
             ce.collisions();
 

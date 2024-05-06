@@ -2,11 +2,14 @@ package lightTheWay.gameLogic;
 
 import gamecore.Config;
 import gamecore.components.CollisionShape;
+import gamecore.components.EndFrame;
+import gamecore.components.Frame;
 import gamecore.components.GameComponent;
 
 import gamecore.engine.CollisionEngine;
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
+import lightTheWay.components.characters.AICharacter;
 import lightTheWay.components.characters.PlayableCharacter;
 import lightTheWay.components.environment.*;
 import processing.core.PVector;
@@ -30,6 +33,7 @@ public abstract class ComponentManager extends GameEngine {
 
     ArrayList<Level> levels = new ArrayList<>();
     int levelIndex = -1;
+    int damageShake;
 
     PlayableCharacter hero;
 
@@ -43,15 +47,17 @@ public abstract class ComponentManager extends GameEngine {
 
     protected ComponentManager() {
         super(Instance.getApp(), Collisions.getInstance());
-        Config.setGravity(new PVector(0, .15f));
+
     }
 
     @Override
-    public void setupGame() {}
+    public void setupGame() {
+    }
 
     public void setupGame(ArrayList<String> filenames) {
         runStartTime = 0;
         levelIndex = -1;
+        damageShake = 0;
         levels = new ArrayList<>();
         animationEngine.removeAllComponents();
         for (String filename : filenames) {
@@ -86,7 +92,16 @@ public abstract class ComponentManager extends GameEngine {
                 Droplet droplet = (Droplet) gc;
                 if (CollisionEngine.checkCollision(droplet, hero)) {
                     hero.damage(0.20f);
+                    damageShake =50;
                     iterator.remove(); // Remove the droplet using iterator
+                }
+            }
+
+            if (gc instanceof AICharacter){
+                if (Collisions.checkCollision(hero, gc)){
+                    hero.damage(0.2f);
+                    damageShake = 50;
+
                 }
             }
         }
@@ -150,8 +165,16 @@ public abstract class ComponentManager extends GameEngine {
                 float sizeIncrement = (lc.getLightDisplaySize() - baseSize) / 6;
 
                 for (int i = 0; i < 6; i++) {
-                    lightMask.fill(addVal);
+                    if (damageShake == 0) lightMask.fill(addVal);
+                    else {
+                        lightMask.fill(app.random(25,30));
+                    }
+
                     lightMask.ellipse(xCenter, yCenter, baseSize + i * sizeIncrement, baseSize + i * sizeIncrement);
+                }
+
+                if (damageShake != 0){
+                    damageShake--;
                 }
             }
         }
@@ -183,27 +206,36 @@ public abstract class ComponentManager extends GameEngine {
      */
     public boolean nextLevel() {
         levelIndex++;
+
         if (levelIndex < levels.size()) {
+            if (hud == null) {
+                hud = new HUDComponent();
+            }
+
             level = levels.get(levelIndex);
-            level.updateMap(app.width, app.height);
+            level.updateMap(app.width, app.height - hud.getHeight());
+            Config.setGravity(level.getHeight() / 10000);
             level.addDecor();
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
             PVector spawnPosition = level.getPlayerSpawn().getP().copy();
-            spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
-            System.out.println(spawnPosition);
+            spawnPosition.add(level.getCellWidth() / 2, level.getCellHeight() / 2);
+
             if (hero == null) {
-                hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
+                hero = new PlayableCharacter(spawnPosition, level.getCellHeight(), level);
                 hero.createLight(level.getWidth() / 6.9f);
             } else {
-                hero.movePosition(spawnPosition);
                 hero.setEnvironment(level);
             }
+            hud.setHero(hero);
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());
-            if (hud == null) {
-                hud = new HUDComponent(hero);
+
+            for (Cell spawnPoint : level.getSpawnPoints()) {
+                animationEngine.addComponent(new AICharacter(spawnPoint.getP().copy().add(level.getCellWidth() / 2, level.getCellHeight() / 2), level.getCellHeight(), level, hero));
             }
+
+
             ArrayList<LightComponent> lights = level.getLightComponents();
             for (LightComponent light : lights) {
                 animationEngine.addComponent(light);
@@ -211,6 +243,7 @@ public abstract class ComponentManager extends GameEngine {
             stalactites = level.getStalactites();
             return true;
         }
+
         return false;
     }
 
