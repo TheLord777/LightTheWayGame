@@ -13,19 +13,12 @@ public class Frame extends GameComponent {
 
     @Override
     public void draw() {
-        //create frame boarder
-        app.fill(25);
-        app.stroke(0, 0, 50);
-        app.strokeWeight(10);
-        app.rect(0, DISPLACEMENT - 7, app.width, app.height - Config.SCREEN_DISPLACEMENT - 10);
-
-        app.pushMatrix();
-        app.translate(DISPLACEMENT / 2, DISPLACEMENT);
     }
 
     @Override
     protected void update() {
-
+        app.pushMatrix();
+        app.translate(0, DISPLACEMENT);
     }
 
     @Override

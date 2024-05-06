@@ -2,11 +2,14 @@ package lightTheWay.gameLogic;
 
 import gamecore.Config;
 import gamecore.components.CollisionShape;
+import gamecore.components.EndFrame;
+import gamecore.components.Frame;
 import gamecore.components.GameComponent;
 
 import gamecore.engine.CollisionEngine;
 import gamecore.engine.GameEngine;
 import lightTheWay.Instance;
+import lightTheWay.components.characters.AICharacter;
 import lightTheWay.components.characters.PlayableCharacter;
 import lightTheWay.components.environment.*;
 import processing.core.PVector;
@@ -47,7 +50,8 @@ public abstract class ComponentManager extends GameEngine {
     }
 
     @Override
-    public void setupGame() {}
+    public void setupGame() {
+    }
 
     public void setupGame(ArrayList<String> filenames) {
         runStartTime = 0;
@@ -183,27 +187,31 @@ public abstract class ComponentManager extends GameEngine {
      */
     public boolean nextLevel() {
         levelIndex++;
+
         if (levelIndex < levels.size()) {
+            if (hud == null) {
+                hud = new HUDComponent();
+            }
+
             level = levels.get(levelIndex);
-            level.updateMap(app.width, app.height);
+            level.updateMap(app.width, app.height - hud.getHeight());
             level.addDecor();
             animationEngine.removeAllComponents();
             animationEngine.addComponent(level);
             PVector spawnPosition = level.getPlayerSpawn().getP().copy();
-            spawnPosition.add(level.getTileSize() / 2, level.getTileSize() / 2);
-            System.out.println(spawnPosition);
+            spawnPosition.add(level.getCellWidth() / 2, level.getCellHeight() / 2);
+
             if (hero == null) {
-                hero = new PlayableCharacter(spawnPosition, level.getTileSize(), level);
+                hero = new PlayableCharacter(spawnPosition, level.getCellHeight(), level);
                 hero.createLight(level.getWidth() / 6.9f);
             } else {
-                hero.movePosition(spawnPosition);
                 hero.setEnvironment(level);
             }
+            hud.setHero(hero);
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());
-            if (hud == null) {
-                hud = new HUDComponent(hero);
-            }
+            animationEngine.addComponent(new AICharacter(spawnPosition.copy(), level.getCellHeight(), level));
+
             ArrayList<LightComponent> lights = level.getLightComponents();
             for (LightComponent light : lights) {
                 animationEngine.addComponent(light);
@@ -211,6 +219,7 @@ public abstract class ComponentManager extends GameEngine {
             stalactites = level.getStalactites();
             return true;
         }
+
         return false;
     }
 

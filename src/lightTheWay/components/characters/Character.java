@@ -11,15 +11,15 @@ import processing.core.PVector;
 
 import static lightTheWay.GameConfig.MAX_SPEED;
 
-public class Character extends DynamicComponent {
+public abstract class Character extends DynamicComponent {
 
-    boolean left = false, right = false, up = false, down = false, sprint = false;
-    private Level environment;
-    private CharacterState state;
+    protected boolean left = false, right = false, up = false, down = false, sprint = false;
+    protected Level environment;
+    protected CharacterState state;
 
 
     protected Character(PVector p, float width, Level l) {
-        super(p, width);
+        super(p, width * .75f);
         this.setShape(CollisionShape.CIRCLE);
         this.environment = l;
         this.state = CharacterState.IDLE;
@@ -45,82 +45,65 @@ public class Character extends DynamicComponent {
     @Override
     public void update() {
         if (!standing()) applyGravity();
-        else v.y = 0;
 
-        move();
         super.update();
 
-//        if (headHit()) v.y = 0;
-//        if (leftHit() || rightHit()) v.x = 0;
+        move();
 
-        if (!environment.intersection(this)) fixClipping();
+        fixClipping();
 
-//        if (!environment.intersection(this)) return;
-//
-//
-//        // If there was a collision, move the character back to the closest point on the map.
-//        PVector cp = environment.getClosestPoint(this);
-//
-//        if (cp == null) return;
-//
-//        // Calculate the vector from the closest point to the character.
-//        PVector v1 = PVector.sub(p, cp).setMag(width / 2);
-//
-//        // Set the position of the character to the closest point on the map without clipping.
-//        p.set(cp.add(v1));
     }
 
-    private void fixClipping() {
-        if (jumping() && headHit()) v.y = 0;
-        else if(standing()) v.y = 0;
-       else  if (rightHit() || leftHit()) v.x = 0;
-        else {return;}
+    protected void fixClipping() {
+        if (jumping()) {
+            if (headHit()) v.y = 0;
+        } else if (standing()) {
+            v.y = 0;
+            f.y = 0;
+            p.y = getStandingCell().getY() - (width / 2);
+        }
 
-        PVector cp = environment.getClosestPoint(this);
-        if (cp == null) return;
-//
-//        // Calculate the vector from the closest point to the character.
-        PVector v1 = PVector.sub(p, cp).setMag((width / 2) + 1);
-//
-//        // Set the position of the character to the closest point on the map without clipping.
-        p.set(cp.add(v1));
+        if (leftHit()) {
+            Cell lc = getLeftCell();
+            p.x = lc.getX()  + lc.getWidth() + (width / 2);
+
+            if (left)
+                f.x = 0;
+                v.x = 0;
+        }
+        if (rightHit()) {
+            p.x = getRightCell().getX() - (width / 2);
+            if (right)
+                f.x = 0;
+                v.x = 0;
+        }
+
+        if (headHit()){
+            Cell tc = getTopCell();
+            v.y = 0;
+            f.y = 0;
+            p.y = tc.getY() + tc.getHeight() + (width / 2);
+        }
 
 
     }
 
     public void move() {
-        int tileSize = environment.getTileSize();
-        float speed = 500;
+        float tileSize = environment.getCellHeight();
+        float speed = getSpeed();
 
         if (tileSize != 0) {
             speed = 500 * (tileSize / 22.0f); // Adjust speed based on tileSize
         }
-        if (Math.abs(v.x) >= MAX_SPEED) {
-            v.x = MAX_SPEED * Math.signum(v.x);
+        if (Math.abs(v.x) >= getMaxSpeed()) {
+            v.x = getMaxSpeed() * Math.signum(v.x);
             return;
         }
-        if (Math.abs(v.y) >= MAX_SPEED) {
-            v.y = MAX_SPEED * Math.signum(v.y);
+        if (Math.abs(v.y) >= getMaxSpeed() && v.y < 0) {
+            v.y = getMaxSpeed() * Math.signum(v.y);
             return;
         }
 
-//        if (!standing()) speed = 5;
-
-        if (left) {
-            if (climbing()) applyForce(new PVector(-speed / 4, 0));
-            else applyForce(new PVector(-speed, 0));
-        }
-        if (right) {
-            if (climbing()) applyForce(new PVector(speed / 4, 0));
-            else applyForce(new PVector(speed, 0));
-        }
-
-        if (up) {
-            if (climbing()) climb();
-            else if (standing()) jump();
-        }
-
-//        if (down) applyForce(new PVector(0, 0.1f));
         if (!left && !right && standing()) {
             if (v.x < 0) applyForce(new PVector(speed, 0));
             else applyForce(new PVector(-speed, 0));
@@ -128,15 +111,37 @@ public class Character extends DynamicComponent {
             if (Math.abs(v.x) < 1) v.x = 0;
         }
 
+        if (left) {
+            if (climbing()) applyForce(new PVector(-speed / 4, 0));
+            else if (!jumping()) applyForce(new PVector(-speed, 0));
+            else if (v.x >= -1) v.x =-1;
+        }
+        if (right) {
+            if (climbing()) applyForce(new PVector(speed / 4, 0));
+            else if (!jumping()) applyForce(new PVector(speed, 0));
+            else if (v.x <= 1) v.x =1;
+        }
+
+        if (up) {
+            if (climbing()) climb();
+            else if (standing()) jump();
+        }
+        
+
+
+        if (jumping()){
+            if (Math.abs(v.x) < 1) v.x = 0;
+        }
+
     }
 
 
-    private void jump() {
+    protected void jump() {
         applyForce(new PVector(0, -GameConfig.JUMP_FORCE));
         setState(CharacterState.JUMPING);
     }
 
-    private void climb() {
+    protected void climb() {
         if (state != CharacterState.CLIMBING) v.x /= 4;
         v.y = -2;
 //        applyForce(new PVector(0, -GameConfig.CHARACTER_A * 2));
@@ -162,36 +167,54 @@ public class Character extends DynamicComponent {
     }
 
     public boolean standing() {
-        Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + width / 2));
+        Cell c = environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
+        if (c.isWall()) {
+            state = CharacterState.Standing;
+        }
         return c.isWall();
     }
 
-    private boolean climbing() {
+    protected boolean climbing() {
         Cell c = environment.getCellFromPoint(new PVector(p.x, p.y));
         return c.isLadder() || c.isRope();
     }
 
-    private boolean jumping() {
+    protected boolean jumping() {
         return state == CharacterState.JUMPING;
     }
 
-    private boolean headHit() {
+    protected boolean headHit() {
         Cell c = environment.getCellFromPoint(new PVector(p.x, p.y - width / 2));
         return c.isWall();
     }
 
-    private boolean leftHit() {
+    protected boolean leftHit() {
         Cell c = environment.getCellFromPoint(new PVector(p.x - width / 2, p.y));
         return c.isWall();
     }
 
-    private boolean rightHit() {
+    protected Cell getLeftCell() {
+        return environment.getCellFromPoint(new PVector(p.x - width / 2, p.y));
+    }
+
+    protected Cell getTopCell(){
+        return environment.getCellFromPoint(new PVector(p.x, p.y - width / 2));
+    }
+    protected Cell getRightCell() {
+        return environment.getCellFromPoint(new PVector(p.x + width / 2, p.y));
+    }
+
+    protected Cell getStandingCell() {
+        return environment.getCellFromPoint(new PVector(p.x, p.y + (width / 2)));
+    }
+
+    protected boolean rightHit() {
         Cell c = environment.getCellFromPoint(new PVector(p.x + width / 2, p.y));
         return c.isWall();
     }
 
 
-    private void setState(CharacterState state) {
+    protected void setState(CharacterState state) {
         this.state = state;
     }
 
@@ -202,6 +225,10 @@ public class Character extends DynamicComponent {
     public void setEnvironment(Level l) {
         environment = l;
     }
+
+    protected abstract float getSpeed();
+
+    protected abstract float getMaxSpeed();
 
 
 }

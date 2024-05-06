@@ -56,6 +56,16 @@ public class PlayableCharacter extends Character {
         return super.standing() || onLadder();
     }
 
+    @Override
+    protected float getSpeed() {
+        return 500;
+    }
+
+    @Override
+    protected float getMaxSpeed() {
+        return 5;
+    }
+
     private boolean onLadder() {
         Cell current = getEnvironment().getCellFromGCPosition(this);
 

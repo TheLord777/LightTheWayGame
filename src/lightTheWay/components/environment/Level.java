@@ -14,7 +14,6 @@ import static java.lang.Math.min;
 
 public class Level extends GameComponent implements Serializable {
 
-    private int tileSize;
     private Cell[][] map;
     private Cell playerSpawn, goal;
 
@@ -28,8 +27,7 @@ public class Level extends GameComponent implements Serializable {
 
     public Level(float width, float height, int tileSize) {
         super(new PVector(0, 0), width, height);
-        this.b = new Background();
-        this.tileSize = tileSize;
+        this.b = new Background(height);
         rows = (int) Math.ceil(height / tileSize);
         cols = (int) (width / tileSize);
         droplets = new ArrayList<>();
@@ -37,10 +35,14 @@ public class Level extends GameComponent implements Serializable {
 
     }
     private void updateTileSize() {
-        this.tileSize = min(app.width, app.height) / 50;
-        for (Cell[] squares : map) {
-            for (Cell square : squares) {
-                square.setSize(tileSize);
+        float cwidth = width / cols, cheight= height / rows;
+
+        for (int i = 0; i < cols; i++) {
+            for (int j = 0; j < rows; j++) {
+                map[i][j].setWidth(cwidth);
+                map[i][j].setHeight(cheight);
+                map[i][j].setP(new PVector(i * cwidth, j * cheight));
+
             }
         }
     }
@@ -53,11 +55,12 @@ public class Level extends GameComponent implements Serializable {
 
     private void generateMap() {
         map = new Cell[cols][rows];
+        float cwidth = width / cols, cheight= height / rows;
 
         // Initialize the map with random values
         for (int i = 0; i < cols; i++)
             for (int j = 0; j < rows; j++)
-                map[i][j] = Cell.createIntialCell(new PVector(i * tileSize, j * tileSize), tileSize, tileSize);
+                map[i][j] = Cell.createIntialCell(new PVector(i * cwidth, j * cheight), cwidth, cheight);
 
         // Apply cellular automata rules to smooth the map
         for (int i = 0; i < generations; i++) applyAutomataRules();
@@ -83,6 +86,7 @@ public class Level extends GameComponent implements Serializable {
 
     private void applyAutomataRules() {
         Cell[][] newMap = new Cell[cols][rows];
+        float cwidth = width / cols, cheight= height / rows;
 
         // Apply rules to each cell
         for (int i = 0; i < cols; i++) {
@@ -95,9 +99,9 @@ public class Level extends GameComponent implements Serializable {
                 else t = aliveNeighbors >= 4 ? 1 : 0;
 
                 if (t == 0) {
-                    newMap[i][j] = new WallCell(map[i][j].getP(), tileSize, tileSize);
+                    newMap[i][j] = new WallCell(map[i][j].getP(), cwidth, cheight);
                 } else {
-                    newMap[i][j] = new EmptyCell(map[i][j].getP(), tileSize, tileSize);
+                    newMap[i][j] = new EmptyCell(map[i][j].getP(), cwidth, cheight);
                 }
             }
         }
@@ -130,20 +134,20 @@ public class Level extends GameComponent implements Serializable {
         b.draw();
         for (Cell[] squares : map) {
             for (Cell square : squares) {
-                if (dev || square.getIlluminated()) {
+//                if (dev || square.getIlluminated()) {
                     square.draw(); // Draw each MapSquare
-                }
+//                }
                 square.setIlluminated(false);
 
             }
         }
-
+        float cwidth = width / cols, cheight= height / rows;
         if (dev) {
             app.fill(255, 0 ,0);
-            app.rect(playerSpawn.getP().x, playerSpawn.getP().y, tileSize, tileSize);
+            app.rect(playerSpawn.getP().x, playerSpawn.getP().y, cwidth, cheight);
 
             app.fill(0, 255, 0);
-            app.rect(goal.getP().x, goal.getP().y, tileSize, tileSize);
+            app.rect(goal.getP().x, goal.getP().y, cwidth, cheight);
         }
     }
 
@@ -194,11 +198,12 @@ public class Level extends GameComponent implements Serializable {
     }
 
     public List<Cell> getCellsWithinGrid(float x1, float y1, float x2, float y2) {
+        float cwidth = width / cols, cheight= height / rows;
         List<Cell> res = new ArrayList<>();
-        int x1Index = (int) (x1 / tileSize);
-        int y1Index = (int) (y1 / tileSize);
-        int x2Index = (int) (x2 / tileSize);
-        int y2Index = (int) (y2 / tileSize);
+        int x1Index = (int) (x1 / cwidth);
+        int y1Index = (int) (y1 / cheight);
+        int x2Index = (int) (x2 / cwidth);
+        int y2Index = (int) (y2 / cheight);
 
         for (int i = x1Index; i <= x2Index; i++) {
             for (int j = y1Index; j <= y2Index; j++) {
@@ -233,8 +238,9 @@ public class Level extends GameComponent implements Serializable {
     }
 
     public Cell edit(int x, int y, int t, ItemType itemType) {
-        int xIndex = (x / tileSize);
-        int yIndex = (y / tileSize);
+        float cwidth = width / cols, cheight= height / rows;
+        int xIndex = (int) (x / cwidth);
+        int yIndex = (int) (y / cheight);
 
         switch (t){
             case 7:
@@ -251,22 +257,21 @@ public class Level extends GameComponent implements Serializable {
     }
 
     public Cell getCellFromGCPosition(GameComponent gc) {
-        int x = (int) (gc.getP().x / tileSize);
-        int y = (int) (gc.getP().y / tileSize);
+        float cwidth = width / cols, cheight= height / rows;
+        int x = (int) (gc.getP().x / cwidth);
+        int y = (int) (gc.getP().y / cheight);
         return map[x][y];
     }
 
 
     public Cell getCellFromPoint(PVector p) {
-        int x = (int) (p.x / tileSize);
-        int y = (int) (p.y / tileSize);
+        float cwidth = width / cols, cheight= height / rows;
+        int x = (int) (p.x / cwidth);
+        int y = (int) (p.y / cheight);
         return map[x][y];
     }
 
 
-    public int getTileSize() {
-        return tileSize;
-    }
 
     public void setDev(boolean b) {
         this.dev = b;
@@ -323,5 +328,13 @@ public class Level extends GameComponent implements Serializable {
             }
         }
         return cs;
+    }
+
+    public float getCellWidth (){
+        return width / cols;
+    }
+
+    public float getCellHeight(){
+        return height / rows;
     }
 }

@@ -3,6 +3,8 @@ package lightTheWay.gameLogic;
 import java.util.ArrayList;
 import java.util.List;
 
+import gamecore.components.EndFrame;
+import gamecore.components.Frame;
 import gamecore.components.GameComponent;
 import gamecore.engine.CollisionEngine;
 import lightTheWay.components.LightComponent;
@@ -39,6 +41,7 @@ public class Collisions extends CollisionEngine {
             }
         }
         for (GameComponent gc : nonLights) {
+            if (gc instanceof Frame || gc instanceof EndFrame) continue;
             for (LightComponent lc : lights) {
                 if (gc instanceof Level) {
                     gc.setIlluminated(true);

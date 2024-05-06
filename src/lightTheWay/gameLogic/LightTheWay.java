@@ -218,6 +218,7 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void spaceKey() {
+       startGame();
         transitionToPlay();
     }
 

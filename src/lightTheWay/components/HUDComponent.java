@@ -18,9 +18,8 @@ public class HUDComponent extends GameComponent {
     // boolean[] inventory = new boolean[6];
     // boolean[] inventory = {true, true, false, false, false, false};
 
-    public HUDComponent(PlayableCharacter pc) {
+    public HUDComponent() {
         super();
-        this.hero = pc;
         float width = Math.min(Math.max(Instance.getApp().width / 2, 200), 800);
         float height = width / 8;
         PVector topLeft = new PVector((Instance.getApp().width - width) / 2, Instance.getApp().height - height);
@@ -28,6 +27,10 @@ public class HUDComponent extends GameComponent {
         this.height = height;
         this.p = topLeft;
         this.setShape(CollisionShape.POINT);
+    }
+
+    public void setHero(PlayableCharacter hero) {
+        this.hero = hero;
     }
 
     @Override

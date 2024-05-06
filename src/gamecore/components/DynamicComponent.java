@@ -110,4 +110,10 @@ public abstract class DynamicComponent extends GameComponent {
         var g = Config.GRAVITY.copy().mult(mass()); // f = mg.
         applyForce(g);
     }
+
+
+    public void applyGravityINV() {
+        var g = Config.GRAVITY.copy().mult(mass()); // f = mg.
+        applyForce(g.mult(-1));
+    }
 }

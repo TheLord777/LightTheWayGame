@@ -7,12 +7,12 @@ public class EndFrame extends GameComponent {
 
     @Override
     public void draw() {
-        app.popMatrix();
+
     }
 
     @Override
     protected void update() {
-
+        app.popMatrix();
     }
 
     @Override
