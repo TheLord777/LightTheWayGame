@@ -39,10 +39,6 @@ public class LightTheWay extends ComponentManager {
                 playMode();
                 break;
         }
-        app.fill(255);
-        app.textSize(16);
-        app.textAlign(PConstants.CENTER, PConstants.TOP);
-        app.text("Frame Rate: " + app.frameRate, 100, 10);
     }
 
     private void setUpStart() {
@@ -108,7 +104,23 @@ public class LightTheWay extends ComponentManager {
             // popCameraPosition();
             this.hud.setAltitude(calculateAltitude());
             this.hud.step();
+            if (progressSaved > 0){
+                float opacity = app.bezierPoint(0, 255, 255, 0, progressSaved / 100f);
+                progressSaved--;
+                app.noFill();
+                app.stroke(255, opacity /4);
+                app.strokeWeight(3);
+                app.rect(0,0, appWidth, appHeight);
+                app.strokeWeight(1);
+                app.noStroke();
+
+                app.fill(255, opacity);
+                app.textSize(16);
+                app.textAlign(PConstants.LEFT, PConstants.TOP);
+                app.text("Checkpoint Saved", 5, 5);
+            }
         }
+
         if (win) {
             drawWinScreen();
         } else if (hero.outOfLight() || hero.killed() && endScreenAlpha < 255) {
@@ -155,6 +167,17 @@ public class LightTheWay extends ComponentManager {
         app.text("Your time is up", app.width / 2, app.height / 2 - fontSize * 1.5f);
         app.text("You may return to the light", app.width / 2, app.height / 2);
         app.text("The " + ordinal(nextGenNumber) + " Generation will carry the torch in your place...", app.width / 2, app.height / 2 + fontSize * 1.5f);
+    }
+
+    protected void drawPausedScreen() {
+        app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
+        float fontSize = Math.min(app.width / 20, 50);
+        app.textSize(fontSize);
+
+        app.background(0);
+        app.fill(255);
+        app.textAlign(PConstants.CENTER);
+        app.text("Game Paused: \nPress 'Enter' to start", (float) app.width / 2, (float) app.height / 2);
     }
 
     @Override
@@ -221,7 +244,6 @@ public class LightTheWay extends ComponentManager {
 
     @Override
     public void spaceKey() {
-       startGame();
         transitionToPlay();
     }
 
@@ -311,5 +333,9 @@ public class LightTheWay extends ComponentManager {
         hero.setDown(false);
     }
 
-
+    @Override
+    public void enterKey() {
+        if (state != GameState.PLAY_MODE) return;
+        super.enterKey();
+    }
 }

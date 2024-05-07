@@ -84,7 +84,11 @@ public abstract class GameEngine {
      * Generic Paused screen.
      */
     protected void drawPausedScreen() {
-        app.background(50);
+        app.textAlign(PConstants.CENTER, PConstants.BOTTOM);
+        float fontSize = Math.min(app.width / 20, 50);
+        app.textSize(fontSize);
+
+        app.background(0);
         app.fill(255);
         app.textAlign(PConstants.CENTER);
         app.text("Game Paused: \nPress 'Enter' to start", (float) app.width / 2, (float) app.height / 2);

@@ -30,7 +30,7 @@ public abstract class ComponentManager extends GameEngine {
 
     ArrayList<Level> levels = new ArrayList<>();
     int levelIndex = -1;
-    int damageShake;
+    int damageShake, progressSaved;
 
     PlayableCharacter hero;
 
@@ -55,6 +55,7 @@ public abstract class ComponentManager extends GameEngine {
         runStartTime = 0;
         levelIndex = -1;
         damageShake = 0;
+        progressSaved = 0;
         hud = new HUDComponent();
         levels = new ArrayList<>();
         animationEngine.removeAllComponents();
@@ -112,8 +113,9 @@ public abstract class ComponentManager extends GameEngine {
 
     public void captureCheckpoint() {
         Cell c = level.getCellFromGCPosition(hero);
-        if (c instanceof CampCell && Collisions.checkCollision(hero, c) && !c.getP().equals(level.getPlayerSpawn())) {
+        if (c instanceof CampCell && Collisions.checkCollision(hero, c) && !c.getP().equals(level.getPlayerSpawn().getP())) {
             level.edit((int) hero.getX(), (int) hero.getY(), 21);
+            progressSaved = 100;
         }
     }
 
@@ -289,7 +291,7 @@ public abstract class ComponentManager extends GameEngine {
     public void respawnCharacter() {
         hero = null;
         hud = null;
-        levelIndex = -1;
+        levelIndex --;
         nextLevel();
     }
 
