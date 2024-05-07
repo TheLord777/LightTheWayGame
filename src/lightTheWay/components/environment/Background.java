@@ -11,8 +11,8 @@ public class Background extends GameComponent {
 
     @Override
     public void draw() {
-//        app.fill(55, 44, 44);
-//        app.rect(0, 0, app.width,height);
+        app.fill(55, 44, 44);
+        app.rect(0, 0, app.width,height);
     }
 
     @Override
