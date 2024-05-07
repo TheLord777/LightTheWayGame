@@ -80,6 +80,8 @@ public class Level extends GameComponent {
                 } else if (j > 0 && map[i][j] instanceof WallCell && map[i][j - 1] instanceof EmptyCell) {
                     target = (EmptyCell) map[i][j - 1];
                     target.setRandomFloorDecor();
+                } else if (map[i][j] instanceof ChestCell && ((ChestCell) map[i][j]).getContent().equals(ItemType.KEY)){
+                    map[i][j] = Cell.cellFromType(map[i][j], 5, this, ItemType.KEY);
                 }
             }
         }
