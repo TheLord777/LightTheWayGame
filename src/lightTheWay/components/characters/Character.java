@@ -51,21 +51,19 @@ public abstract class Character extends DynamicComponent {
     public void update() {
         try {
             if (!standing() || climbing()) applyGravity();
+
+            super.update();
+
+            if (killed()) return;
+
+            move();
+            fixClipping();
         } catch (ArrayIndexOutOfBoundsException e) {
             kill();
         }
 
-        super.update();
 
-        if (killed()) return;
 
-        move();
-
-        try {
-            fixClipping();
-        } catch (ArrayIndexOutOfBoundsException e){
-            kill();
-        }
     }
 
     protected void fixClipping() {
@@ -152,7 +150,7 @@ public abstract class Character extends DynamicComponent {
 
 
     protected void jump() {
-        if (v.y != 0) return;
+        if (v.y > 1) return;
         applyForce(new PVector(0, -jumpForce()));
         jumpBoost = false;
         setState(CharacterState.JUMPING);

@@ -22,10 +22,7 @@ import processing.core.PImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 
 public abstract class ComponentManager extends GameEngine {
@@ -58,14 +55,17 @@ public abstract class ComponentManager extends GameEngine {
         runStartTime = 0;
         levelIndex = -1;
         damageShake = 0;
+        hud = new HUDComponent();
         levels = new ArrayList<>();
         animationEngine.removeAllComponents();
         for (String filename : filenames) {
             Level newLevel = getMapFormation(filename);
             if (newLevel != null) {
+                newLevel.updateMap(app.width, app.height - hud.getHeight());
                 levels.add(newLevel);
             }
         }
+        Collections.reverse(levels);
 
         runStartTime = Instance.getApp().millis();
 
@@ -99,9 +99,12 @@ public abstract class ComponentManager extends GameEngine {
 
             if (gc instanceof AICharacter) {
                 if (Collisions.checkCollision(hero, gc)) {
-                    hero.damage(0.2f);
-                    damageShake = 50;
-
+                    if (hero.getY() < gc.getY()){
+                        iterator.remove();
+                    }else {
+                        hero.damage(0.2f);
+                        damageShake = 50;
+                    }
                 }
             }
         }
@@ -109,7 +112,7 @@ public abstract class ComponentManager extends GameEngine {
 
     public void captureCheckpoint() {
         Cell c = level.getCellFromGCPosition(hero);
-        if (c instanceof CampCell && Collisions.checkCollision(hero, c) && c.getY() < level.getPlayerSpawn().getY()) {
+        if (c instanceof CampCell && Collisions.checkCollision(hero, c) && !c.getP().equals(level.getPlayerSpawn())) {
             level.edit((int) hero.getX(), (int) hero.getY(), 21);
         }
     }
@@ -220,8 +223,7 @@ public abstract class ComponentManager extends GameEngine {
             }
 
             level = levels.get(levelIndex);
-            if (level.getHeight() != app.height - hud.getHeight())
-                level.updateMap(app.width, app.height - hud.getHeight());
+
 
             Config.setGravity(level.getHeight() / 5000);
             level.addDecor();
@@ -230,12 +232,10 @@ public abstract class ComponentManager extends GameEngine {
             PVector spawnPosition = level.getPlayerSpawn().getP().copy();
             spawnPosition.add(level.getCellWidth() / 2, level.getCellHeight() / 2);
 
-            if (hero == null) {
-                hero = new PlayableCharacter(spawnPosition, level.getCellHeight(), level);
-                hero.createLight(level.getWidth() / 6.9f);
-            } else {
-                hero.setEnvironment(level);
-            }
+            hero = new PlayableCharacter(spawnPosition, level.getCellHeight(), level);
+            hero.createLight(level.getWidth() / 6.9f);
+
+
             hud.setHero(hero);
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());

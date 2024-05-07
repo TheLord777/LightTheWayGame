@@ -56,6 +56,7 @@ public class AICharacter extends Character {
     @Override
     public void update() {
         super.update();
+
     }
 
     private boolean onEdge(){
