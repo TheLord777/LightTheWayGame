@@ -105,7 +105,7 @@ public class LightTheWay extends ComponentManager {
             this.hud.setAltitude(calculateAltitude());
             this.hud.step();
             if (progressSaved > 0){
-                float opacity = app.bezierPoint(0, 255, 255, 0, progressSaved / 100f);
+                float opacity = app.bezierPoint(0, 255, 255, 0, progressSaved / 200f);
                 progressSaved--;
                 app.noFill();
                 app.stroke(255, opacity /4);
@@ -115,9 +115,9 @@ public class LightTheWay extends ComponentManager {
                 app.noStroke();
 
                 app.fill(255, opacity);
-                app.textSize(16);
+                app.textSize(30);
                 app.textAlign(PConstants.LEFT, PConstants.TOP);
-                app.text("Checkpoint Saved", 5, 5);
+                app.text("Area " + (levelIndex + 1), 5, 5);
             }
         }
 

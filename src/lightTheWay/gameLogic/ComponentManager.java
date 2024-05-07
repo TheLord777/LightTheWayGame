@@ -22,6 +22,7 @@ import processing.core.PImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -66,8 +67,6 @@ public abstract class ComponentManager extends GameEngine {
                 levels.add(newLevel);
             }
         }
-        Collections.reverse(levels);
-
         runStartTime = Instance.getApp().millis();
 
         nextLevel();
@@ -111,13 +110,6 @@ public abstract class ComponentManager extends GameEngine {
         }
     }
 
-    public void captureCheckpoint() {
-        Cell c = level.getCellFromGCPosition(hero);
-        if (c instanceof CampCell && Collisions.checkCollision(hero, c) && !c.getP().equals(level.getPlayerSpawn().getP())) {
-            level.edit((int) hero.getX(), (int) hero.getY(), 21);
-            progressSaved = 100;
-        }
-    }
 
     public Level getMapFormation(String file) {
         try {
@@ -218,6 +210,7 @@ public abstract class ComponentManager extends GameEngine {
      */
     public boolean nextLevel() {
         levelIndex++;
+        progressSaved = 200;
 
         if (levelIndex < levels.size()) {
             if (hud == null) {
