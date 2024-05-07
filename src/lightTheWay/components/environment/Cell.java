@@ -6,6 +6,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public abstract class Cell extends GameComponent {
+    private static final long serialVersionUID = 5963730885159841321L;
 
     protected boolean isSpawnCell;
     protected boolean isGoalCell = false;

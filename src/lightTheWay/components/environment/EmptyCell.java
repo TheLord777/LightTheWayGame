@@ -5,6 +5,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public class EmptyCell extends Cell{
+    private static final long serialVersionUID = 5647465040415756606L;
 
     int random = (int) Math.floor(Math.random() * 3);
     float seed = (float) Math.random() / 2 + 0.25f;
