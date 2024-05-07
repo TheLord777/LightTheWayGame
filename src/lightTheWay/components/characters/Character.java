@@ -57,6 +57,7 @@ public abstract class Character extends DynamicComponent {
             if (killed()) return;
 
             move();
+
             fixClipping();
         } catch (ArrayIndexOutOfBoundsException e) {
             kill();
@@ -114,6 +115,11 @@ public abstract class Character extends DynamicComponent {
             return;
         }
 
+        if (Math.abs(v.y) >= getMaxSpeed()) {
+            v.y = getMaxSpeed() * Math.signum(v.y);
+            return;
+        }
+
         if (!left && !right && (standing() || climbing())) {
             if (v.x < 0) applyForce(new PVector(speed, 0));
             else applyForce(new PVector(-speed, 0));
@@ -138,7 +144,7 @@ public abstract class Character extends DynamicComponent {
         if (up) {
             if (climbing()) climb();
             else if (standing()) jump();
-            else if (Math.abs(v.y) < .1 && !jumpBoost) jumpBoost();
+            else if ((Math.abs(v.y) < .1 && !jumpBoost) || (v.y > 0 && !jumpBoost)) jumpBoost();
         }
 
 
@@ -157,6 +163,7 @@ public abstract class Character extends DynamicComponent {
     }
 
     protected void jumpBoost() {
+        v.y =0;
         applyForce(new PVector(0, -jumpForce()));
         jumpBoost = true;
         setState(CharacterState.JUMPING);
