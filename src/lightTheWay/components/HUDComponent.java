@@ -190,7 +190,11 @@ public class HUDComponent extends GameComponent {
     }
 
     public ItemType getSelectedType() {
-        return hero.inventory[selectedSlot];
+        if (selectedSlot >= 0) {
+            return hero.inventory[selectedSlot];
+        } else {
+            return ItemType.NO_ITEM;
+        }
     }
 
     public boolean useSelectedSlot() {
