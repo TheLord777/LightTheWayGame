@@ -37,8 +37,9 @@ public class LevelGenerator extends PApplet {
         if (map == null) {
             int tileSize = min(width, height) / 50; // Adjust as needed
             map = new Level(width, height, tileSize);
-        }
 
+        }
+        map.updateMap(width, height);
     }
 
 
@@ -128,7 +129,7 @@ public class LevelGenerator extends PApplet {
     public void saveMap() {
         try {
             map.setDev(false);
-            FileOutputStream fileOut = new FileOutputStream("levels/h1.ser");
+            FileOutputStream fileOut = new FileOutputStream("levels/level2.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(map);
             out.close();
@@ -215,6 +216,7 @@ public class LevelGenerator extends PApplet {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             map = (Level) in.readObject();
+
             in.close();
             fileIn.close();
         } catch (IOException i) {
