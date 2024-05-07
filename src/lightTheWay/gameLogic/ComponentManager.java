@@ -225,8 +225,6 @@ public abstract class ComponentManager extends GameEngine {
             }
 
             level = levels.get(levelIndex);
-
-
             Config.setGravity(level.getHeight() / 5000);
             level.addDecor();
             animationEngine.removeAllComponents();
@@ -234,11 +232,15 @@ public abstract class ComponentManager extends GameEngine {
             PVector spawnPosition = level.getPlayerSpawn().getP().copy();
             spawnPosition.add(level.getCellWidth() / 2, level.getCellHeight() / 2);
 
-            hero = new PlayableCharacter(spawnPosition, level.getCellHeight(), level);
-            hero.createLight(level.getWidth() / 6.9f);
-
-
-            hud.setHero(hero);
+            if (hero == null) {
+                hero = new PlayableCharacter(spawnPosition, level.getCellHeight(), level);
+                hero.createLight(level.getWidth() / 6.9f);
+                hud.setHero(hero);
+            } else {
+                hero.movePosition(spawnPosition);
+                hero.setEnvironment(level);
+            }
+            
             animationEngine.addComponent(hero);
             animationEngine.addComponent(hero.getLight());
 
@@ -291,7 +293,7 @@ public abstract class ComponentManager extends GameEngine {
     public void respawnCharacter() {
         hero = null;
         hud = null;
-        levelIndex --;
+        levelIndex = -1;
         nextLevel();
     }
 

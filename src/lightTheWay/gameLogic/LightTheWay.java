@@ -185,7 +185,7 @@ public class LightTheWay extends ComponentManager {
         lighting();
         dropDroplets();
         if (!hero.killed()) checkPlayerForDanger();
-        captureCheckpoint();
+        // captureCheckpoint();
         if (win) {
             return;
         }
