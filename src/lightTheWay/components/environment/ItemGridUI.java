@@ -6,6 +6,8 @@ import processing.core.PVector;
 import java.util.ArrayList;
 
 public class ItemGridUI extends GameComponent {
+    private static final long serialVersionUID = 1L;
+
     private ArrayList<Item> items;
     private PVector position;
     private float width;

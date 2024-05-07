@@ -3,7 +3,7 @@ package lightTheWay.components.environment;
 import gamecore.components.GameComponent;
 
 public class Background extends GameComponent {
-
+    private static final long serialVersionUID = 1L;
 
     public Background(float height){
         setHeight(height);

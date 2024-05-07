@@ -4,9 +4,10 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class Stalactite extends Cell {
+    private static final long serialVersionUID = 1L;
+
     private float baseWidth;
     private float height;
-
 
     public Stalactite(PVector p, float baseWidth, float height) {
         super(p, baseWidth, height);

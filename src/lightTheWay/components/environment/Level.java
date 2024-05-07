@@ -12,6 +12,7 @@ import java.util.List;
 import static java.lang.Math.min;
 
 public class Level extends GameComponent {
+    private static final long serialVersionUID = 1L;
 
     private Cell[][] map;
     private Cell playerSpawn, goal;

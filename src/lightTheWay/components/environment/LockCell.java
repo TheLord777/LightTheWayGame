@@ -5,6 +5,7 @@ import processing.core.PConstants;
 import processing.core.PVector;
 
 public class LockCell extends WallCell{
+    private static final long serialVersionUID = 1L;
 
     private float promptHeight = p.y - height * 1.5f;
     private boolean promptDirection = false; // true -> upwards, false -> downwards

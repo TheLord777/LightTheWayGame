@@ -4,6 +4,8 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class Item extends GameComponent {
+    private static final long serialVersionUID = 1L;
+
     private ItemType type;
 
     // Add properties and methods for the item

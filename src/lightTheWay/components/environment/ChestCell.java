@@ -5,6 +5,8 @@ import processing.core.PVector;
 
 
 public class ChestCell extends Cell{
+    private static final long serialVersionUID = 1L;
+
     private float promptHeight = p.y - height * 1.5f;
     private boolean promptDirection = false; // true -> upwards, false -> downwards
     private boolean isOpen;

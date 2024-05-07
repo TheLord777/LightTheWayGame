@@ -4,7 +4,7 @@ import lightTheWay.components.LightComponent;
 import processing.core.PVector;
 
 public class GoalCell extends Cell {
-
+    private static final long serialVersionUID = 1L;
 
     private LightComponent lightComponent;
 

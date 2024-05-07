@@ -5,6 +5,7 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public class WallCell extends Cell {
+    private static final long serialVersionUID = 1L;
 
     public WallCell(PVector p, float width, float height) {
         super(p, width, height);

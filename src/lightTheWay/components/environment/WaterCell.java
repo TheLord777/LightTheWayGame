@@ -4,6 +4,7 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class WaterCell extends Cell{
+    private static final long serialVersionUID = 1L;
 
     public WaterCell(PVector p, float width, float height) {
         super(p, width, height );

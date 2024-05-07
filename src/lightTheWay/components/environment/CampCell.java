@@ -5,6 +5,8 @@ import lightTheWay.components.LightComponent;
 import processing.core.PVector;
 
 public class CampCell extends Cell {
+    private static final long serialVersionUID = 1L;
+
     private CampComponent campComponent;
     private LightComponent lightComponent;
 

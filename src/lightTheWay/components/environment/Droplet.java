@@ -6,7 +6,7 @@ import gamecore.components.GameComponent;
 import processing.core.PVector;
 
 public class Droplet extends DynamicComponent {
-
+    private static final long serialVersionUID = 1L;
 
     public Droplet(PVector position, float diameter) {
         super(position, diameter); // Adjust size as needed
